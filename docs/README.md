@@ -1,17 +1,17 @@
 ---
 home: true
-heroImage: /egg.png
+heroImage: /orange.png
 heroText: 小丞的前端日记
 tagline: 无比热爱，来日方长
 actionText: 开启热爱 →
 actionLink: /pages/folder1/test1.md
 features:
-- title: 简洁至上
-  details: 以 Markdown 为中心的项目结构，以最少的配置帮助你专注于写作。
-- title: Vue驱动
-  details: 享受 Vue + webpack 的开发体验，在 Markdown 中使用 Vue 组件，同时可以使用 Vue 来开发自定义主题。
-- title: 高性能
-  details: VuePress 为每个页面预渲染生成静态的 HTML，同时在页面被加载的时候，将作为 SPA 运行。
+- title: 前端之路
+  details: 从 2021 年大一开始接触前端，热爱前端，主要技术栈 React + TS，对 React 源码有深入的理解
+- title: 目前现状
+  details: 目前在字节跳动（base：广州）实习，提升自己的实战能力，以及积累实习经验。
+- title: 短期规划
+  details: 全力备战 2024 届秋招，希望在 2023 年收获大厂 offer
 ---
 <!-- 
 <ClientOnly>
