@@ -12,6 +12,8 @@ module.exports = {
     themeConfig: {
         logo: '/orange.png',
         lastUpdated: 'lastUpdate', // string | boolean
+        sidebar: 'auto',
+        search: false,
         nav: [
             { text: '首页', link: '/' },
             {
