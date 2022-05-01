@@ -10,5 +10,8 @@
     "build": "vuepress build docs",
     "push": "bash scripts/push.sh",
     "deploy": "bash deploy.sh"
+  },
+  "devDependencies": {
+    "vuepress": "^1.9.7"
   }
 }
