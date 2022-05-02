@@ -22,6 +22,7 @@ module.exports = {
                 items: [
                     { text: '前端总结', link: '/pages/summary/qrcode.md' },
                     { text: '数据结构和算法', link: '/pages/structure/start.md' },
+                    { text: 'CSS 布局方式', link: '/pages/css/layout/flex.md' },
                     // { text: 'JavaScript', link: '/pages/javascript/test1.md' },
                     // { text: 'CSS', link: '/pages/css/test1.md' },
                     // { text: 'HTML', link: '/pages/html/test4.md' },
@@ -151,6 +152,17 @@ module.exports = {
                         ['tree.md', '详解树结构，并实现二叉搜索树'],
                         ['graph.md', '详解图结构，并实现一个图结构'],
                         ['heap.md', '详解堆结构，并实现一个最小堆'],
+                    ]
+                }
+            ],
+            '/pages/css/layout/': [
+                {
+                    title: 'CSS 布局方式',   // 必要的
+                    collapsable: false, // 可选的, 默认值是 true,
+                    sidebarDepth: 2,    // 可选的, 默认值是 1
+                    children: [
+                        ['flex.md', '一文读懂CSS布局--flex布局'],
+                        ['grid.md', '一文读懂CSS布局--grid布局'],
                     ]
                 }
             ]
