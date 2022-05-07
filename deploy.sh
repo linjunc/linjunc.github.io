@@ -5,11 +5,11 @@ set -e
 
 # 生成静态文件
 npm run build
-
+# 域名
+echo 'linjuncheng.cn' > CNAME
 # 进入生成的文件夹
 cd docs/.vuepress/dist
 # 发布
-echo '${linjuncheng.cn}' > CNAME
 
 git init
 git add -A
