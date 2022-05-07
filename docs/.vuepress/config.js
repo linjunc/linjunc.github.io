@@ -67,7 +67,7 @@ module.exports = {
             '/pages/react/primary/': [
                 {
                     title: 'React 入门学习',   // 必要的
-                    collapsable: false, // 可选的, 默认值是 true,
+                    collapsable: true, // 可选的, 默认值是 true,
                     sidebarDepth: 2,    // 可选的, 默认值是 1
                     children: [
                         ['jsx.md', '基础知识以及 jsx语法'],
@@ -94,7 +94,7 @@ module.exports = {
             '/pages/react/hard/': [
                 {
                     title: 'React 源码解析',   // 必要的
-                    collapsable: false, // 可选的, 默认值是 true,
+                    collapsable: true, // 可选的, 默认值是 true,
                     sidebarDepth: 2,    // 可选的, 默认值是 1
                     children: [
                         ['fiberidea.md', 'React 设计理念'],
@@ -103,7 +103,7 @@ module.exports = {
                 },
                 {
                     title: 'Render 阶段',
-                    collapsable: false, // 可选的, 默认值是 true,
+                    collapsable: true, // 可选的, 默认值是 true,
                     sidebarDepth: 2,    // 可选的, 默认值是 1
                     children: [
                         ['beginwork.md', 'Render 阶段 -- Beginwork']
@@ -113,7 +113,7 @@ module.exports = {
             '/pages/interview/heading/': [
                 {
                     title: '前端面试题精选',   // 必要的
-                    collapsable: false, // 可选的, 默认值是 true,
+                    collapsable: true, // 可选的, 默认值是 true,
                     sidebarDepth: 2,    // 可选的, 默认值是 1
                     children: [
                         ['best1.md', '面试题精选1'],
@@ -125,7 +125,7 @@ module.exports = {
             '/pages/summary/': [
                 {
                     title: '前端总结',   // 必要的
-                    collapsable: false, // 可选的, 默认值是 true,
+                    collapsable: true, // 可选的, 默认值是 true,
                     sidebarDepth: 2,    // 可选的, 默认值是 1
                     children: [
                         ['qrcode.md', '如何优雅的在 H5 网页中实现扫码功能'],
@@ -148,7 +148,7 @@ module.exports = {
             '/pages/about/': [
                 {
                     title: 'About Me',   // 必要的
-                    collapsable: false, // 可选的, 默认值是 true,
+                    collapsable: true, // 可选的, 默认值是 true,
                     sidebarDepth: 2,    // 可选的, 默认值是 1
                     children: [
                         ['about.md', '关于我'],
@@ -159,7 +159,7 @@ module.exports = {
             '/pages/structure/': [
                 {
                     title: '数据结构和算法',   // 必要的
-                    collapsable: false, // 可选的, 默认值是 true,
+                    collapsable: true, // 可选的, 默认值是 true,
                     sidebarDepth: 2,    // 可选的, 默认值是 1
                     children: [
                         ['start.md', '从这里开启数据结构和算法'],
@@ -177,7 +177,7 @@ module.exports = {
             '/pages/css/layout/': [
                 {
                     title: 'CSS 布局方式',   // 必要的
-                    collapsable: false, // 可选的, 默认值是 true,
+                    collapsable: true, // 可选的, 默认值是 true,
                     sidebarDepth: 2,    // 可选的, 默认值是 1
                     children: [
                         ['flex.md', '一文读懂CSS布局--flex布局'],
