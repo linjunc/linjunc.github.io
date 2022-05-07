@@ -49,7 +49,7 @@ module.exports = {
                 text: 'React 全家桶',
                 items: [
                     { text: 'React 入门', link: '/pages/react/primary/jsx.md' },
-                    // { text: 'React 源码', link: '/pages/react1/test1.md' },
+                    { text: 'React 源码解析', link: '/pages/react/hard/fiberidea.md' },
                     // { text: 'Mobx', link: '/pages/mobx/test2.md' },
                 ]
             },
@@ -88,6 +88,25 @@ module.exports = {
                         ['share.md', '数据共享'],
                         ['more', 'React 扩展'],
                         ['hooks', 'React Hooks'],
+                    ]
+                }
+            ],
+            '/pages/react/hard/': [
+                {
+                    title: 'React 源码解析',   // 必要的
+                    collapsable: false, // 可选的, 默认值是 true,
+                    sidebarDepth: 2,    // 可选的, 默认值是 1
+                    children: [
+                        ['fiberidea.md', 'React 设计理念'],
+                        ['constructure.md', 'React Fiber 架构'],
+                    ]
+                },
+                {
+                    title: 'Render 阶段',
+                    collapsable: false, // 可选的, 默认值是 true,
+                    sidebarDepth: 2,    // 可选的, 默认值是 1
+                    children: [
+                        ['beginwork.md', 'Render 阶段 -- Beginwork']
                     ]
                 }
             ],
