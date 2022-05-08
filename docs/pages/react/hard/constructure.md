@@ -103,6 +103,10 @@ type Fiber = {|
   //用来描述fiber是处于何种模式。用二进制位来表示
   mode: TypeOfMode,
 
+  flags: Flags,// fiber 节点包含的副作用标识
+  subtreeFlags: Flags,// 子树包含的副作用标识，避免深度遍历
+  deletions: Array<Fiber> | null,// 删除的节点，用于执行 unmount 钩子
+
   // 用来记录Side Effect具体的执行的工作的类型：比如Placement，Update等等
   effectTag: SideEffectTag,
 

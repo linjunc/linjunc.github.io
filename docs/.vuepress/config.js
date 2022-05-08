@@ -106,7 +106,8 @@ module.exports = {
                     collapsable: true, // 可选的, 默认值是 true,
                     sidebarDepth: 2,    // 可选的, 默认值是 1
                     children: [
-                        ['beginwork.md', 'Render 阶段 -- Beginwork']
+                        ['beginwork.md', 'Render 阶段 -- Beginwork'],
+                        ['completework.md', 'Render 阶段 -- Completework']
                     ]
                 }
             ],

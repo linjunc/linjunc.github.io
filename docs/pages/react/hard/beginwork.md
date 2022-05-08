@@ -130,7 +130,7 @@ export function reconcileChildren(
   }
 }
 ```
-我们可以看到其实 `mount` 和 `update` 时调用的这两个方法是封装而成，差别只在于**传参的不同**，这个参数用来**表示是否追踪副作用** ，在 `ChildReconciler` 中用 `shouldTrackSideEffects` 来判断是否为对应的节点打上对应 DOM 操作的 `effectTag`
+我们可以看到其实 `mount` 和 `update` 时调用的这两个方法是封装而成，差别只在于**传参的不同**，这个参数用来**表示是否追踪副作用** ，在 `ChildReconciler` 中用 `shouldTrackSideEffects` 来判断是否为对应的节点打上对应 DOM 操作的 `effectTag`(即 `flags`)
 ```javascript
 export const reconcileChildFibers = ChildReconciler(true);
 export const mountChildFibers = ChildReconciler(false);
@@ -354,6 +354,8 @@ export function cloneChildFibers(
 ```
 以上就是 update 是的主要流程，最核心的工作就是 bailoutOnAlreadyFinishedWork ，通过 bailout，一些与本次 update 无关的 Fiber 树路径可以被直接裁剪掉，直接进行复用，这种复用，会保留被裁剪的 Fiber 子树的所有 Fiber 节点
 ### 关于 EffectTag 是啥
+> React 17 更新为 flags，用法相同
+
 effectTag 实际上就是需要对节点需要执行的 DOM 操作（也可认为是副作用，即 sideEffect ）<br />render 阶段是在内存中进行的，render 阶段需要做的是为需要执行 DOM 操作的节点打上标记也就是 effectTag。 当工作结束后会通知 renderer 渲染器需要执行的 DOM 操作，要执行的 DOM 操作的具体类型就保存在 fiber.effectTag 中
 ```javascript
 export const Placement = /*             */ 0b0000000000010;  // 插入节点
