@@ -190,7 +190,7 @@ case HostComponent: {
     }
 
     if (workInProgress.ref !== null) {
-      // 设置fiber.flags标记(Ref)
+      // 设置fiber.flags标记 (Ref)
       markRef(workInProgress);
     }
   }
