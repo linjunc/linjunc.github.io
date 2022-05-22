@@ -124,6 +124,26 @@ module.exports = {
                         ['mutation.md', 'Mutation 阶段'],
                         ['layout.md', 'Layout 阶段'],
                     ]
+                },
+                { 
+                    title: 'Diff 算法', 
+                    collapsable: true,
+                },
+                { 
+                    title: '状态更新',
+                    collapsable: true,
+                },
+                {
+                    title: 'Hooks 实现',
+                    collapsable: true,
+                },
+                { 
+                    title: '事件系统',
+                    collapsable: true,
+                },
+                { 
+                    title: 'Scheduler 模块',
+                    collapsable: true,
                 }
             ],
             '/pages/interview/heading/': [
