@@ -128,6 +128,11 @@ module.exports = {
                 { 
                     title: 'Diff 算法', 
                     collapsable: true,
+                    sidebarDepth: 2,
+                    children: [
+                        ['singlediff.md', '单一节点的 Diff'],
+                        ['diff.md', '多节点的 Diff']
+                    ]
                 },
                 { 
                     title: '状态更新',
