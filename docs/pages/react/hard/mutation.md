@@ -1,4 +1,7 @@
-接下来到了**执行 DOM 操作**的 `mutation` 阶段的工作<br />`mutation` 阶段会遍历 `effectList` 链表，执行对应的函数，这里执行的是 `commitMutationEffects`函数，它会通过调用 `commitMutationEffects_begin`函数来开始本次的 `mutation` 阶段的工作
+接下来到了**执行 DOM 操作**的 `mutation` 阶段的工作<br />
+在 `before mutation` 阶段中，会一上一下的之行 begin 和 complete 的工作，最后 nextEffect 又回到了起始点
+
+`mutation` 阶段会用同样的方式，**向下遍历，向上归并**，执行对应的函数，这里执行的是 `commitMutationEffects` 函数，它会通过调用 `commitMutationEffects_begin`函数来开始本次的 `mutation` 阶段的工作
 
 > React 将每一个阶段又分为了 begin 和 complete，这样将逻辑进行抽离，主函数流程更加清晰
 
@@ -21,11 +24,11 @@ export function commitMutationEffects(
 
 ## commitMutationEffects_begin
 
-可以看到在这个函数中，主体是一个 `while`循环，会对包含 `effectTag` 的 Fiber 节点形成的 `effectList` 链表进行遍历<br />如果遍历到的 **Fiber 上有 Deletion 标记**，则调用 `commitDeletion`函数，**分离 ref 引用**，并**调用 `componentWillUnmount` 生命周期函数**，断开 Fiber 与父节点的连接关系。这些工作都在 `commitDeletion` 函数中进行处理
+可以看到在这个函数中，主体是一个 `while` 循环，会从 rootFiber 开始向下遍历，和 before mutation 的工作一样，找到最底层的有 mutation 标志的 fiber 节点，执行 `commitMutationEffects_complete` 函数<br />
+如果遍历到的 **Fiber 上有 Deletion 标记**，则调用 `commitDeletion`函数，**分离 ref 引用**，并**调用 `componentWillUnmount` 生命周期函数**，断开 Fiber 与父节点的连接关系。这些工作都在 `commitDeletion` 函数中进行处理
 
 > 这是在 React 17.0.3 之后才启用的字段，会在需要被 delete 掉的 Fiber 节点上的 deletions 字段上打上标记，这样可以直接通过 deletions 字段来判断是否需要删除该节点
 
-最后会调用 `commitMutationEffects_complete` 函数来执行 mutation 阶段的副作用
 
 ```javascript
 function commitMutationEffects_begin(root: FiberRoot) {
@@ -54,7 +57,7 @@ function commitMutationEffects_begin(root: FiberRoot) {
 
 ## commitMutationEffects_complete
 
-在 `commitMutationEffects_complete` 函数中，会继续遍历 effectList 链表，调用 `commitMutationEffectsOnFiber` 函数，根据不同的组件类型，来执行更新、插入、删除 DOM 的操作
+在 `commitMutationEffects_complete` 函数中，**会开始归并，优先处理兄弟节点，最后处理父节点**，调用 `commitMutationEffectsOnFiber` 函数，根据不同的组件类型，来执行更新、插入、删除 DOM 的操作
 
 ```javascript
 function commitMutationEffects_complete(root: FiberRoot) {
@@ -268,11 +271,13 @@ export function insertInContainerBefore(
 
 `commitWork` 函数会对不同类型的更新做出处理，重点关注 HostComponent 和 HostText 类型
 
+整体流程如下
+
 - 首先会判断**是否支持 mutation**，执行其他的逻辑，这里我们的宿主环境不会进入当前逻辑，跳过这部分
 - 接下来会根据 Fiber 节点的 tag 类型，进入不同的条件语句：
 
-对于和 **Function Component 相关的类型**，例如 `simpleMemoComponent`、`functionComponent` 等类型，会执行 `commitHookEffectListUnmount`函数，也就是会**调用 `useLayoutEffect` 的销毁函数**
-<br />会遍历当前的 `effectList` 链表，如果当前 Fiber 节点的 `effectTag` 等于传入的 tag（HookLayout），这个 `effectTag` 就表示，当前 Fiber 节点包含对 `useLayoutEffect` 的调用，会执行它们的**销毁函数**
+对于和 **Function Component 相关的类型**，例如 `simpleMemoComponent`、`functionComponent` 等类型，会执行 `commitHookEffectListUnmount`函数，也就是会**调用 `useLayoutEffect` 或 `useInsertionEffect` 的销毁函数**
+<br />具体是会遍历当前的 `updateQueue` 队列，如果当前 Fiber 节点的 `effectTag` 等于传入的 tag（HookLayout ｜ Insertion），这个 `effectTag` 就表示，当前 Fiber 节点包含对 `useLayoutEffect` 或 `useInsertionEffect` 的调用，会执行它们的**销毁函数**
 
 ```javascript
 function commitHookEffectListUnmount(
@@ -304,65 +309,56 @@ function commitHookEffectListUnmount(
 ```
 
 - 对于 HostComponent 类型的节点，首先会获取到 **新旧props**以及 `updateQueue` ，最后调用 `commitUpdate`来对 DOM 进行更新
-- 对于 HostText 类型的更新，首先获取到真实的文本节点、**新旧文本的内容**，调用 `commitTextUpdate` 进行文本内容的更新
+
+```js
+case HostComponent: {
+  // 获取对应的 DOM 节点
+  const instance: Instance = finishedWork.stateNode;
+  if (instance != null) {
+    // 新旧 props
+    const newProps = finishedWork.memoizedProps;
+    const oldProps = current !== null ? current.memoizedProps : newProps;
+    const type = finishedWork.type;
+    // 获取 updateQueue
+    const updatePayload: null | UpdatePayload = (finishedWork.updateQueue: any);
+    finishedWork.updateQueue = null; // 清空
+    if (updatePayload !== null) {
+      // 提交更新
+      commitUpdate(
+        instance,
+        updatePayload,
+        type,
+        oldProps,
+        newProps,
+        finishedWork,
+      );
+    }
+  }
+  return;
+}
+```
+
+- 对于 HostText 类型的更新，首先获取到真实的文本节点、**新旧文本的内容**，调用 `commitTextUpdate` 来更新文本节点的 nodeValue
 
 ```javascript
-function commitWork(current: Fiber | null, finishedWork: Fiber): void {
-  if (!supportsMutation) {
-  // 不支持 mutation 情况下的处理逻辑，同样会根据 tag 进行不同处理
-  }
+// FC 相关的 case 调用 commitHookEffectListUnmount
+case HostText: {
+  // ...错误处理
+  const textInstance: TextInstance = finishedWork.stateNode;
+  const newText: string = finishedWork.memoizedProps;
 
-  switch (finishedWork.tag) {
-    // FC 相关的 case 调用 commitHookEffectListUnmount
-    ... 不是我们关注的
-    case ClassComponent: {
-      return;
-    }
-    case HostComponent: {
-      // 获取对应的 DOM 节点
-      const instance: Instance = finishedWork.stateNode;
-      if (instance != null) {
-        // 新旧 props
-        const newProps = finishedWork.memoizedProps;
-        const oldProps = current !== null ? current.memoizedProps : newProps;
-        const type = finishedWork.type;
-        // 获取 updateQueue
-        const updatePayload: null | UpdatePayload = (finishedWork.updateQueue: any);
-        finishedWork.updateQueue = null; // 清空
-        if (updatePayload !== null) {
-          // 提交更新
-          commitUpdate(
-            instance,
-            updatePayload,
-            type,
-            oldProps,
-            newProps,
-            finishedWork,
-          );
-        }
-      }
-      return;
-    }
-    case HostText: {
-      // ...错误处理
-      const textInstance: TextInstance = finishedWork.stateNode;
-      const newText: string = finishedWork.memoizedProps;
-
-      const oldText: string =
-        current !== null ? current.memoizedProps : newText;
-      // 更新新旧 text
-      commitTextUpdate(textInstance, oldText, newText);
-      return;
-    }
-    // ... 不关注
-  }
-
-  ... 错误处理
+  const oldText: string =
+    current !== null ? current.memoizedProps : newText;
+  // 更新新旧 text
+  commitTextUpdate(textInstance, oldText, newText);
+  return;
+}
+// ... 不关注
 }
 ```
 
 ### commitUpdate
-在 `commitWork` 中，会调用 `commitUpdate` 函数来进行更新，`commitUpdate` 主要做以下几件事
+在 `commitWork` 中，会调用 `commitUpdate` 函数来进行元素的更新，`commitUpdate` 主要做以下几件事
 
 - 执行 `domElement[internalPropsKey] = props` ，来更新 props
 - 然后调用 `updateProperties` 函数，来更新 DOM 的属性，将 `diff` 的结果应用到真实 DOM 上，首先会对 radio 进行特殊的处理，然后会调用 `updateDOMProperties`，然后根据 Fiber 的 tag 类型，对 input、textarea、select 等表单类型的节点做处理

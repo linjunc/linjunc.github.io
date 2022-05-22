@@ -53,7 +53,15 @@ export function prepareForCommit(containerInfo: Container): Object | null {
 
 ## commitBeforeMutationEffects_begin
 
-在 `commitBeforeMutationEffects_begin` 函数中会遍历 `effectList` 链表，对每个遍历到的 Fiber 节点调用 `commitBeforeMutationEffects_complete` 函数来**更新 props 和 state**<br />如果当前的 Fiber 节点上的 `deletions` 字段被标记了值，意味着节点即将被删除，会调用 `commitBeforeMutationEffectsDeletion` 来**创建 blur 事件并进行派发**
+在 `commitBeforeMutationEffects_begin` 函数中会从上往下遍历，找到最底部并且有标记了 before mutation 的 fiber 节点，调用 `commitBeforeMutationEffects_complete` 函数来**更新 props 和 state**<br />如果当前的 Fiber 节点上的 `deletions` 字段被标记了值，意味着节点即将被删除，会调用 `commitBeforeMutationEffectsDeletion` 来**创建 blur 事件并进行派发**
+
+因此可以知道 begin 流程主要做了两件事
+- 如果子代 Fiber 树上有 before mutation 标记，会把 nextEffect 赋值给子 Fiber，也就是向下递归找到有标记 before mutation 的 Fiber
+- 找到后，执行 `commitBeforeMutationEffects_complete` 函数
+
+从 `commitBeforeMutationEffects_begin` 的执行上，我们可以知道：**commit 阶段执行的生命周期以及钩子函数是子先后父的**
+
+这是因为，如果在子组件中的生命周期内改变 DOM 状态，并且还要在父组件生命周期中同步状态，就需要子先后父之行生命周期
 
 ```javascript
 function commitBeforeMutationEffects_begin() {
@@ -89,7 +97,7 @@ function commitBeforeMutationEffects_begin() {
 
 ## commitBeforeMutationEffectsOnFiber
 
-在 `commitBeforeMutationEffects_begin` 中会调用 `commitBeforeMutationEffects_complete` 函数，在 `commitBeforeMutationEffects_complete` 中同样会遍历 `effectList` 链表，执行 `commitBeforeMutationEffectsOnFiber`函数，这也是 `before_mutation`的**核心逻辑**
+在 `commitBeforeMutationEffects_begin` 中会调用 `commitBeforeMutationEffects_complete` 函数，在 `commitBeforeMutationEffects_complete` 中会从下到上归并，（sibling 到 parent）执行 `commitBeforeMutationEffectsOnFiber`函数，这也是 `before_mutation`的**核心逻辑**
 
 - **首先会处理 blur 和 focus 相关逻辑**
 - **其次会执行 getSnapshotBeforeUpdate 的生命周期函数**

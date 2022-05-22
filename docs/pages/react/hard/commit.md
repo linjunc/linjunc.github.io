@@ -3,12 +3,22 @@
 随着 `render` 阶段的完成，也意味着在内存中**构建 `workInProgress Fiber` 树**的所有工作都已经完成，这其中包括了对 Fiber 节点的 `update`、`diff`、`flags 标记`、`subtreeFlags`（effectList） 的收集等操作<br />我们知道，在 `render` 阶段，会将需要更新的节点**标记上** `flags` （effectTag），在 `completeWork` 阶段会**形成** `effectList` 链表，**连接所有需要被更新的节点**。
 
 为了将这些需要更新的节点应用到真实 DOM 上却不需要**遍历整棵树**，在 `commit` 阶段，会通过**遍历这条 `EffectList` 链表**，执行对应的操作，来完成对真实 DOM 的更新，这也叫做 `mutation`，即 **DOM 节点的增删改操作**。
-<br />`commit` 阶段会做以下这些事情
 
-- 对一些**生命周期和副作用钩子的处理**，比如 类组件的 `componentDidMount` 、`componentDidUpdate`，函数组件的 `useEffect`、`useLayoutEffect`等
+> 在新版本中不再需要 effectList 链表了，而是通过 rootFiber 自下而上调和的方式处理这些标志，执行对应的操作，来完成对真实 DOM 的更新
+
+接下来我们带着**以下的问题**一起去思考 commit 阶段的工作！
+- commit 阶段分为几个子阶段，都做了什么事情？
+- 如何执行生命周期和 hooks 钩子的回调及销毁函数？
+- commit 阶段是如何更新 DOM 节点的？
+- useEffect 钩子是如何被调度的？
+---
+`commit` 阶段会做以下这些事情
+
+- 对一些**生命周期和副作用钩子的处理**，比如 类组件的 `componentDidMount` 、`componentDidUpdate`，函数组件的 `useEffect`、`useLayoutEffect` 、`useInsertionEffect` 等
 - 另一方面，在一次 Update 中，进行添加节点（`Placement`）、更新节点（`Update`）、删除节点（`Deletion`）、同时有对 `ref` 的处理等。
 
 `commit` 阶段的**入口在 `commitRoot` 函数**，在这里会发起一个最高优先级的调度任务，然后调用 `commitRootImpl` 函数来处理副作用，将最新的 Fiber 树同步到 DOM 上
+
 
 ```javascript
 function commitRoot(root) {
@@ -121,5 +131,6 @@ function commitRootImpl(root, renderPriorityLevel) {
 }
 ```
 
-接下来我们来看看每个阶段都分别做了哪些工作！
+接下来我们去看看每个阶段都分别做了哪些工作！
+
  <br />

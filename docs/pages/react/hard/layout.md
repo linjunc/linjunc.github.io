@@ -42,7 +42,7 @@ export function commitLayoutEffects(
 
 ## commitLayoutEffects_begin
 
-在这个函数中会遍历 `nextEffect`  链表，对**当前屏幕内的节点**调用 `commitLayoutMountEffects_complete` 函数来处理副作用，触发 `componentDidMount`、`componentDidUpdate` 以及各种回调函数等，跳过未显示的节点。
+在这个函数中会从 rootFiber 开始，向下遍历。对**当前屏幕内的节点**调用 `commitLayoutMountEffects_complete` 函数来处理副作用，触发 `componentDidMount`、`componentDidUpdate` 以及各种回调函数等，跳过未显示的节点。
 
 ```javascript
 function commitLayoutEffects_begin(
@@ -101,7 +101,7 @@ function commitLayoutEffects_begin(
 
 ## commitLayoutMountEffects_complete
 
-在 complete 中，同样会从 `nextEffect` 开始进行遍历，遍历整棵树。调用 `commitLayoutEffectOnFiber` 函数，根据不同的组件类型，处理相关的副作用
+在 complete 中，同样会从 `nextEffect` 开始进行归并。调用 `commitLayoutEffectOnFiber` 函数，根据不同的组件类型，处理相关的副作用
 
 ```javascript
 function commitLayoutMountEffects_complete(
@@ -165,6 +165,7 @@ function commitLayoutEffectOnFiber(
 
 - 如果 `current` 为 `null` 会调用 `componentDidMount` 这个生命周期函数，因此也可以知道 `componentDidMount` 是在 `commit layout` 阶段同步执行的
 - 当 `current` 不为 `null` 时，会执行 `componentDidUpdate` 生命周期函数，然后会调用 `commitUpdateQueue`函数，遍历 `updateQueue`上的 `effects`，执行 `effect`副作用
+- 如果 setState 有 callback 会放入 updateQueue 中，通过 `commitUpdateQueue` 来执行 callback 回调函数
 
 > current 为 null 时，是首屏渲染
 
@@ -247,7 +248,8 @@ function commitAttachRef(finishedWork: Fiber) {
 
 至此 layout 阶段的工作已经完成了，Layout 做的事情有：
 
-- `commitLayoutEffectOnFiber` 对于类组件，会执行生命周期，setState 的 callback，对于函数组件会执行 `useLayoutEffect` 钩子
+- 对于类组件，会执行 `componentDidMount` 、`componentDidUpdate` 生命周期，setState 的 callback
+- 对于函数组件会执行 `useLayoutEffect` 、`useInsertionEffect` 钩子
 - 如果有 ref ，会更新 ref 
 
 
