@@ -152,7 +152,7 @@ workInProgressFiber.alternate === currentFiber;
 在下一次渲染时，React 会直接复用 workInProgress Fiber 树作为下一次的渲染树，上一次的渲染树又作为缓存树，这样不仅防止只有一棵树容易状态丢失的问题，又加快了 DOM 节点的更新和替换
 ### mount 时
 #### 第一步：创建 FiberRoot 和 RootFiber
-首次执行 `ReactDOM.render` 会创建 `fiberRoot` 和 `rootFiber`，**其中 **`**fiberRoot**`** 是整个应用的根节点，**`**rootFiber**`** 是组件树的根节点，**一个 React 应用可以有多个 `rootFiber`，但是只能有一个 `fiberRoot`
+首次执行 `ReactDOM.render` 会创建 `fiberRoot` 和 `rootFiber`，**其中 `fiberRoot`** 是整个应用的根节点，**`rootFiber`** 是组件树的根节点，一个 React 应用可以有多个 `rootFiber`，但是只能有一个 `fiberRoot`
 ```javascript
 render(<Index/>, document.getElementById('app'));
 ```
@@ -188,3 +188,9 @@ workInProgressFiber.alternate = currentFiber
 1. 创建 workInProgress 副本，进入 Reconciliation 执行对应的 render 更新。 
 1. 记录有副作用的 fiber 节点，放入一个队列 
 1. 完成 Reconciliation，进入 Commit 阶段，取出有副作用的 fiber 节点，通过 fiber 节点的 nextEffect 属性访问有副作用的节点，进行更新
+
+
+## 参考资料
+
+- [React 技术揭秘](https://react.iamkasong.com/process/doubleBuffer.html#update%E6%97%B6) -- Fiber 架构的工作原理
+- [React Conf 2017](https://www.youtube.com/watch?v=ZCuYPiUIONs&t=801s) -- 关于 Fiber 架构

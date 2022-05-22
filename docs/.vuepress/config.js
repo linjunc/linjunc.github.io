@@ -93,7 +93,11 @@ module.exports = {
             ],
             '/pages/react/hard/': [
                 {
-                    title: 'React 源码解析',   // 必要的
+                    title: 'React 源码解析', 
+                    collapsable: false,
+                },
+                {
+                    title: 'React 哲学',   // 必要的
                     collapsable: true, // 可选的, 默认值是 true,
                     sidebarDepth: 2,    // 可选的, 默认值是 1
                     children: [
@@ -108,6 +112,17 @@ module.exports = {
                     children: [
                         ['beginwork.md', 'Render 阶段 -- Beginwork'],
                         ['completework.md', 'Render 阶段 -- Completework']
+                    ]
+                },
+                {
+                    title: 'Commit 阶段',
+                    collapsable: true, // 可选的, 默认值是 true,
+                    sidebarDepth: 2,    // 可选的, 默认值是 1
+                    children: [
+                        ['commit.md', '流程概览'],
+                        ['beforemutation.md', 'Before Mutation 阶段'],
+                        ['mutation.md', 'Mutation 阶段'],
+                        ['layout.md', 'Layout 阶段'],
                     ]
                 }
             ],

@@ -99,4 +99,6 @@ export const Deletion = /*              */ 0b0000000001000;
 Renderer 会根据 Reconciler 中为虚拟 DOM 打的 tag，**同步执行**对应的 DOM 操作
 
 以上就是 React 的设计理念以及新老架构的演变
-          
+
+## 参考资料
+- [React 技术揭秘](https://react.iamkasong.com/preparation/oldConstructure.html#react15%E6%9E%B6%E6%9E%84) -- React 15 架构
