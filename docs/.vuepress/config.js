@@ -137,6 +137,11 @@ module.exports = {
                 { 
                     title: '状态更新',
                     collapsable: true,
+                    sidebarDepth: 2,
+                    children: [
+                        ['update.md', '状态更新流程'],
+                        ['updatecalculate.md', 'Update 的计算'],
+                    ]
                 },
                 {
                     title: 'Hooks 实现',
