@@ -178,6 +178,7 @@ module.exports = {
                     collapsable: true, // 可选的, 默认值是 true,
                     sidebarDepth: 2,    // 可选的, 默认值是 1
                     children: [
+                        ['event.md', 'Event 对象，这些你都知道吗？'],
                         ['qrcode.md', '如何优雅的在 H5 网页中实现扫码功能'],
                         ['animate.md', '为什么 CSS 动画比 JavaScript 高效？'],
                         ['git.md', '通俗易懂的GIT入门'],
