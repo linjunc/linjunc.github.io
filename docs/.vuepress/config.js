@@ -130,8 +130,9 @@ module.exports = {
                     collapsable: true,
                     sidebarDepth: 2,
                     children: [
+                        ['diffpre.md', 'Diff 算法概览'],
                         ['singlediff.md', '单一节点的 Diff'],
-                        ['diff.md', '多节点的 Diff']
+                        ['arraydiff.md', '多节点的 Diff']
                     ]
                 },
                 { 

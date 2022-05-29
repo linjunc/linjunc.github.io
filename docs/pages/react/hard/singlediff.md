@@ -1,79 +1,66 @@
 ## 前言
-在最前沿的 diff 算法中，复杂度达到了 O(n^3) <br />react 的 diff 会有 3个限制 
 
-1. 只对同级元素进行 diff ，如果 dom 前后两次更新跨层级，不会复用，而作为新元素 
-1. 两个不同类型的元素会产生出不同的树。如 div 变成 p 会将整棵树销毁 
-1. 可以通过 key 来暗示不同的渲染下保持稳定 
-
-## 单一节点的 diff 
-
-对于单一节点，会进入 `reconcileSingleElement`的逻辑
+在上一节，已经说过了 Diff 算法的一些策略，这节开始通过源码来看看 React 是如何实现的<br />Diff 算法发生在 `beginWork` 阶段的 `reconcileChildFibers` 函数中，在这里会根据 Fiber 节点的 tag 不同，进入不同的逻辑<br />当新创建的节点 `typeof` 为 `object` 时，我们来看看 `REACT_ELEMENT_TYPE` 类型的 diff 。其执行的函数是 `placeSingleChild()` 函数，传参是 `reconcileSingleElement`函数的返回值
 
 ```javascript
 // ReactChildFiber.old.js  function reconcileChildFibers
-// Handle object types
-    if (typeof newChild === 'object' && newChild !== null) {
-      // 单一节点的 Diff
-      switch (newChild.$$typeof) {
-        case REACT_ELEMENT_TYPE:
-          return placeSingleChild(
-            reconcileSingleElement(
-              returnFiber,
-              currentFirstChild,
-              newChild,
-              lanes,
-            ),
-          );
-       // case....
-      }
-
+if (typeof newChild === 'object' && newChild !== null) {
+  // 单一节点的 Diff
+  switch (newChild.$$typeof) {
+    case REACT_ELEMENT_TYPE:
+      return placeSingleChild(
+        reconcileSingleElement(
+          returnFiber,
+          currentFirstChild,
+          newChild,
+          lanes,
+        ),
+      );
+      // case....
+  }
 ```
 
-1. 首先会判断上次更新时的 Fiber 节点是否存在对应 DOM 节点
-2. 判断 DOM 节点是否可以复用
-   1. key 是否相同
-   1. type 是否相同
-3. 如果可以复用，将上次更新的 Fiber 节点的副本作为本次新生成的 Fiber 节点并返回
-4. 如果不可以服用，标记 DOM 为需要被删除，新生成一个 Fiber 节点并返回
+核心逻辑在于 `ReconcileSingleElement` 中
 
-## 判断是否可以复用
+## ReconcileSingleElement
 
-判断是否可以复用的逻辑在 `reconcileSingleElement` 中
+在 `reconcileSingleElement`函数中，通过 `while`循环遍历父 Fiber 节点下所有的旧子 Fiber 节点，在每次的遍历中，都会对比 key 和 type 是否一致
 
 ```javascript
   function reconcileSingleElement(
     returnFiber: Fiber,
-    currentFirstChild: Fiber | null,
-    element: ReactElement,
-    lanes: Lanes,
+    currentFirstChild: Fiber | null, // 父 Fiber 下，第一个子 Fiber
+    element: ReactElement, // 当前 react element
+    lanes: Lanes, // 优先级
   ): Fiber {
     const key = element.key;
     let child = currentFirstChild;
     // dom 节点是否存在
     while (child !== null) {
-      // TODO: If key === null and child.key === null, then this only applies to
-      // the first item in the list.
-      // key 是否相同
+      // 旧 fiber 节点的 key 和 新 fiber 节点的 key 相同
       if (child.key === key) {
         const elementType = element.type;
-        // type 是否可以服用
+        // type 是否相等
         if (elementType === REACT_FRAGMENT_TYPE) {
+          //如果新的 ReactElement 和 旧fiber 都是 fragment 类型且 key 相同
           if (child.tag === Fragment) {
             // 删除，单一节点更新，key type 不同，删除
             deleteRemainingChildren(returnFiber, child.sibling);
             const existing = useFiber(child, element.props.children);
             existing.return = returnFiber;
-            if (__DEV__) {
-              existing._debugSource = element._source;
-              existing._debugOwner = element._owner;
-            }
+            ...
             return existing;
           }
-        } else {
-          // ...
+        } else if(child.elementType === elementType){
+          // 旧fiber节点的 key 和 新fiber节点的key 相同
+          deleteRemainingChildren(returnFiber, child.sibling);
+          const existing = useFiber(child, element.props);
+          existing.ref = coerceRef(returnFiber, child, element);
+          existing.return = returnFiber;
+          return existing;
         }
-        // 代码执行到这里代表：key相同但是type不同
-        // 将该fiber及其兄弟fiber标记为删除
+        ...
+        // key相同但是type不同 将该fiber及其兄弟fiber标记为删除
         deleteRemainingChildren(returnFiber, child);
         break;
       } else {
@@ -86,21 +73,70 @@
   }
 ```
 
-在上面的代码中，React 先判断 key 是否相同，如果 key 相同，则判断 type 是否相同，只有都相同时，一个 DOM 节点才能复用<br />需要特别注意的是
+如果新旧 Fiber 节点的**key 和 type 都一致**，那么**可以复用**当前的旧 Fiber 节点，此时
 
-- 当 key 相同，type 不同时，执行的是 `deleteRemainingChildren`将 child 和 他的 sibling 节点，都标记为删除
-- 当 key 不同时，只将 child 标记删除
-
-## 例子
-
-原因如下面这个例子<br />当页面中的 3 个 li ，被替换成一个 p 节点时
+- 通过  `deleteRemainingChildren`来对当前旧 Fiber 节点后面的兄弟 Fiber 节点标记 Deletion 删除标记
+- 通过 `useFiber` 函数基于当前旧子 Fiber 节点和新 props 生成新的 Fiber 节点，以复用 Fiber 节点，返回新节点
 
 ```javascript
-// 当前页面显示的
-ul > li * 3
-
-// 这次需要更新的
-ul > p
+deleteRemainingChildren(returnFiber, child.sibling);
+const existing = useFiber(child, element.props);
+existing.ref = coerceRef(returnFiber, child, element);
+existing.return = returnFiber;
+return existing;
 ```
 
-只有单一节点 p 的更新，属于上面的逻辑<br />在 `reconcileSingleElement`中遍历之前的 3个 Fiber ，寻找是否有本次更新的 p 能够复用的 fiber 对应的 DOM 节点<br />当 key 相同，type 不同时，表达我们**已经找到了对应的 fiber** ，但是 p 与 li type 不同，不能匹配，唯一的 key 已经无法匹配了，因此其他的 fiber 节点更没有机会了，所以需要标记删除<br />当  key 不同时，后面的 fiber 有可能会和 当前的 key 相同，因此仅仅删除当前的 fiber
+如果新旧 Fiber 节点的**key 相同，但 type 不同**，则将当前 Fiber 及其所有兄弟节点删除
+
+```javascript
+deleteRemainingChildren(returnFiber, child);
+```
+
+如果新旧 Fiber 节点的 **key 不同**，则删除当前 child 即可
+
+```javascript
+deleteChild(returnFiber, child); 
+```
+
+`deleteRemainingChildren`和 `deleteChild`的区别是，前者会通过 while 循环，遍历删除全部的 `child` 的 `sibling` 节点
+
+## deleteRemainingChildren
+
+`shouldTrackSideEffects`就是 `current`对应的参数，也就用来表明当前是 mount 还是 update 阶段，如果是 mount 阶段则不做操作，只有在 `update`才会做出处理<br />遍历 `child`，循环调用 `deleteChild` 进行删除
+
+```javascript
+function deleteRemainingChildren(
+  returnFiber: Fiber,
+  currentFirstChild: Fiber | null,
+): null {
+  if (!shouldTrackSideEffects) {
+    return null;
+  }
+
+  let childToDelete = currentFirstChild;
+  while (childToDelete !== null) {
+    deleteChild(returnFiber, childToDelete);
+    childToDelete = childToDelete.sibling;
+  }
+  return null;
+}
+```
+
+## placeSingleChild
+
+`placeSingleChild` 函数所做的就是为 `reconcileSingleElement` 新生成的 Fiber 节点，打上 `Placement` 的 `effectTag`，在 `commit` 阶段进行 DOM 更新时执行插入的操作
+
+```javascript
+function placeSingleChild(newFiber: Fiber): Fiber {
+  if (shouldTrackSideEffects && newFiber.alternate === null) {
+    newFiber.flags |= Placement;
+  }
+  return newFiber;
+}
+```
+
+## 疑问
+
+- **为什么在 key 相同 type 不同时，删除全部的子节点？而 key 不同时，只删除当前节点？**
+
+因为 当 key 相同，type 不同时，表达我们**已经找到了对应的 fiber，**但是由于 type 不同导致了不能复用，又因为 key 是唯一的，剩下的其他的 Fiber 都**无法再与这个 key 匹配**了，所以剩下的都是 `key` 的不同情况，因此**全部标记删除**<br />当 key 不同时，后面的 fiber **有可能**会和当前的 key 相同，因此仅仅删除当前的 fiber

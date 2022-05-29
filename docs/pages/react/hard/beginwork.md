@@ -225,7 +225,7 @@ function reconcileChildFibers(
 }
 
 ```
-reconcileSingle Element 会进行单一节点的 Diff 算法<br />在判断 newChild 为 array 时，会进入多节点的 Diff 算法，具体会在后面讲到
+在 update 阶段 reconcileSingle Element 会进行单一节点的 Diff 算法<br />在判断 newChild 为 array 时，会进入多节点的 Diff 算法，具体会在后面讲到
 ### update 时
 当 beginWork 的参数中 current 不为 null 时，会进入 update 的逻辑，在这个条件分支里，会根据一些条件来修改 `didReceiveUpdate` 这个变量的值，这个变量代表的是当前更新是否源自父级的更新
 
