@@ -1,9 +1,11 @@
 ## 前言
 
-在 React 18 的更新中，全面启用了 `concurrent` 模式，使用 `legacy` 模式将会报 warning 提示，可以看出 `concurrent` 模式会是 React 的未来。<br />`legacy` 模式是我们之前常用的，它构建 dom 的过程是同步的，所以在 `reconcile` 阶段的 Diff 中，如果特别耗时，那么导致的结果就是 js 一直**阻塞高优先级的任务**，表现为页面的卡顿，无法响应。<br />`concurrent` 模式是 react 18 中全面开启的模式，它用**时间片调度实现了异步可中断**的任务，根据设备性能的不同，时间片的长度也不一样，在每个时间片中，如果任务到了过期时间，就会主动让出线程给高优先级的任务。<br />采用 `ReactDOM.render` 来渲染的应用，就是 `legacy` 模式，都是同步的，在状态更新时没有优先级的概念，任务之间需要依次执行。<br />对于 `concurrent` 模式和 `blocking` 模式来说，也就是采用 `ReactDOM.createRoot` 或 `ReactDOM.createBlockingRoot` 创建的应用，会采用并发的方式来更新状态。**当有高优先级任务存在时，会中断当前正在执行的低优先级任务，先完成高优先级更新后，再基于更新结果进行重新低优先级更新。**
+在 React 18 的更新中，全面启用了 `concurrent` 模式，使用 `legacy` 模式将会报 **warning 警告**，可以看出 `concurrent` 模式会是 React 的未来。<br />
+`legacy` 模式是我们之前常用的，它**构建 dom 的过程是同步的**，所以在 `reconcile` 阶段的 Diff 中，如果特别耗时，那么导致的结果就是 js 会一直**阻塞高优先级的任务**，表现为页面的卡顿和无法响应。<br />`concurrent` 模式是 react 18 中全面开启的模式，它用**时间片调度实现了异步可中断**的任务，根据设备性能的不同，时间片的长度也不一样，在每个时间片中，如果任务到了过期时间，就会主动让出线程给高优先级的任务。<br />采用 `ReactDOM.render` 来渲染的应用，就是 `legacy` 模式，都是同步的，在状态更新时没有优先级的概念，任务之间需要依次执行。<br />对于 `concurrent` 模式和 `blocking` 模式来说，也就是采用 `ReactDOM.createRoot` 或 `ReactDOM.createBlockingRoot` 创建的应用，会采用并发的方式来更新状态。**当有高优先级任务存在时，会中断当前正在执行的低优先级任务，先完成高优先级更新后，再基于更新结果重新进行低优先级的更新。**
 
 > blocking mode 是实验中的模式，为了 legacy 迁移至 concurrent 而存在
 
+**那么什么是优先级呢？**
 ## 优先级与Update
 
 > 优先级的概念只存在与 concurrent 模式中
@@ -22,12 +24,12 @@ export const LowPriority = 4; //
 export const IdlePriority = 5; // 空闲优先级
 ```
 
-优先级计算公式，只执行**高于本次更新**的优先级的 Update<br />baseState + Update1（NormalPriority） + Update2（UserBlockingPriority） = newState<br />对于上面的公式来说，`Update2` 的优先级高于 `Update1`，那么会先执行 `Update2` 的更新，再基于 `Update2` 更新的结果进行 `Update1` 的更新，也就是下面两步
+优先级的计算公式，只执行**高于本次更新**的优先级的 Update<br />baseState + Update1（NormalPriority） + Update2（UserBlockingPriority） = newState<br />对于上面的公式来说，`Update2` 的优先级高于 `Update1`，那么会先执行 `Update2` 的更新，再基于 `Update2` 更新的结果进行 `Update1` 的更新，也就是下面两步
 
 1. `baseState` + `Update2` = `newState1`
 1. `newState1` + `Update1` = `newState`
 
-在知道了不同事件触发更新的优先级之后，我们来看看它的更新流程
+在知道了不同事件触发更新的优先级之后，我们再来看看它的更新流程
 
 ## 更新流程
 
@@ -81,4 +83,4 @@ return (
 
 ## 参考资料
 
-[React 技术揭秘](
+[React 技术揭秘](https://react.iamkasong.com/)
