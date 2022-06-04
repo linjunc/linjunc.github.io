@@ -140,8 +140,9 @@ module.exports = {
                     collapsable: true,
                     sidebarDepth: 2,
                     children: [
-                        ['update.md', '状态更新流程'],
-                        ['updatecalculate.md', 'Update 的计算'],
+                        ['update.md', '状态更新流程概览'],
+                        ['priority.md', '优先级更新'],
+                        ['updatecode.md', '状态更新调度源码解析'],
                     ]
                 },
                 {
