@@ -277,7 +277,7 @@ export function insertInContainerBefore(
 - 接下来会根据 Fiber 节点的 tag 类型，进入不同的条件语句：
 
 对于和 **Function Component 相关的类型**，例如 `simpleMemoComponent`、`functionComponent` 等类型，会执行 `commitHookEffectListUnmount`函数，也就是会**调用 `useLayoutEffect` 或 `useInsertionEffect` 的销毁函数**
-<br />具体是会遍历当前的 `updateQueue` 队列，如果当前 Fiber 节点的 `effectTag` 等于传入的 tag（HookLayout ｜ Insertion），这个 `effectTag` 就表示，当前 Fiber 节点包含对 `useLayoutEffect` 或 `useInsertionEffect` 的调用，会执行它们的**销毁函数**
+<br />具体是会遍历当前的 `updateQueue` 链表，如果当前 Fiber 节点的 `effectTag` 等于传入的 tag（HookLayout ｜ Insertion），这个 `effectTag` 就表示，当前 Fiber 节点包含对 `useLayoutEffect` 或 `useInsertionEffect` 的调用，会执行它们的**销毁函数**
 
 ```javascript
 function commitHookEffectListUnmount(
@@ -381,7 +381,7 @@ export function commitUpdate(
 
 ### updateDOMProperties
 
-在 `updateDOMProperties` 中会遍历 `updateQueue` 队列，将更新作用到真实 DOM 节点上，根据 propKey 进行不同的更新操作
+在 `updateDOMProperties` 中会遍历 `updateQueue` 链表，将更新作用到真实 DOM 节点上，根据 propKey 进行不同的更新操作
 
 ```javascript
 function updateDOMProperties(
