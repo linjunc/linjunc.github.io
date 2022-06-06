@@ -4,7 +4,7 @@ heroImage: /orange.png
 heroText: 小丞的前端日记
 tagline: 无比热爱，来日方长!
 actionText: 开启热爱 →
-actionLink: /pages/react/hard/fiberidea.md
+actionLink: /pages/react/hard/start.md
 features:
 - title: 前端之路
   details: 自 2021 年大一开始接触前端，热爱前端，主要技术栈 React + TS，对 React 源码有深入的理解。

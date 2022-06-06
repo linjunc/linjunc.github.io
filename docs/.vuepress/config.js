@@ -93,8 +93,11 @@ module.exports = {
             ],
             '/pages/react/hard/': [
                 {
-                    title: 'React 源码解析', 
+                    title: 'React 源码解析',
                     collapsable: false,
+                    children: [
+                        ['start.md', '专栏介绍'
+                        ]]
                 },
                 {
                     title: 'React 哲学',   // 必要的
@@ -125,8 +128,8 @@ module.exports = {
                         ['layout.md', 'Layout 阶段'],
                     ]
                 },
-                { 
-                    title: 'Diff 算法', 
+                {
+                    title: 'Diff 算法',
                     collapsable: true,
                     sidebarDepth: 2,
                     children: [
@@ -135,7 +138,7 @@ module.exports = {
                         ['arraydiff.md', '多节点的 Diff']
                     ]
                 },
-                { 
+                {
                     title: '状态更新',
                     collapsable: true,
                     sidebarDepth: 2,
@@ -146,14 +149,14 @@ module.exports = {
                     ]
                 },
                 {
-                    title: 'Hooks 实现',
-                    collapsable: true,
-                },
-                { 
                     title: 'Scheduler 模块',
                     collapsable: true,
                 },
-                { 
+                {
+                    title: 'Hooks 实现',
+                    collapsable: true,
+                },
+                {
                     title: '事件系统',
                     collapsable: true,
                 },
