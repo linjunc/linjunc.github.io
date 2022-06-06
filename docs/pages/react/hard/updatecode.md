@@ -309,7 +309,12 @@ function scheduleCallback(priorityLevel, callback) {
 }
 ```
 
-`Scheduler_scheduleCallback` 方法最终是由 `unstable_scheduleCallback` 方法导入的，这个方法在 `scheduler/src/forks/scheduler.js`目录下，比较难找<br />通过调用 `unstable_scheduleCallback` 方法创建调度任务，然后根据任务是否超时，将任务插入到超时队列 `timerQueue` 和调度任务队列 `taskQueue` <br />将任务插入调度任务队列 `taskQueue` 之后，会通过 `requestHostCallback` 函数去调度任务。
+`Scheduler_scheduleCallback` 方法最终是由 `unstable_scheduleCallback` 方法导入的，这个方法在 `scheduler/src/forks/scheduler.js`目录下，比较难找<br />通过调用 `unstable_scheduleCallback` 方法创建调度任务，然后**根据任务是否超时**，将任务插入到超时队列 `timerQueue` 和调度任务队列 `taskQueue` <br />将任务插入调度任务队列 `taskQueue` 之后，会通过 `requestHostCallback` 函数去调度任务。
+
+核心流程如下
+1. 通过 `startTime` 和 `currentTime` 比较，来**判断任务是否过期**，过期存入 `taskQueue` ，未过期存入 `timerQueue`
+2. 如果**有过期任务存在，并且没有正在调度的任务**，那么通过 requestHostCallback 来调度
+3. 如果**没有过期任务**，通过 `requestHostTimeout` 来延时执行
 
 ```javascript
 function unstable_scheduleCallback(priorityLevel, callback, options) {
@@ -374,6 +379,9 @@ function unstable_scheduleCallback(priorityLevel, callback, options) {
   return newTask;
 }
 ```
+
+- `taskQueue` 里存放的是过期的任务，根据过期时间来排序，需要在调度的 `workLoop` 中循环执行完这些任务
+- `timerQueue` 里存的都是没有过期的任务，依据任务的开始时间( `startTime` )排序，在调度 `workLoop` 中 会用 `advanceTimers` 检查任务是否过期，如果过期了，放入 `taskQueue` 队列。
 
 ---
 
