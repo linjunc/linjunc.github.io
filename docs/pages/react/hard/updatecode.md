@@ -7,7 +7,7 @@
 1. 执行任务会调：构造 Fiber 树，`render` 阶段的 `completeWork` 阶段会创建 Fiber 对应的 DOM 节点
 1. 输出 DOM 节点：`commit` 阶段会与渲染器交互，渲染出 DOM 节点
 
-对于**不同形式触发**的状态更新来说，它们都会进入**一套相同的 render 到 commit 的流程**，这是因为在每次更新时都会创建一个保存**更新状态相关内容**的对象 **Update**。在 render 阶段的**beginWork** 中会根据 Update 来计算 `newState`<br />**在初始化阶段完成之后，如果触发了 state 的更新，那么会发生什么呢？**
+对于**不同形式触发**的状态更新来说，它们都会进入**一套相同的 render 到 commit 的流程**，这是因为在每次更新时都会创建一个保存**更新状态相关内容**的对象 **Update**。在 render 阶段的 **beginWork** 中会根据 Update 来计算 `newState`<br />**在初始化阶段完成之后，如果触发了 state 的更新，那么会发生什么呢？**
 
 ## 触发更新
 
@@ -50,7 +50,12 @@ function dispatchSetState(fiber, queue, action) {
 
 ## 更新入口 scheduleUpdateOnFiber
 
-从前面我们知道了，无论是什么方式触发的更新，最后都会调用 `scheduleUpdateOnFiber`方法，这也是任务调度的入口，它的核心代码如下
+从前面我们知道了，无论是什么方式触发的更新，最后都会调用 `scheduleUpdateOnFiber`方法，这也是任务调度的入口，它的核心流程如下
+
+1. 首先会检查当前的更新是否存在嵌套更新
+2. 递归向上通知沿途的父节点，子节点存在某种优先级的更新
+3. 标记 RootFiber 有待处理的更新，为 render 阶段做准备
+4. 开始可中断更新
 
 ```javascript
 // react-reconciler/src/ReactFiberWorkLoop.new.js
