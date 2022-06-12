@@ -151,19 +151,56 @@ module.exports = {
                 {
                     title: 'Scheduler 模块',
                     collapsable: true,
+                    sidebarDepth: 2,
+                    children: [
+                        ['writing.md', 'Scheduler 核心流程概览'],
+                        ['writing.md', 'Scheduler 调度源码解析'],
+                    ]
                 },
                 {
                     title: 'Hooks 实现',
                     collapsable: true,
+                    sidebarDepth: 2,
+                    children: [
+                        ['writing.md', 'Hooks 实现原理'],
+                        ['writing.md', 'useContext 源码解读'],
+                        ['writing.md', 'useState  源码解读'],
+                        ['writing.md', 'useReducer  源码解读'],
+                        ['writing.md', 'useLayoutEffect  源码解读'],
+                        ['writing.md', 'useEffect  源码解读'],
+                        ['writing.md', 'useRef  源码解读'],
+                        ['writing.md', 'useMemo  源码解读'],
+                        ['writing.md', 'useCallback  源码解读'],
+                    ]
                 },
                 {
                     title: '事件系统',
                     collapsable: true,
+                    sidebarDepth: 2,
+                    children: [
+                        ['writing.md', 'React 事件系统概览'],
+                        ['writing.md', 'React 事件系统源码解析'],
+                    ]
                 },
                 {
-                    title: 'Context 原理',
+                    title: 'Context 状态原理',
                     collapsable: true,
+                    sidebarDepth: 2,
+                    children: [
+                        ['writing.md', 'Context 状态原理概览'],
+                        ['writing.md', 'Context 状态原理源码解析'],
+                    ]
                 },
+                { 
+                    title: 'React 全家桶',
+                    collapsable: true,
+                    sidebarDepth: 2,
+                    children: [
+                        ['writing.md', 'React Redux 源码解析'],
+                        ['writing.md', 'React MobX 源码解析'],
+                        ['writing.md', 'React Router 源码解析'],
+                    ]
+                }
             ],
             '/pages/interview/heading/': [
                 {
