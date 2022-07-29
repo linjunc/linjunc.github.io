@@ -1,3 +1,4 @@
+# BeginWork 工作流程
 ## 前言
 render 阶段和 commit 阶段是整个 Fiber Reconcile 的核心，这节我们先来看看 Render 阶段的 beginWork 的主要工作。<br />在 render 阶段，React 会根据当前的可用时间片处理单个或多个 Fiber 节点，并且得益于 Fiber 对象中存储上下文信息的链表结构，使其能够在执行到一半的工作现场保存在内存当中，去处理其他一些优先级更高的事情。之后再找到停止的 Fiber 节点并继续工作
 ## 概览

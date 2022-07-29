@@ -1,3 +1,4 @@
+# 状态更新调度源码解析
 ## 前言
 
 在前面几节，我们介绍了 React 中，状态更新的主要流程，以及 `concurrent` 模式下，优先级的概念以及优先级更新的流程，本节我们将**从源码的角度来解析 React 是如何实现状态更新**的。<br />无论是 `setState` 还是 `useState` 进行的更新，**都会**创建更新任务，也就是创建 Update 对象，并添加到 Fiber 的 `UpdateQueue` 中，如果是 Function Component 会添加到 `baseQueue` 中。<br />接下来就会进入核心的 `reconciler` 阶段，主要分为 4 个子阶段

@@ -1,3 +1,4 @@
+# mutation 阶段
 接下来到了**执行 DOM 操作**的 `mutation` 阶段的工作<br />
 在 `before mutation` 阶段中，会一上一下的之行 begin 和 complete 的工作，最后 nextEffect 又回到了起始点
 

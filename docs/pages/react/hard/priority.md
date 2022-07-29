@@ -1,3 +1,5 @@
+
+# 优先级更新
 ## 前言
 
 在 React 18 的更新中，全面启用了 `concurrent` 模式，使用 `legacy` 模式将会报 **warning 警告**，可以看出 `concurrent` 模式会是 React 的未来。<br />

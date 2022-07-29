@@ -1,3 +1,4 @@
+# before mutation 阶段
 ## 概览
 
 首先是 before mutation 阶段，在 before mutation 阶段，会执行 `commitBeforeMutationEffects` 函数，因为此时还没有对真实 DOM 进行修改，因此是**获取 DOM 快照的最佳时期**，同时也会在此异步调用 `useEffect` 

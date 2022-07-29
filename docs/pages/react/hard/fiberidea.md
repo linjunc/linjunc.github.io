@@ -1,3 +1,4 @@
+# React 设计理念
 ![image.png](/img/idea.png)
 
 React 是用 JavaScript 构建**快速响应**的大型 Web 应用程序的首选方式。

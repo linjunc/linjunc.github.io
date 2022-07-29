@@ -1,3 +1,4 @@
+# diff 算法流程概览
 ## 前言
 
 在 `beginWork`那一节我们知道了，在 `reconcileChildren` 中，会根据当前的 `current` 是否存在，来判断是进入 `update` 还是 `mount` 的逻辑<br />在 `update`时，会维护两棵虚拟 DOM 树，React 在每次更新时，都会将本次的新的内容与旧的 Fiber 树进行对比，通过 Diff 算法比较他们之间的差异后，构建新的 Fiber 树，将计算好的需要更新的节点放入更新队列中，从而在 commti 阶段，依据这个 Diff 结果，对真实 DOM 进行更新渲染。<br />这样可以确保通过**最小的代价来将旧的 Fiber 树转化为新的 Fiber 树**，以保证 UI 与新的树保持同步

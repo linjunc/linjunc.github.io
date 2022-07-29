@@ -1,3 +1,4 @@
+# layout 阶段
 在 `layout` 阶段正式开始之前，也就是在 `mutation` 阶段之后，会执行 current 树变更的操作，这是一个非常重要的过程
 ## current Fiber 树的切换
 
