@@ -8,7 +8,7 @@ hero:
   text: 前端日记
   tagline: 分享学习内容，共同学习，一起进步
   image:
-    src: /img/avatar.jpg
+    src: /avatar.jpg
     alt: 小丞
   actions:
     - theme: brand
