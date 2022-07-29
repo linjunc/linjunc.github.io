@@ -6,6 +6,7 @@ module.exports = {
     ["link", { rel: "icon", href: "/avatar.jpg" }], //浏览器的标签栏的网页图标
   ],
   serviceWorker: true,
+  appearance: true,
   themeConfig: {
     markdown: {
       theme: "material-palenight",
