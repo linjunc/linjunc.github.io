@@ -1,3 +1,4 @@
+# 状态更新调度源码解析
 ## 前言
 
 在前面几节，我们介绍了 React 中，状态更新的主要流程，以及 `concurrent` 模式下，优先级的概念以及优先级更新的流程，本节我们将**从源码的角度来解析 React 是如何实现状态更新**的。<br />无论是 `setState` 还是 `useState` 进行的更新，**都会**创建更新任务，也就是创建 Update 对象，并添加到 Fiber 的 `UpdateQueue` 中，如果是 Function Component 会添加到 `baseQueue` 中。<br />接下来就会进入核心的 `reconciler` 阶段，主要分为 4 个子阶段
@@ -392,4 +393,4 @@ function unstable_scheduleCallback(priorityLevel, callback, options) {
 
 ## 总结
 
-至此状态更新的大致流程我们已经讲解完毕，后面省略了一部分关于 Scheduler 部分的内容，会在后面 Schduler 部分单独讲解<br />以下就是完整流程图<br />![未命名文件 (1)的副本.png](../../../../img/update/code/9.png)
+至此状态更新的大致流程我们已经讲解完毕，后面省略了一部分关于 Scheduler 部分的内容，会在后面 Schduler 部分单独讲解<br />以下就是完整流程图<br />![未命名文件 (1)的副本.png](/img/update/code/9.png)

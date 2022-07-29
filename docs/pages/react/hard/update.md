@@ -1,3 +1,4 @@
+# 状态更新流程概览
 ## 前言
 
 前面我们讲了 `render` 阶段和 `commit` 阶段的工作，讲了 `render` 阶段中 Diff 算法的实现，现在我们已经对整体的流程有了一定的认识
@@ -35,7 +36,7 @@
 
 ## 创建 Update 对象
 
-首先，每次状态更新都会创建一个保存更新状态内容的对象，也就是 Update 对象，保存在 updateQueue 链表中，记录当前 Fiber 节点收集到的更新。在 `render` 阶段的 `beginWork` 中会根据 `Update` 对象来计算新的 `state`<br />![image.png](../../../../img/update/first/1.png))<br />这个 Update 会被保存在一个环状链表中，接下来会调用 `scheduleUpdateOnFiber` 方法，来调度这个 Update
+首先，每次状态更新都会创建一个保存更新状态内容的对象，也就是 Update 对象，保存在 updateQueue 链表中，记录当前 Fiber 节点收集到的更新。在 `render` 阶段的 `beginWork` 中会根据 `Update` 对象来计算新的 `state`<br />![image.png](/img/update/first/1.png))<br />这个 Update 会被保存在一个环状链表中，接下来会调用 `scheduleUpdateOnFiber` 方法，来调度这个 Update
 
 ## 标记 RootFiber
 
@@ -55,4 +56,4 @@
 - 在 `render` 阶段的 `reconcile` 也就是 diff 算法中，会根据 `Update` 对象，返回对应的 `state`，根据 `state` 判断本次是否需要更新视图，如果需要更新视图就会被标记为 `effectTag`
 - 在 `commit` 阶段，标记了 `effectTag` 的 `Fiber`，就会执行对应的视图更新
 
-![image.png](../../../../img/update/first/2.png)
+![image.png](/img/update/first/2.png)

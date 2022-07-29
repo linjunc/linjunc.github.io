@@ -1,3 +1,4 @@
+# completeWork 工作流程
 在上一节，我们已经讲过了 beginwork 阶段的工作流程，这一节来讲与 beginwork 相对的 completeWork 的工作流程<br />作为  render 的“归”阶段，需在 render 的“递”阶段结束后才会执行；换句话说，当 beginWork 返回 null 值，即**当前节点无（或无需关注）当前节点的子Fiber节点**时，才会进入到 render 的 completeWork 阶段
 
 ## 概述
@@ -128,7 +129,7 @@ function completeWork(
 
 ```
 
-完整流程图<br />![image.png](../../../../img//completework/mind.png)
+完整流程图<br />![image.png](/img//completework/mind.png)
 
 ### 处理 Host Component
 
@@ -491,4 +492,4 @@ commitRoot(root);
 - 在更新时会对 DOM 节点对应的新旧 props 进行 diff，并打上 `updatePayload`
 - 最终结束 `completeUnitOfWork` 执行，进入 `commit` 阶段
 
-![image.png](../../../../img//completework/mind.png)
+![image.png](/img//completework/mind.png)

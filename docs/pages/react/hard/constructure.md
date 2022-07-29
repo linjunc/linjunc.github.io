@@ -1,14 +1,15 @@
+# React Fiber 架构
 在 React 16 版本中采用了**新的 Reconciler** 来实现 异步可中断的更新， Reconciler 内部采用了全新的 Fiber 架构来实现。这节来谈谈 Fiber 架构
 ## Fiber 架构的起源
-在 React15 及以前，Reconciler 采用**递归**的方式创建虚拟 DOM，递归过程是**不能中断**的。如果组件树的**层级很深**，递归会占用线程很多时间，造成卡顿，因为浏览器所有的时间都交给了 js 执行，并且 js 的执行时单线程的，导致无法在一帧内执行完毕。同时 React 15 采用了调用堆栈的方式，造成了调用栈过深难以执行等问题<br />![image.png](../../../../img/constructure/1.png)<br />为了解决这些问题，React 16 就引入了**Scheduler调度器**进行时间片的调度，给每个 task 工作单元分配一定的时间，如果在这个时间内任务没有执行完，也要交出执行权给浏览器进行回流和重绘，因此实现异步可中断的更新需要一定的数据结构在内存中保存工作单元的信息，曾经的虚拟 DOM 数据结构已经无法满足需要，于是有了新的数据结构，也就是 Fiber <br />**React Fiber 的目标是提高它在动画、布局和手势等领域的适用性。最重要的功能就是增量渲染：能够将渲染工作分成块，并将其分散到多个帧上**<br />其他关键功能有以下
+在 React15 及以前，Reconciler 采用**递归**的方式创建虚拟 DOM，递归过程是**不能中断**的。如果组件树的**层级很深**，递归会占用线程很多时间，造成卡顿，因为浏览器所有的时间都交给了 js 执行，并且 js 的执行时单线程的，导致无法在一帧内执行完毕。同时 React 15 采用了调用堆栈的方式，造成了调用栈过深难以执行等问题<br />![image.png](/img/constructure/1.png)<br />为了解决这些问题，React 16 就引入了**Scheduler调度器**进行时间片的调度，给每个 task 工作单元分配一定的时间，如果在这个时间内任务没有执行完，也要交出执行权给浏览器进行回流和重绘，因此实现异步可中断的更新需要一定的数据结构在内存中保存工作单元的信息，曾经的虚拟 DOM 数据结构已经无法满足需要，于是有了新的数据结构，也就是 Fiber <br />**React Fiber 的目标是提高它在动画、布局和手势等领域的适用性。最重要的功能就是增量渲染：能够将渲染工作分成块，并将其分散到多个帧上**<br />其他关键功能有以下
 
 - 在新更新到来时**暂停、中止或重用工作的能力**
 - 能够为不同类型的更新分配优先级
 - 新的并发原语
 
-**React Fiber 是调用堆栈的重新实现，专门用于 React 组件，也就是一种 虚拟堆栈帧，这样的优点是将堆栈帧保存在内存中，并随行所欲的执行他们。**<br />![image.png](../../../../img/constructure/2.png)
+**React Fiber 是调用堆栈的重新实现，专门用于 React 组件，也就是一种 虚拟堆栈帧，这样的优点是将堆栈帧保存在内存中，并随行所欲的执行他们。**<br />![image.png](/img/constructure/2.png)
 ## 认识 Fiber
-首先需要弄清楚 React.element 、Fiber 和 真实 DOM 节点三者间的关系<br />![image.png](../../../../img/constructure/3.png)
+首先需要弄清楚 React.element 、Fiber 和 真实 DOM 节点三者间的关系<br />![image.png](/img/constructure/3.png)
 
 - element 是 React 视图层在代码的表象，也就是我们写的 JSX ，这些都会被创建成 element 对象的形式，上面保存了 props、children 等信息
 - DOM 就很纯粹了就是浏览器真实渲染的
@@ -80,7 +81,7 @@ type Fiber = {|
   ...
 |}
 ```
-我们知道了 `Fiber` 可以保存真实的 DOM ，真实的 DOM 对应在内存中的 Fiber 节点会形成 Fiber 树<br />Fiber 树通过 return、child、slibing 指针形成，连接父子兄弟节点以构成一颗单链表 fiber 树，其扁平化的单链表结构的特点将以往递归遍历改为了**循环遍历**，实现深度优先遍历。<br />![image.png](../../../../img/constructure/4.png)<br />同时，这颗由真实DOM 构建成的 Fiber 树也就是 `current Fiber Tree`，而正在构建的 Fiber 树叫做 `WIP Fiber`，这两颗树的节点通过 `alternate` 指针相连，这也是 Fiber 架构的双缓存机制，下面会讲到<br />![image.png](../../../../img/constructure/5.png)
+我们知道了 `Fiber` 可以保存真实的 DOM ，真实的 DOM 对应在内存中的 Fiber 节点会形成 Fiber 树<br />Fiber 树通过 return、child、slibing 指针形成，连接父子兄弟节点以构成一颗单链表 fiber 树，其扁平化的单链表结构的特点将以往递归遍历改为了**循环遍历**，实现深度优先遍历。<br />![image.png](/img/constructure/4.png)<br />同时，这颗由真实DOM 构建成的 Fiber 树也就是 `current Fiber Tree`，而正在构建的 Fiber 树叫做 `WIP Fiber`，这两颗树的节点通过 `alternate` 指针相连，这也是 Fiber 架构的双缓存机制，下面会讲到<br />![image.png](/img/constructure/5.png)
 ### 作为动态的工作单元的属性
 **作为动态的工作单元，Fiber中如下参数保存了本次更新相关的信息，**
 ```javascript
@@ -166,7 +167,7 @@ function createFiberRoot(containerInfo,tag){
     return root
 }
 ```
-![image.png](../../../../img/constructure/6.png)<br />因为是首屏渲染，页面中还没有挂载任何的 DOM，所以 `fiberRoot.current` 指向的 rootFiber 没有任何的 子 Fiber 节点
+![image.png](/img/constructure/6.png)<br />因为是首屏渲染，页面中还没有挂载任何的 DOM，所以 `fiberRoot.current` 指向的 rootFiber 没有任何的 子 Fiber 节点
 #### 第二步：workInProgress 和 current
 接下来进入了 `render` 阶段，会进入 `beginWork` 的流程，会根据组件返回的 JSX 在内存中依次创建 Fiber 节点，并连接在一起构建形成 Fiber 树，被称为 `workInProgress Fiber` 树
 > - workInProgress：正在内存中构建的 Fiber 树称为 `workInProgress Fiber`树。在一次更新中，所有的更新都是发生在 workInProgress 树上。在一次更新之后，workInProgress 树上的状态是最新的状态，那么它将变成 current 树用于渲染视图。
@@ -177,10 +178,10 @@ function createFiberRoot(containerInfo,tag){
 currentFiber.alternate = workInProgressFiber
 workInProgressFiber.alternate = currentFiber
 ```
-#### ![image.png](../../../../img/constructure/7.png)<br />第三步：深度调和子节点，渲染视图
-接下来会按照上一步的方法，在 WIP 下完成整个 Fiber 的遍历及创建，生成一颗完整的 WIP Tree<br />最后会以 workInProgress 作为最新的渲染树，**fiberRoot 的 current 指针指向 workInProgress 使其变为 current Fiber 树。到此完成初始化流程。**<br />![image.png](../../../../img/constructure/8.png)
+#### ![image.png](/img/constructure/7.png)<br />第三步：深度调和子节点，渲染视图
+接下来会按照上一步的方法，在 WIP 下完成整个 Fiber 的遍历及创建，生成一颗完整的 WIP Tree<br />最后会以 workInProgress 作为最新的渲染树，**fiberRoot 的 current 指针指向 workInProgress 使其变为 current Fiber 树。到此完成初始化流程。**<br />![image.png](/img/constructure/8.png)
 ### update 时
-接着上面的结构，当我们点击一次按钮触发更新时，首先会创建一颗 `workInProgress` 树，复用当前 `current` 树上的 `alternate` ，作为新的 WIP，由于初始化 `rootFiber` 有 `alternate` ，所以对于剩余的子节点，React 还需要创建一份，和 `current` 树上的 `Fiber` 建立起 `alternate`关联。渲染完毕后，`workInProgress` 再次变成 `current` 树<br />![image.png](../../../../img/constructure/9.png)
+接着上面的结构，当我们点击一次按钮触发更新时，首先会创建一颗 `workInProgress` 树，复用当前 `current` 树上的 `alternate` ，作为新的 WIP，由于初始化 `rootFiber` 有 `alternate` ，所以对于剩余的子节点，React 还需要创建一份，和 `current` 树上的 `Fiber` 建立起 `alternate`关联。渲染完毕后，`workInProgress` 再次变成 `current` 树<br />![image.png](/img/constructure/9.png)
 ### 整体更新流程
 
 1. 初始化渲染，根据 React Element 生成对应的 Fiber 树 

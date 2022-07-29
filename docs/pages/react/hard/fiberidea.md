@@ -1,4 +1,5 @@
-![image.png](../../../../docs/.vuepress/public/idea.png)
+# React 设计理念
+![image.png](/img/idea.png)
 
 React 是用 JavaScript 构建**快速响应**的大型 Web 应用程序的首选方式。
 
@@ -58,7 +59,7 @@ React 最初只是服务于 DOM，但是这之后被改编成也能同时**支�
 
 当 2 更新为 3 后，我们中断了更新，由于 React 15 采用的是递归的更新，在上一个 DOM 完成更新之后才会开始下一个 DOM 的更新，因此就会看到右侧的页面，也就是 `2 3 3`，用户却**看不到期望的值**，也因此有了 React 16 的 Fiber 架构
 
-![image.png](../../../../img/constructure/9.jpeg)
+![image.png](/img/constructure/9.jpeg)
 ## 新的 React 架构
 在 React 16 版本中进行了一次大的重构，React 16 架构**解决了 React 15 不能支撑异步更新的问题**
 React16 架构可以分为三层：

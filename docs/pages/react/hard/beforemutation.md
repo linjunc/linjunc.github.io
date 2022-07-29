@@ -1,3 +1,4 @@
+# before mutation 阶段
 ## 概览
 
 首先是 before mutation 阶段，在 before mutation 阶段，会执行 `commitBeforeMutationEffects` 函数，因为此时还没有对真实 DOM 进行修改，因此是**获取 DOM 快照的最佳时期**，同时也会在此异步调用 `useEffect` 
@@ -9,7 +10,7 @@
 
 > passiveEffect 就是 useEffect 对应的 effectTag
 
-`beforemutation` 阶段的主要控制函数在于 `commitBeforeMutationEffects`，主要做的事情就是初始化全局变量 `nextEffect` 以及 `focusedInstanceHandle`，然后调用 `commitBeforeMutationEffects_begin` 来处理副作用<br />![image.png](../../../../img/commit/beforemutation.png)
+`beforemutation` 阶段的主要控制函数在于 `commitBeforeMutationEffects`，主要做的事情就是初始化全局变量 `nextEffect` 以及 `focusedInstanceHandle`，然后调用 `commitBeforeMutationEffects_begin` 来处理副作用<br />![image.png](/img/commit/beforemutation.png)
 
 ```javascript
 export function commitBeforeMutationEffects(

@@ -1,3 +1,5 @@
+
+# 优先级更新
 ## 前言
 
 在 React 18 的更新中，全面启用了 `concurrent` 模式，使用 `legacy` 模式将会报 **warning 警告**，可以看出 `concurrent` 模式会是 React 的未来。<br />
@@ -33,7 +35,7 @@ export const IdlePriority = 5; // 空闲优先级
 
 ## 更新流程
 
-在上面我们知道了不同优先级的更新会有中断的可能，那么具体流程是怎么样的呢，我们通过下面这个例子来了解一下<br />下图是一个组件树的结构，F 组件触发了一次更新，它的优先级是 **NormalPriority**。<br />可以假设是在 `componentDidMount` 中去请求了一次数据，在请求成功后调用了 `setState` 去更新状态，这里调用 `setState` 就会创建一次更新，因此这个更新的优先级是 **NormalPriority**<br />![image.png](../../../../img/update/second/tree.png)
+在上面我们知道了不同优先级的更新会有中断的可能，那么具体流程是怎么样的呢，我们通过下面这个例子来了解一下<br />下图是一个组件树的结构，F 组件触发了一次更新，它的优先级是 **NormalPriority**。<br />可以假设是在 `componentDidMount` 中去请求了一次数据，在请求成功后调用了 `setState` 去更新状态，这里调用 `setState` 就会创建一次更新，因此这个更新的优先级是 **NormalPriority**<br />![image.png](/img/update/second/tree.png)
 
 - 首先它会从当前的 Fiber 节点，也就是 F 节点，开始向上遍历，并通知沿途的 Fiber 节点有更新，一直到 `FiberRootNode`，在 `FiberRootNode` 上保存当前更新的优先级，在这里就是 **NormalPriority**
 - 接下来，就会以 **NormalPriority** 优先级，来调度整个应用的根节点 `FiberRootNode`，整个应用中只有一个被调度的任务，它的优先级是 **NormalPriority**，于是就调用 **NormalPriority** 的回调函数，这个回调函数就是 `render` 阶段的入口，由于优先级是作用在**整个组件树**的，我们会从 `FiberRootNode` 开始向下，采用深度优先遍历的方式，依次以 **NormalPriority** 来执行每一个组件的 Diff 

@@ -1,3 +1,4 @@
+# 单一节点 diff 算法
 ## 前言
 
 在上一节，已经说过了 Diff 算法的一些策略，这节开始通过源码来看看 React 是如何实现的<br />Diff 算法发生在 `beginWork` 阶段的 `reconcileChildFibers` 函数中，在这里会根据 Fiber 节点的 tag 不同，进入不同的逻辑<br />当新创建的节点 `typeof` 为 `object` 时，我们来看看 `REACT_ELEMENT_TYPE` 类型的 diff 。其执行的函数是 `placeSingleChild()` 函数，传参是 `reconcileSingleElement`函数的返回值

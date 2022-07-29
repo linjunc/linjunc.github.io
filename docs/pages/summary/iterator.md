@@ -27,7 +27,7 @@ let arr = ['小', '丞', '呀']
 
 这是一个简单的数组，如果要获取它的每一项数据，我们可以采用 `for` 循环，当然也可以采用 `forEach` 循环，这样很酷
 
-> 关于 `forEach` 循环在之前的文章有解释，[原文连接]()
+> 关于 `forEach` 循环在之前的文章有解释
 
 ![image-20210808214248246](https://ljcimg.oss-cn-beijing.aliyuncs.com/img/image-20210808214248246.png)
 

@@ -39,13 +39,13 @@ Git 作为目前最强大的代码管理工具，相信大家都很熟悉了。�
 
 用户名
 
-```git
+```shell
 git config --global user.name "your_username"
 ```
 
 邮箱
 
-```git
+```shell
 git config --global user.email "your_email"
 ```
 
@@ -55,7 +55,7 @@ git config --global user.email "your_email"
 
 建好文件夹后，我们需要初始化代码仓库
 
-```git
+```shell
 git init
 ```
 
@@ -65,7 +65,7 @@ git init
 
 这时候我们在当前文件夹下创建一个文件
 
-```git
+```shell
 touch README.md
 ```
 
@@ -73,7 +73,7 @@ touch README.md
 
 将修改的文件保存到暂存区
 
-```git
+```shell
 git add .
 ```
 
@@ -81,7 +81,7 @@ git add .
 
 如果只想上传某个可以这样
 
-```git
+```shell
 git add README.md
 ```
 
@@ -99,7 +99,7 @@ git commit -m "first commit"
 
 我们可以将此次的修改加到上一次提交中
 
-```git
+```shell
 git commit --amend
 ```
 
@@ -107,7 +107,7 @@ git commit --amend
 
 在推送代码之前我们需要与远程仓库建立连接，不然本地参考怎么知道上传到哪里呢？
 
-```git
+```shell
 git remote add origin 仓库地址
 ```
 
@@ -119,7 +119,7 @@ git remote add origin 仓库地址
 
 在提交代码到本地仓库后，我们需要将它推送到远程仓库中
 
-```git
+```shell
 git push -u origin master
 ```
 
@@ -127,7 +127,7 @@ git push -u origin master
 
 可以直接
 
-```git
+```shell
 git push origin master
 ```
 
@@ -147,19 +147,19 @@ git push origin master
 
 我们可以先查看当前仓库下的所有分支
 
-```git
+```shell
 git branch
 ```
 
 创建一个 `dev` 分支
 
-```git
+```shell
 git branch dev
 ```
 
 切换到 `dev` 分支
 
-```git
+```shell
 git checkout "dev"
 ```
 
@@ -167,19 +167,19 @@ git checkout "dev"
 
 创建分支并切换到该分支
 
-```git
+```shell
 git checkout -b "分支名"
 ```
 
 也可以采用 `switch` （推荐）
 
-```git
+```shell
 git switch -c "分支名"
 ```
 
 切换分支也可以采用 `switch` 
 
-```git
+```shell
 git switch 分支名
 ```
 
@@ -193,19 +193,19 @@ git switch 分支名
 
 首先需要切换到 `master` 分支
 
-```git
+```shell
 git checkout master
 ```
 
 然后合并 dev 分支
 
-```git
+```shell
 git merge dev
 ```
 
 合并完成后要 push 到远程仓库
 
-```git
+```shell
 git push origin master
 ```
 
@@ -213,7 +213,7 @@ git push origin master
 
 当我们不再需要这个分支时，我们就可以删除它
 
-```git
+```shell
 git branch -D 分支名
 ```
 
@@ -221,7 +221,7 @@ git branch -D 分支名
 
 我们还要删除远程仓库的分支
 
-```git
+```shell
 git push origin --delete 分支名
 ```
 
@@ -235,7 +235,7 @@ git push origin --delete 分支名
 
 直接拉取就好了
 
-```gt
+```shell
 git pull
 ```
 
@@ -251,13 +251,13 @@ git pull
 
 #### 1. 查看文件状态
 
-```git
+```shell
 git status
 ```
 
 #### 2. 查看提交历史记录
 
-```git
+```shell
 git log
 ```
 
@@ -265,19 +265,19 @@ git log
 
 版本号可以在 gitee 上看到，也可以在 log 中看到
 
-```git
+```shell
 git checkout 版本号
 ```
 
 #### 4. 克隆项目
 
-```git
+```shell
 git clone 地址
 ```
 
 指定克隆下来的文件位置
 
-```git
+```shell
 git clone git地址 '文件存放路径'
 ```
 
@@ -285,25 +285,25 @@ git clone git地址 '文件存放路径'
 
 把本地修改储藏起来，等恢复后再继续工作
 
-```git
+```shell
 git stash
 ```
 
 #### 6. 查看储藏信息
 
-```git
+```shell
 git stash list
 ```
 
 #### 7. 恢复储藏信息
 
-```git
+```shell
 git stash apply
 ```
 
 #### 8. 删除储藏内容
 
-```git
+```shell
 git stash drop
 ```
 

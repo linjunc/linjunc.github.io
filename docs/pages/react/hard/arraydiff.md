@@ -1,3 +1,4 @@
+# 多节点 Diff 算法
 ## 前言
 
 在上一节，我们知道了 React 是如何对单节点进行 Diff 的，逻辑很简单，判断 key 和 type 即可，而对于 多节点而言，也就是 Array 而言，在场景上也就是**将一个或多个 Fiber 替换成多个 Fiber**，处理起来会复杂很多<br />这种情况下，`reconcileChildFibers` 的 `newChild` 参数类型为 Array，在 `reconcileChildFibers` 函数内部会进入下面的 if 中，从而处理 array 多节点的 diff
@@ -9,7 +10,7 @@
   }
 ```
 
- 如下图 newChild 为新的节点，是 Array 类型的![image.png](../../../../img/diff/diff1.png)
+ 如下图 newChild 为新的节点，是 Array 类型的![image.png](/img/diff/diff1.png)
 
 ## Diff 的思路
 

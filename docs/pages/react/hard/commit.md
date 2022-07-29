@@ -1,3 +1,4 @@
+# commit 阶段流程概览
 ## 前言
 
 随着 `render` 阶段的完成，也意味着在内存中**构建 `workInProgress Fiber` 树**的所有工作都已经完成，这其中包括了对 Fiber 节点的 `update`、`diff`、`flags 标记`、`subtreeFlags`（effectList） 的收集等操作<br />我们知道，在 `render` 阶段，会将需要更新的节点**标记上** `flags` （effectTag），在 `completeWork` 阶段会**形成** `effectList` 链表，**连接所有需要被更新的节点**。

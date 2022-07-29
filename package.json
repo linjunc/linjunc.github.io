@@ -6,12 +6,14 @@
   "homepage": "./",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "vuepress dev docs",
-    "build": "vuepress build docs",
+    "dev": "vitepress dev docs --port 3002",
+    "build": "vitepress build docs",
+    "serve": "vitepress serve docs",
     "push": "bash scripts/push.sh",
     "deploy": "bash deploy.sh"
   },
   "devDependencies": {
-    "vuepress": "^1.9.7"
+    "vitepress": "^1.0.0-alpha.4",
+    "vue": "^3.2.37"
   }
 }
