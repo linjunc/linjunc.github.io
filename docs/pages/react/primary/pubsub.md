@@ -13,13 +13,13 @@ description: 引言 在前面写的 Github 案例中，我们采用的是 axios 
 
 ![react-消息订阅](https://ljcimg.oss-cn-beijing.aliyuncs.com/img/react-%E6%B6%88%E6%81%AF%E8%AE%A2%E9%98%85.gif)
 
-> 📢 大家好，我是小丞同学，一名<font color=#2e86de>**大二的前端爱好者**</font>
+> 📢 大家好，我是小丞同学，一名<div color=#2e86de>**大二的前端爱好者**</div>
 >
 > 📢 这篇文章是学习 React 中 GitHub 搜索案例的学习笔记
 >
 > 📢 非常感谢你的阅读，不对的地方欢迎指正 🙏
 >
-> 📢 <font color=#f368e0>**愿你忠于自己，热爱生活**</font>
+> 📢 <div color=#f368e0>**愿你忠于自己，热爱生活**</div>
 
 ## 引言
 

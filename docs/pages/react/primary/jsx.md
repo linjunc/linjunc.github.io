@@ -15,7 +15,7 @@ description: 本文是 React 学习的第一篇文章，主要阐述了 react �
 
 > 📢 大家好😪 ，我是小丞同学，最近在学习 React、小程序、阅读 JS 高程，以及整理 Node 的笔记，这是关于 React 的第一篇文章，也是我学习的第一个框架，内容如有错误，欢迎大家指正
 >
-> 📢 <font color=#e84393>愿你生活明朗，万物可爱</font>
+> 📢 <div color=#e84393>愿你生活明朗，万物可爱</div>
 
 先附上[React官网](https://zh-hans.reactjs.org/) ，有很多问题都要通过查询官方文档来解决，要学会查文档~
 

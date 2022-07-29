@@ -13,13 +13,13 @@ description: 在 Redux 中存在着一些问题，例如组件无法状态无法
 
 ![react-redux](https://ljcimg.oss-cn-beijing.aliyuncs.com/img/react-redux.gif)
 
-> 📢 大家好，我是小丞同学，一名<font color=#2e86de>**大二的前端爱好者**</font>
+> 📢 大家好，我是小丞同学，一名<div color=#2e86de>**大二的前端爱好者**</div>
 >
 > 📢 这篇文章是学习 React-Redux 的学习笔记
 >
 > 📢 非常感谢你的阅读，不对的地方欢迎指正 🙏
 >
-> 📢 <font color=#f368e0>**愿你忠于自己，热爱生活**</font>
+> 📢 <div color=#f368e0>**愿你忠于自己，热爱生活**</div>
 
 ## 引言
 
