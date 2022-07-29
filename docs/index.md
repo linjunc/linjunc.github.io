@@ -8,6 +8,9 @@ hero:
   name: 小丞
   text: 前端日记
   tagline: 分享学习内容，共同学习，一起进步
+  image:
+    src: /orange.png
+    alt: 小丞
   actions:
     - theme: brand
       text: 开启热爱 →

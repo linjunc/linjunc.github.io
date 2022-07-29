@@ -3,7 +3,7 @@ module.exports = {
     description: '小丞同学的博客，致力于分享高质量的 React,JS 相关博文', // meta 中的描述文字，用于SEO
     // 注入到当前页面的 HTML <head> 中的标签
     head: [
-        ['link', { rel: 'icon', href: '/orange.png' }] //浏览器的标签栏的网页图标
+        ['link', { rel: 'icon', href: '/orange.png' }], //浏览器的标签栏的网页图标
     ],
     serviceWorker: true,
     themeConfig: {
