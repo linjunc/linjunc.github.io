@@ -9,7 +9,7 @@
 
 > passiveEffect 就是 useEffect 对应的 effectTag
 
-`beforemutation` 阶段的主要控制函数在于 `commitBeforeMutationEffects`，主要做的事情就是初始化全局变量 `nextEffect` 以及 `focusedInstanceHandle`，然后调用 `commitBeforeMutationEffects_begin` 来处理副作用<br />![image.png](../../../../img/commit/beforemutation.png)
+`beforemutation` 阶段的主要控制函数在于 `commitBeforeMutationEffects`，主要做的事情就是初始化全局变量 `nextEffect` 以及 `focusedInstanceHandle`，然后调用 `commitBeforeMutationEffects_begin` 来处理副作用<br />![image.png](/img/commit/beforemutation.png)
 
 ```javascript
 export function commitBeforeMutationEffects(

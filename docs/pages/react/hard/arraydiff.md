@@ -9,7 +9,7 @@
   }
 ```
 
- 如下图 newChild 为新的节点，是 Array 类型的![image.png](../../../../img/diff/diff1.png)
+ 如下图 newChild 为新的节点，是 Array 类型的![image.png](/img/diff/diff1.png)
 
 ## Diff 的思路
 

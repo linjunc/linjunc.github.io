@@ -128,7 +128,7 @@ function completeWork(
 
 ```
 
-完整流程图<br />![image.png](../../../../img//completework/mind.png)
+完整流程图<br />![image.png](/img//completework/mind.png)
 
 ### 处理 Host Component
 
@@ -491,4 +491,4 @@ commitRoot(root);
 - 在更新时会对 DOM 节点对应的新旧 props 进行 diff，并打上 `updatePayload`
 - 最终结束 `completeUnitOfWork` 执行，进入 `commit` 阶段
 
-![image.png](../../../../img//completework/mind.png)
+![image.png](/img//completework/mind.png)

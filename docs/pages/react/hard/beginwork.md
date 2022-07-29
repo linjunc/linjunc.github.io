@@ -37,7 +37,7 @@ function performUnitOfWork(unitOfWork: Fiber): void {
 ### 递阶段
 递阶段首先会从 rootFiber 开始向下深度优先遍历。遍历到的每个 Fiber 节点，会调用 `beginWork` 方法，并且该方法会为传入的 Fiber 节点**创建它的子 Fiber 节点**，并赋值给 `workInProgress.child` 进行连接，当遍历到叶子节点时就会进入**归阶段**这个过程也叫做**调和**
 ### 归阶段
-就是向上归并的过程，会执行 completeWork 方法来处理 Fiber 节点，当某个 Fiber 节点执行完 completeWork，如果有兄弟 Fiber 节点，会**进入该兄弟节点的递阶段**。如果不存在兄弟 Fiber 节点，会进入**父级节点的归阶段**，一直执行到 **rootFiber** ，期间可以形成 effectList，对于初始化构建会创建 DOM ，对 DOM 事件收集、处理 style等<br />这样递归的工作就完成了，这也就是整个 Fiber 树的调和的过程<br />![image.png](../../../../img//beginwork/all.png "图片来自网络")
+就是向上归并的过程，会执行 completeWork 方法来处理 Fiber 节点，当某个 Fiber 节点执行完 completeWork，如果有兄弟 Fiber 节点，会**进入该兄弟节点的递阶段**。如果不存在兄弟 Fiber 节点，会进入**父级节点的归阶段**，一直执行到 **rootFiber** ，期间可以形成 effectList，对于初始化构建会创建 DOM ，对 DOM 事件收集、处理 style等<br />这样递归的工作就完成了，这也就是整个 Fiber 树的调和的过程<br />![image.png](/img//beginwork/all.png "图片来自网络")
 
 ---
 
@@ -366,5 +366,5 @@ export const Passive = /*               */ 0b0001000000000;  // useEffect的副�
 export const Callback = /*              */ 0b0000000100000;  // setState的 callback
 export const Ref = /*                   */ 0b0000010000000;  // ref
 ```
-采用二进制表示 effectTag 的类型，可以方便的使用位操作为 fiber.effectTag 赋值多个 effect<br />![image.png](../../../../img//beginwork/test.png)<br />在下一节，我们会讲 render 阶段 completeWork 的主要流程
+采用二进制表示 effectTag 的类型，可以方便的使用位操作为 fiber.effectTag 赋值多个 effect<br />![image.png](/img//beginwork/test.png)<br />在下一节，我们会讲 render 阶段 completeWork 的主要流程
 

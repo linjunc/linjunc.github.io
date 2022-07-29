@@ -392,4 +392,4 @@ function unstable_scheduleCallback(priorityLevel, callback, options) {
 
 ## 总结
 
-至此状态更新的大致流程我们已经讲解完毕，后面省略了一部分关于 Scheduler 部分的内容，会在后面 Schduler 部分单独讲解<br />以下就是完整流程图<br />![未命名文件 (1)的副本.png](../../../../img/update/code/9.png)
+至此状态更新的大致流程我们已经讲解完毕，后面省略了一部分关于 Scheduler 部分的内容，会在后面 Schduler 部分单独讲解<br />以下就是完整流程图<br />![未命名文件 (1)的副本.png](/img/update/code/9.png)

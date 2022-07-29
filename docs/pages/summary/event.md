@@ -1,5 +1,5 @@
 
-![head](../../../img/summary/event.png)
+![head](/img/summary/event.png)
 
 还记得上一次使用 event 对象是什么场景吗？<br />我猜一定是用来获取 target 或者用来阻止事件冒泡吧
 ```javascript
