@@ -43,8 +43,8 @@ description: 嘟嘟嘟~~发车啦，快来和博主一起飙车啦！😊文末�
 
 ### 1.3 单向链表与数组各个操作时间复杂度对比
 
-| 链表操作        | 最大时间复杂度 | 数组操作        | 最大时间复杂度 |
-| --------------- | -------------- | --------------- | -------------- |
+| 链表操作      | 最大时间复杂度 | 数组操作      | 最大时间复杂度 |
+|-------------|----------------|-------------|----------------|
 | search（访问）  | `O(n)`         | search（访问）  | `O(1)`         |
 | insert（插入）  | `O(1)`         | insert（插入）  | `O(n)`         |
 | remove（删除）  | `O(1)`         | remove（删除）  | `O(n)`         |
@@ -411,15 +411,15 @@ append(element) {
 
 向双向链表中插入一个新节点和单向链表非常相似。区别在于，单向链表只需要控制一个`next`指针，而双向链表则要同时控制`next`和`prev`两个指针
 
-首先来分析**第一种场景**：在链表的<font color=#00a8ff>第一个位置</font>插入一个新节点。如果链表为空，只需要把`head`和`tail`都指向这个新节点。如果不为空，`current`变量将保存的是链表中第一个元素的引用，那么只需让新节点的`next`指针指向`current`，让`current`节点的`prev`指针指向新节点，最后让`head`指向第一个节点即可，==演示过程==如下：
+首先来分析**第一种场景**：在链表的<div color=#00a8ff>第一个位置</div>插入一个新节点。如果链表为空，只需要把`head`和`tail`都指向这个新节点。如果不为空，`current`变量将保存的是链表中第一个元素的引用，那么只需让新节点的`next`指针指向`current`，让`current`节点的`prev`指针指向新节点，最后让`head`指向第一个节点即可，==演示过程==如下：
 
 ![双向链表3](https://ljcimg.oss-cn-beijing.aliyuncs.com/img/%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A83.png)
 
-接下来是**第二种场景**：<font color=#00a8ff>在尾部插入</font>，这个和上一个方法有点类似，可以查看上一小节，这里就不重复赘述了
+接下来是**第二种场景**：<div color=#00a8ff>在尾部插入</div>，这个和上一个方法有点类似，可以查看上一小节，这里就不重复赘述了
 
-**最后一个场景**也是相对复杂一点点的：在链表的<font color=#00a8ff>中间部分</font>插入
+**最后一个场景**也是相对复杂一点点的：在链表的<div color=#00a8ff>中间部分</div>插入
 
-通过前面写的`getNode`方法，获取到需要插入位置的**前一个节点**`preNode`以及**下一个节点**`current`，我们将在`current`和`preNode`元素<font color=#00a8ff>之间</font>插入新元素。首先，`node`节点的`next`指针指向`current`，再让`node`的`prev`指针指向`preNode`节点，再处理剩下两个指针分别指向`node`即可，演示图如下：
+通过前面写的`getNode`方法，获取到需要插入位置的**前一个节点**`preNode`以及**下一个节点**`current`，我们将在`current`和`preNode`元素<div color=#00a8ff>之间</div>插入新元素。首先，`node`节点的`next`指针指向`current`，再让`node`的`prev`指针指向`preNode`节点，再处理剩下两个指针分别指向`node`即可，演示图如下：
 
 ![双向链表4](https://ljcimg.oss-cn-beijing.aliyuncs.com/img/%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A84.png)
 
@@ -480,27 +480,27 @@ insert(position, element) {
 }
 ```
 
-<font color=#e84118>注意：</font>在我们封装的`getNode`方法中，无论如何都是从头开始遍历的，实际上我们可以优化这个过程，当我们要找的`position`大于`size`的一半时，我们可以从<font color=#e84118>尾部开始遍历</font>，这样可以提高性能。
+<div color=#e84118>注意：</div>在我们封装的`getNode`方法中，无论如何都是从头开始遍历的，实际上我们可以优化这个过程，当我们要找的`position`大于`size`的一半时，我们可以从<div color=#e84118>尾部开始遍历</div>，这样可以提高性能。
 
 #### 2.2.5 从链表中的特定位置删除元素
 
-双向链表的操作其实都和单向链表相似，只是多了一个前驱指针，要多操作一个指针而已，对于这个删除特定位置元素的方法，我们需要知道最重要的一点就是<font color=#0097e6>将被删除的节点从链表中移出，再将链表连接完好</font>即可
+双向链表的操作其实都和单向链表相似，只是多了一个前驱指针，要多操作一个指针而已，对于这个删除特定位置元素的方法，我们需要知道最重要的一点就是<div color=#0097e6>将被删除的节点从链表中移出，再将链表连接完好</div>即可
 
 同样的我们需要分成3种情况
 
-<font color=#e84118>第一种情况</font>：删除第一个节点
+<div color=#e84118>第一种情况</div>：删除第一个节点
 
 用`current`变量保存链表中第一个节点的引用，也就是我们想要移除的第一个节点。首先要改变的是 `head` 的引用，将其从` current `改为`current.next`。但我们还需要更新`current.next`指向上一个元素的指针，因此需要判断链表的长度是否为1，如果为1说明删除第一个节点之后链表就为空了，这时候就需要将`tail`设为`null`，如果不为1，则把`head.prev`的引用改为`null`即可。演示图如下：
 
 ![双向链表5](https://ljcimg.oss-cn-beijing.aliyuncs.com/img/%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A85.png)
 
-<font color=#e84118>第二种情况</font>：删除最后一个节点
+<div color=#e84118>第二种情况</div>：删除最后一个节点
 
 因为有了最后一个节点的引用`tail`，我们不需要通过`getNode`来获取最后一个节点，这样我们也就可以把`tail`的引用赋给`current`变量。接下来，需要把`tail`的引用更新为列表中**倒数第二个元素**，同时将`next`指针指向`null`，这个过程可以展示为下图：
 
 ![双向链表6](https://ljcimg.oss-cn-beijing.aliyuncs.com/img/%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A86.png)
 
-<font color=#e84118>第三种情况</font>：删除中间的节点
+<div color=#e84118>第三种情况</div>：删除中间的节点
 
 首先我们需要通过`getNode`方法找到要删除的节点，用`current`变量保存，再用`preNode`表示要删除节点的前一个节点，。那么要移除它，我们可以通过更新`prev.next`和`current.next.prev`的引用，在链表中跳过它，因此，将`prev`的`next`指针指向`current.next`，而`current.next`的`prev`指针指向`prev`，如下图演示：
 
@@ -648,11 +648,11 @@ class CircleLinkedList {
 
 #### 2.3.2 在链表尾部追加节点
 
-<font color=#00a8ff>第一种情况</font>：链表为空，直接让`head`指向新节点`node`即可
+<div color=#00a8ff>第一种情况</div>：链表为空，直接让`head`指向新节点`node`即可
 
-<font color=#00a8ff>第二种情况</font>：链表不为空，通过`getNode`方法获取到链表的最后一个节点，让该节点的`next`指针指向新节点`node`
+<div color=#00a8ff>第二种情况</div>：链表不为空，通过`getNode`方法获取到链表的最后一个节点，让该节点的`next`指针指向新节点`node`
 
-<font color=#c23616>注意</font>：在执行完`if`判断后都需要将最后一个节点的`next`指针指向第一个节点`head`
+<div color=#c23616>注意</div>：在执行完`if`判断后都需要将最后一个节点的`next`指针指向第一个节点`head`
 
 ```js
 append(element) {

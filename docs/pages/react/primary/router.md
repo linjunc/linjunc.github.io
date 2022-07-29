@@ -13,13 +13,13 @@ description: 在我们之前写的页面当中，用我们的惯用思维去思�
 
 ![React路由](https://ljcimg.oss-cn-beijing.aliyuncs.com/img/react-%E8%B7%AF%E7%94%B1.gif)
 
-> 📢 大家好，我是小丞同学，一名<font color=#2e86de>**大二的前端爱好者**</font>
+> 📢 大家好，我是小丞同学，一名<div color=#2e86de>**大二的前端爱好者**</div>
 >
 > 📢 这篇文章是学习 React 中 React 路由的学习笔记
 >
 > 📢 非常感谢你的阅读，不对的地方欢迎指正 🙏
 >
-> 📢 <font color=#f368e0>**愿你忠于自己，热爱生活**</font>
+> 📢 <div color=#f368e0>**愿你忠于自己，热爱生活**</div>
 
 ## 引言
 

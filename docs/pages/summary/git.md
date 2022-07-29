@@ -13,11 +13,11 @@ description: Git 从零入门，实现将本地文件上传到 Github 中
 <!-- more -->
 
 
-> 📢 大家好，我是小丞同学，一名<font color=#2e86de>准大二的前端爱好者</font>
+> 📢 大家好，我是小丞同学，一名<div color=#2e86de>准大二的前端爱好者</div>
 >
 > 📢 这篇文章将结合使用场景，带你轻松入门 GIT 
 >
-> 📢 <font color=#f368e0>**愿你忠于自己，热爱生活**</font>
+> 📢 <div color=#f368e0>**愿你忠于自己，热爱生活**</div>
 
 ## 引言
 

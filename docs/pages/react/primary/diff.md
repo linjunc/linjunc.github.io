@@ -13,11 +13,11 @@ description: diff 算法是 React 提升渲染性能的一种优化算法，在 
 
 ![diffing](https://ljcimg.oss-cn-beijing.aliyuncs.com/img/diffing.png)
 
-> 📢 大家好，我是小丞同学，一名<font color=#2e86de>准大二的前端爱好者</font>
+> 📢 大家好，我是小丞同学，一名<div color=#2e86de>准大二的前端爱好者</div>
 >
 > 📢 这篇文章将**尽力**说明白 **diff 算法**
 >
-> 📢 <font color=#f368e0>**愿你忠于自己，热爱生活**</font>
+> 📢 <div color=#f368e0>**愿你忠于自己，热爱生活**</div>
 
 ## 前言
 
