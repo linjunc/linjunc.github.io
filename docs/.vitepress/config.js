@@ -28,6 +28,7 @@ module.exports = {
         text: "各类知识点",
         items: [
           { text: "前端总结", link: "/pages/summary/qrcode.md" },
+          { text: "TS 类型挑战", link: "/pages/tschallenge/easy.md"},
           {
             text: "数据结构和算法",
             link: "/pages/structure/start.md",
@@ -485,6 +486,26 @@ module.exports = {
           ],
         },
       ],
+      "/pages/tschallenge/": [
+        {
+          text: "typescript 类型挑战",
+          collapsable: true,
+          items: [
+            {
+              link: "/pages/tschallenge/easy.md",
+              text: "Easy 题"
+            },
+            {
+              link: "/pages/tschallenge/medium.md",
+              text: "Medium 题"
+            },
+            {
+              link: "/pages/tschallenge/hard.md",
+              text: "Hard 题"
+            },
+          ]
+        }
+      ]
     },
   },
 };
