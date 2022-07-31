@@ -36,7 +36,7 @@ interface Todo {
 type TodoPreview = MyOmit<Todo, 'description' | 'title'>
 
 const todo: TodoPreview = {
-  completed: false,
+  completed: false
 }
 ```
 
