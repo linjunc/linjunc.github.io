@@ -1,7 +1,7 @@
 
 # Middle 题
 
-## 获取函数返回类型
+## 2 · 获取函数返回类型
 
 题目：不使用 `ReturnType` 实现 TypeScript 的 `ReturnType<T>` 范型。
 
@@ -14,15 +14,15 @@ const fn = (v: boolean) => {
 type a = MyReturnType<typeof fn> // 应推导出 "1 | 2"
 ```
 
-解答：
+解答：通过 infer 来推断返回的参数类型
 
 ```typescript
-
+type MyReturnType<T> = T extends (...args: any) => infer R ? R : never
 ```
 
 ---
 
-## 实现 Omit
+## 3 · 实现 Omit
 
 题目：不使用 Omit 实现 TypeScript 的 `Omit<T, K>` 范型。Omit 会创建一个省略 K 中字段的 T 对象。
 
@@ -40,15 +40,17 @@ const todo: TodoPreview = {
 }
 ```
 
-解答：
+解答：extends 有遍历的功能，通过 判断 key 是不是属于 需要排除的参数来实现
 
 ```typescript
-
+type MyOmit<T, K extends keyof T> = {
+  [R in keyof T as R extends K ? never: R ]: T[R]
+}
 ```
 
 ---
 
-## Readonly 2
+## 8 · Readonly 2
 
 题目：实现一个通用`MyReadonly2<T, K>`，它带有两种类型的参数 T 和 K。
 
@@ -72,15 +74,19 @@ todo.description = 'barFoo' // Error: cannot reassign a readonly property
 todo.completed = true // OK
 ```
 
-解答：
+解答：这题需要结合上一题，需要判断当前的 key 是不是 K 中传入的，如果是 K 中的，那么需要设置为 readonly，要主要其他的也要保持原来的类型。需要注意，当 K 不传入时，所有都需要是 readonly ，因此可以设置 K 为 T
 
 ```typescript
-
+type MyReadonly2<T, K extends keyof T = keyof T> = {
+  readonly [P in K]: T[P]
+} & {
+  [P in Exclude<keyof T, K>]: T[P]
+}
 ```
 
 ---
 
-## 深度 Readonly
+## 9 · 深度 Readonly
 
 题目：实现一个通用的`DeepReadonly<T>`，它将对象的每个参数及其子对象递归地设为只读。
 
@@ -106,15 +112,18 @@ type Expected = {
 const todo: DeepReadonly<X> // should be same as `Expected`
 ```
 
-解答：
+解答：通过判断 value 的类型，来递归添加 readonly
 
 ```typescript
-
+type DeepReadonly<T> = {
+  readonly [P in keyof T]: T[P] extends Object ? T[P] extends Function ? T[P]: DeepReadonly<T[P]> : T[P]
+}
+// 也可以用 keyof T[P] extends never 来判断
 ```
 
 ---
 
-## 元组转合集
+## 10 · 元组转合集
 
 题目：实现泛型`TupleToUnion<T>`，它覆盖元组的值与其值联合。
 
@@ -124,15 +133,15 @@ type Arr = ['1', '2', '3']
 const a: TupleToUnion<Arr> // expected to be '1' | '2' | '3'
 ```
 
-解答：
+解答：通过 infer 来推断数组中每一项的类型
 
 ```typescript
-
+type TupleToUnion<T extends any[]> = T extends (infer R)[] ? R :never
 ```
 
 ---
 
-## 可串联构造器
+## 12 · 可串联构造器
 
 题目：在 JavaScript 中我们很常会使用可串联（Chainable/Pipeline）的函数构造一个对象，但在 TypeScript 中，你能合理的给他附上类型吗？
 
@@ -157,15 +166,27 @@ interface Result {
 }
 ```
 
-解答：
+解答：有点难，需要注意 key 重复的情况，会按照后面的类型来定义。将 option 的两个参数设置为 泛型，来判断是否存在于当前的对象中，类似去重，然后返回相应的 value 类型
+
+可以理解为这是一个 class，T 是其中的一个对象，保存了所有的 key value 组合
 
 ```typescript
-
+type Chainable<T = {}> = {
+  option<K extends PropertyKey, V>(
+    key: K extends keyof T 
+      ? T[K] extends V ? never : K
+      : K, 
+    value: V
+  ): Chainable<{
+      [U in (keyof T | K)]: U extends K ? V : U extends keyof T ? T[U] : never
+    }>
+  get(): T
+}
 ```
 
 ---
 
-## 最后一个元素
+## 15 · 最后一个元素
 
 题目：实现一个通用`Last<T>`，它接受一个数组 T 并返回其最后一个元素的类型。
 
@@ -177,15 +198,15 @@ type tail1 = Last<arr1> // expected to be 'c'
 type tail2 = Last<arr2> // expected to be 1
 ```
 
-解答：
+解答：很简单，用 infer 推断一下最后一个参数就好
 
 ```typescript
-
+type Last<T extends any[]> = T extends [...any[], infer R] ? R: never
 ```
 
 ---
 
-## 出堆
+## 16 · 出堆
 
 题目：实现一个通用`Pop<T>`，它接受一个数组 T 并返回一个没有最后一个元素的数组。
 
@@ -197,15 +218,15 @@ type re1 = Pop<arr1> // expected to be ['a', 'b', 'c']
 type re2 = Pop<arr2> // expected to be [3, 2]
 ```
 
-解答：
+解答：用 infer 推出前面的即可，把最后一个单独弄出来
 
 ```typescript
-
+type Pop<T extends any[]> = T extends [...infer R, any] ? R : never
 ```
 
 ---
 
-## Promise.all
+## 20 · Promise.all
 
 题目：键入函数`PromiseAll`，它接受 PromiseLike 对象数组，返回值应为`Promise<T>`，其中 T 是解析的结果数组。
 
@@ -220,15 +241,19 @@ const promise3 = new Promise<string>((resolve, reject) => {
 const p = PromiseAll([promise1, promise2, promise3] as const)
 ```
 
-解答：
+解答：核心在于处理这个泛型 T，利用类型推断，会得到一个参数类型数组 T，类似于传入 `[1,2]` T 就是 `[number, number]` 后续只需要遍历匹配数组即可
+
+> 遍历数组这里的 P 就是它的 index
 
 ```typescript
-
+declare function PromiseAll<T extends any[] >(values: readonly [...T]): Promise<{
+  [P in keyof T]: T[P] extends Promise<infer U> ? U : T[P]
+}>
 ```
 
 ---
 
-## Type Lookup
+## 62 · Type Lookup
 
 题目：有时，您可能希望根据其属性在并集中查找类型。
 
@@ -249,15 +274,15 @@ interface Dog {
 type MyDog = LookUp<Cat | Dog, 'dog'> // expected to be `Dog`
 ```
 
-解答：
+解答：遍历泛型 U，判断是否有 type 为 T 的即可
 
 ```typescript
-
+type LookUp<U, T extends string> = U extends { type: T} ? U : never
 ```
 
 ---
 
-## Trim Left
+## 106 · Trim Left
 
 题目：删除字符串开头的空格
 
@@ -265,15 +290,15 @@ type MyDog = LookUp<Cat | Dog, 'dog'> // expected to be `Dog`
 type trimed = TrimLeft<'  Hello World  '> // expected to be 'Hello World  '
 ```
 
-解答：
+解答：一次判断一个，递归判断，通过 infer 留下最后的，每次清一个
 
 ```typescript
-
+type TrimLeft<S extends string> = S extends `${' ' | '\n' | '\t'}${infer R}` ? TrimLeft<R> : S
 ```
 
 ---
 
-## Trim
+## 108 · Trim
 
 题目：删除字符串开头和结尾的空格
 
@@ -281,15 +306,16 @@ type trimed = TrimLeft<'  Hello World  '> // expected to be 'Hello World  '
 type trimed = Trim<'  Hello World  '> // expected to be 'Hello World'
 ```
 
-解答：
+解答：先删除前面的，删除完再删除后面的，都用 infer 就行
 
 ```typescript
-
+type Space = ' ' | '\n' | '\t'
+type Trim<S extends string> = S extends `${Space}${infer R}` ? Trim<R> : S extends `${infer R}${Space}` ? Trim<R> : S
 ```
 
 ---
 
-## Capitalize
+## 110 · Capitalize
 
 题目：将第一个字符转为大写
 
@@ -297,15 +323,15 @@ type trimed = Trim<'  Hello World  '> // expected to be 'Hello World'
 type capitalized = Capitalize<'hello world'> // expected to be 'Hello world'
 ```
 
-解答：
+解答：通过 infer 取到第一个字母，通过 Uppercase 转化成大写
 
 ```typescript
-
+type MyCapitalize<S extends string> = S extends `${infer U}${infer R}` ? `${Uppercase<U>}${R}` : S
 ```
 
 ---
 
-## Replace
+## 116 · Replace
 
 题目：替换给定的内容
 
@@ -313,15 +339,19 @@ type capitalized = Capitalize<'hello world'> // expected to be 'Hello world'
 type replaced = Replace<'types are fun!', 'fun', 'awesome'> // expected to be 'types are awesome!'
 ```
 
-解答：
+解答：通过找到 From 替换即可，用模版字符串最方便
 
 ```typescript
-
+type Replace<S extends string, From extends string, To extends string> = From extends ''
+  ? S
+  : S extends `${infer R}${From}${infer U}`
+    ? `${R}${To}${U}`
+    : S
 ```
 
 ---
 
-## ReplaceAll
+## 119 · ReplaceAll
 
 题目：替换全部给定的内容
 
@@ -329,15 +359,19 @@ type replaced = Replace<'types are fun!', 'fun', 'awesome'> // expected to be 't
 type replaced = ReplaceAll<'t y p e s', ' ', ''> // expected to be 'types'
 ```
 
-解答：
+解答：需要注意多个的情况，递归调用 ReplaceAll
 
 ```typescript
-
+type ReplaceAll<S extends string, From extends string, To extends string> = From extends '' 
+  ? S 
+  : S extends `${infer R}${From}${infer U}`
+    ? `${R}${To}${ReplaceAll<U, From, To>}`
+    : S
 ```
 
 ---
 
-## 追加参数
+## 191 · 追加参数
 
 题目：实现一个范型`AppendArgument<Fn, A>`，对于给定的函数类型 Fn，以及一个任意类型 A，返回一个新的函数 G。G 拥有 Fn 的所有参数并在末尾追加类型为 A 的参数。
 
@@ -348,15 +382,15 @@ type Result = AppendArgument<Fn, boolean>
 // 期望是 (a: number, b: string, x: boolean) => number
 ```
 
-解答：
+解答：利用 args 和 infer，获得 fn 的参数列表类型，再进行添加
 
 ```typescript
-
+type AppendArgument<Fn extends Function, A> = Fn extends (...args: infer U) => infer R ? (...args: [...U, A]) => R : never
 ```
 
 ---
 
-## Permutation
+## 296 · Permutation 🌟
 
 实现联合类型的全排列，将联合类型转换成所有可能的全排列数组的联合类型。
 
@@ -364,15 +398,20 @@ type Result = AppendArgument<Fn, boolean>
 type perm = Permutation<'A' | 'B' | 'C'> // ['A', 'B', 'C'] | ['A', 'C', 'B'] | ['B', 'A', 'C'] | ['B', 'C', 'A'] | ['C', 'A', 'B'] | ['C', 'B', 'A']
 ```
 
-解答：
+解答：很难，[题解](https://github.com/type-challenges/type-challenges/issues/614)
 
 ```typescript
-
+type Permutation<T, U = T> = 
+  [T] extends [never] 
+  ? []
+  : U extends U
+      ? [U, ...Permutation<Exclude<T, U>>]
+      : never
 ```
 
 ---
 
-## Length of String
+## 298 · Length of String
 
 题目：计算字符串的长度
 
@@ -382,15 +421,18 @@ type a = 'hellow world'
 type b = LengthOfString<a> // type b = 12
 ```
 
-解答：
+解答：拿一个数组来保存遍历到的每个字符，最后返回数组的 length
 
 ```typescript
-
+type LengthOfString<S extends string, A extends any[] = []> =
+  S extends `${infer R}${infer U}`
+  ? LengthOfString<U, [...A, R]>
+  : A['length']
 ```
 
 ---
 
-## Flatten
+## 459 · Flatten
 
 题目：铺平数组
 
@@ -398,15 +440,20 @@ type b = LengthOfString<a> // type b = 12
 type flatten = Flatten<[1, 2, [3, 4], [[[5]]]]> // [1, 2, 3, 4, 5]
 ```
 
-解答：
+解答：通过遍历数组的每一项，如果还是数组就再走一遍
 
 ```typescript
-
+type Flatten<A extends any[]> = 
+  A extends [infer R, ...infer K]
+  ? R extends any[]
+    ? [...Flatten<R>, ...Flatten<K>]
+    : [R, ...Flatten<K>]
+  : A
 ```
 
 ---
 
-## Append to object
+## 527 · Append to object
 
 题目：拓展对象的属性
 
@@ -415,15 +462,17 @@ type Test = { id: '1' }
 type Result = AppendToObject<Test, 'value', 4> // expected to be { id: '1', value: 4 }
 ```
 
-解答：
+解答：通过增加一个对 新增 key 的判断，如果是这个 key 就给他匹配 value
 
 ```typescript
-
+type AppendToObject<T extends Object, U extends string, V> = {
+  [P in keyof T | U]: P extends keyof T ? T[P] : V
+}
 ```
 
 ---
 
-## Absolute
+## 529 · Absolute
 
 题目：获取数字的绝对值，返回绝对值的字符串形式
 
@@ -440,7 +489,7 @@ type Result = Absolute<Test> // expected to be "100"
 
 ---
 
-## String to Union
+## 531 · String to Union
 
 题目：实现一个将接收到的 String 参数转换为一个字母 Union 的类型。
 
@@ -457,7 +506,7 @@ type Result = StringToUnion<Test> // expected to be "1" | "2" | "3"
 
 ---
 
-## Merge
+## 599 · Merge
 
 题目：合并两个类型，key 相同的类型由第二个覆盖第一个
 
@@ -483,7 +532,7 @@ type c = Merge<a, b> // c { x: 1, y: 2, z: 3 }
 
 ---
 
-## KebabCase
+## 612 · KebabCase
 
 题目： `FooBarBaz` -> `foo-bar-baz`
 
@@ -501,7 +550,7 @@ type b = KebabCase<a> // for-bar-baz
 
 ---
 
-## Diff
+## 645 · Diff
 
 题目：获取两个接口类型中的差值属性。
 
@@ -527,7 +576,7 @@ type Result2 = Diff<Bar, Foo> // { b: number, c: boolean }
 
 ---
 
-## AnyOf
+## 949 · AnyOf
 
 题目： 在类型系统中实现类似于 Python 中 `any` 函数。类型接收一个数组，如果数组中任一个元素为真，则返回 `true`，否则返回 `false`。如果数组为空，返回 `false`。
 
@@ -544,7 +593,7 @@ type Sample2 = AnyOf<[0, '', false, [], {}]> // expected to be false.
 
 ---
 
-## IsNever
+## 1042 · IsNever
 
 题目： 判断是否为 never 类型
 
@@ -564,7 +613,7 @@ type E = IsNever<number> // expected to be false
 
 ---
 
-## IsUnion
+## 1097 · IsUnion
 
 题目： 判断是否为联合类型
 
@@ -582,7 +631,7 @@ type case3 = IsUnion<[string | number]> // false
 
 ---
 
-## ReplaceKeys
+## 1130 · ReplaceKeys
 
 题目： 根据指定的 key 替换属性
 
