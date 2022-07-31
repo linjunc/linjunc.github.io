@@ -5,7 +5,7 @@
 :root {
   --vp-c-brand: #2196F3;
   --vp-c-brand-light: #42A5F5;
-  --vp-c-brand-lighter: #448AFF;
+  --vp-c-brand-lighter: #36d4f6;
   --vp-c-brand-lightest: #7fc5ff;
   --vp-c-brand-dark: #1976D2;
   --vp-c-brand-darker: #1565C0;
@@ -113,4 +113,8 @@
 /* Transition by color instead of opacity */
 .dark .vp-doc .custom-block a {
   transition: color 0.25s;
+}
+
+.dark code {
+  color: var(--vp-c-brand-lighter)!important;
 }
