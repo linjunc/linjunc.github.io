@@ -282,7 +282,7 @@ type LookUp<U, T extends string> = U extends { type: T} ? U : never
 
 ---
 
-## Trim Left
+## 106 · Trim Left
 
 题目：删除字符串开头的空格
 
@@ -290,15 +290,15 @@ type LookUp<U, T extends string> = U extends { type: T} ? U : never
 type trimed = TrimLeft<'  Hello World  '> // expected to be 'Hello World  '
 ```
 
-解答：
+解答：一次判断一个，递归判断，通过 infer 留下最后的，每次清一个
 
 ```typescript
-
+type TrimLeft<S extends string> = S extends `${' ' | '\n' | '\t'}${infer R}` ? TrimLeft<R> : S
 ```
 
 ---
 
-## Trim
+## 108 · Trim
 
 题目：删除字符串开头和结尾的空格
 
@@ -306,15 +306,16 @@ type trimed = TrimLeft<'  Hello World  '> // expected to be 'Hello World  '
 type trimed = Trim<'  Hello World  '> // expected to be 'Hello World'
 ```
 
-解答：
+解答：先删除前面的，删除完再删除后面的，都用 infer 就行
 
 ```typescript
-
+type Space = ' ' | '\n' | '\t'
+type Trim<S extends string> = S extends `${Space}${infer R}` ? Trim<R> : S extends `${infer R}${Space}` ? Trim<R> : S
 ```
 
 ---
 
-## Capitalize
+## 110 · Capitalize
 
 题目：将第一个字符转为大写
 
@@ -322,15 +323,15 @@ type trimed = Trim<'  Hello World  '> // expected to be 'Hello World'
 type capitalized = Capitalize<'hello world'> // expected to be 'Hello world'
 ```
 
-解答：
+解答：通过 infer 取到第一个字母，通过 Uppercase 转化成大写
 
 ```typescript
-
+type MyCapitalize<S extends string> = S extends `${infer U}${infer R}` ? `${Uppercase<U>}${R}` : S
 ```
 
 ---
 
-## Replace
+## 116 · Replace
 
 题目：替换给定的内容
 
@@ -338,15 +339,19 @@ type capitalized = Capitalize<'hello world'> // expected to be 'Hello world'
 type replaced = Replace<'types are fun!', 'fun', 'awesome'> // expected to be 'types are awesome!'
 ```
 
-解答：
+解答：通过找到 From 替换即可，用模版字符串最方便
 
 ```typescript
-
+type Replace<S extends string, From extends string, To extends string> = From extends ''
+  ? S
+  : S extends `${infer R}${From}${infer U}`
+    ? `${R}${To}${U}`
+    : S
 ```
 
 ---
 
-## ReplaceAll
+## 119 · ReplaceAll
 
 题目：替换全部给定的内容
 
@@ -354,15 +359,19 @@ type replaced = Replace<'types are fun!', 'fun', 'awesome'> // expected to be 't
 type replaced = ReplaceAll<'t y p e s', ' ', ''> // expected to be 'types'
 ```
 
-解答：
+解答：需要注意多个的情况，递归调用 ReplaceAll
 
 ```typescript
-
+type ReplaceAll<S extends string, From extends string, To extends string> = From extends '' 
+  ? S 
+  : S extends `${infer R}${From}${infer U}`
+    ? `${R}${To}${ReplaceAll<U, From, To>}`
+    : S
 ```
 
 ---
 
-## 追加参数
+## 191 · 追加参数
 
 题目：实现一个范型`AppendArgument<Fn, A>`，对于给定的函数类型 Fn，以及一个任意类型 A，返回一个新的函数 G。G 拥有 Fn 的所有参数并在末尾追加类型为 A 的参数。
 
@@ -373,15 +382,15 @@ type Result = AppendArgument<Fn, boolean>
 // 期望是 (a: number, b: string, x: boolean) => number
 ```
 
-解答：
+解答：利用 args 和 infer，获得 fn 的参数列表类型，再进行添加
 
 ```typescript
-
+type AppendArgument<Fn extends Function, A> = Fn extends (...args: infer U) => infer R ? (...args: [...U, A]) => R : never
 ```
 
 ---
 
-## Permutation
+## 296 · Permutation 🌟
 
 实现联合类型的全排列，将联合类型转换成所有可能的全排列数组的联合类型。
 
@@ -389,15 +398,20 @@ type Result = AppendArgument<Fn, boolean>
 type perm = Permutation<'A' | 'B' | 'C'> // ['A', 'B', 'C'] | ['A', 'C', 'B'] | ['B', 'A', 'C'] | ['B', 'C', 'A'] | ['C', 'A', 'B'] | ['C', 'B', 'A']
 ```
 
-解答：
+解答：很难，[题解](https://github.com/type-challenges/type-challenges/issues/614)
 
 ```typescript
-
+type Permutation<T, U = T> = 
+  [T] extends [never] 
+  ? []
+  : U extends U
+      ? [U, ...Permutation<Exclude<T, U>>]
+      : never
 ```
 
 ---
 
-## Length of String
+## 298 · Length of String
 
 题目：计算字符串的长度
 
@@ -407,15 +421,18 @@ type a = 'hellow world'
 type b = LengthOfString<a> // type b = 12
 ```
 
-解答：
+解答：拿一个数组来保存遍历到的每个字符，最后返回数组的 length
 
 ```typescript
-
+type LengthOfString<S extends string, A extends any[] = []> =
+  S extends `${infer R}${infer U}`
+  ? LengthOfString<U, [...A, R]>
+  : A['length']
 ```
 
 ---
 
-## Flatten
+## 459 · Flatten
 
 题目：铺平数组
 
@@ -423,15 +440,20 @@ type b = LengthOfString<a> // type b = 12
 type flatten = Flatten<[1, 2, [3, 4], [[[5]]]]> // [1, 2, 3, 4, 5]
 ```
 
-解答：
+解答：通过遍历数组的每一项，如果还是数组就再走一遍
 
 ```typescript
-
+type Flatten<A extends any[]> = 
+  A extends [infer R, ...infer K]
+  ? R extends any[]
+    ? [...Flatten<R>, ...Flatten<K>]
+    : [R, ...Flatten<K>]
+  : A
 ```
 
 ---
 
-## Append to object
+## 527 · Append to object
 
 题目：拓展对象的属性
 
@@ -440,15 +462,17 @@ type Test = { id: '1' }
 type Result = AppendToObject<Test, 'value', 4> // expected to be { id: '1', value: 4 }
 ```
 
-解答：
+解答：通过增加一个对 新增 key 的判断，如果是这个 key 就给他匹配 value
 
 ```typescript
-
+type AppendToObject<T extends Object, U extends string, V> = {
+  [P in keyof T | U]: P extends keyof T ? T[P] : V
+}
 ```
 
 ---
 
-## Absolute
+## 529 · Absolute
 
 题目：获取数字的绝对值，返回绝对值的字符串形式
 
@@ -465,7 +489,7 @@ type Result = Absolute<Test> // expected to be "100"
 
 ---
 
-## String to Union
+## 531 · String to Union
 
 题目：实现一个将接收到的 String 参数转换为一个字母 Union 的类型。
 
@@ -482,7 +506,7 @@ type Result = StringToUnion<Test> // expected to be "1" | "2" | "3"
 
 ---
 
-## Merge
+## 599 · Merge
 
 题目：合并两个类型，key 相同的类型由第二个覆盖第一个
 
@@ -508,7 +532,7 @@ type c = Merge<a, b> // c { x: 1, y: 2, z: 3 }
 
 ---
 
-## KebabCase
+## 612 · KebabCase
 
 题目： `FooBarBaz` -> `foo-bar-baz`
 
@@ -526,7 +550,7 @@ type b = KebabCase<a> // for-bar-baz
 
 ---
 
-## Diff
+## 645 · Diff
 
 题目：获取两个接口类型中的差值属性。
 
@@ -552,7 +576,7 @@ type Result2 = Diff<Bar, Foo> // { b: number, c: boolean }
 
 ---
 
-## AnyOf
+## 949 · AnyOf
 
 题目： 在类型系统中实现类似于 Python 中 `any` 函数。类型接收一个数组，如果数组中任一个元素为真，则返回 `true`，否则返回 `false`。如果数组为空，返回 `false`。
 
@@ -569,7 +593,7 @@ type Sample2 = AnyOf<[0, '', false, [], {}]> // expected to be false.
 
 ---
 
-## IsNever
+## 1042 · IsNever
 
 题目： 判断是否为 never 类型
 
@@ -589,7 +613,7 @@ type E = IsNever<number> // expected to be false
 
 ---
 
-## IsUnion
+## 1097 · IsUnion
 
 题目： 判断是否为联合类型
 
@@ -607,7 +631,7 @@ type case3 = IsUnion<[string | number]> // false
 
 ---
 
-## ReplaceKeys
+## 1130 · ReplaceKeys
 
 题目： 根据指定的 key 替换属性
 
