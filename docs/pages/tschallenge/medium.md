@@ -481,10 +481,13 @@ type Test = -100
 type Result = Absolute<Test> // expected to be "100"
 ```
 
-解答：
+解答：通过模板字符串来识别开头是否有 负号，需要注意要把 T 转成字符串来进行考虑
 
 ```typescript
-
+type Absolute<T extends number | string | bigint> =
+  `${T}` extends `-${infer R}` 
+  ? R
+  : `${T}`
 ```
 
 ---
@@ -498,10 +501,13 @@ type Test = '123'
 type Result = StringToUnion<Test> // expected to be "1" | "2" | "3"
 ```
 
-解答：
+解答：通过 infer 来推第一个字母，递归的形式达成题意
 
 ```typescript
-
+type StringToUnion<T extends string> = 
+  T extends `${infer R}${infer U}`
+  ? R | StringToUnion<U>
+  : never
 ```
 
 ---
@@ -524,10 +530,16 @@ type b = {
 type c = Merge<a, b> // c { x: 1, y: 2, z: 3 }
 ```
 
-解答：
-
-```typescript
-
+解答：先遍历 key 是否在 F 和 S 中，在的话就再判断它要使用谁的类型，也就是 P extends keyof S,这里是因为 S 会覆盖 F，后面也是依次判断即可
+```ts
+type Merge<F, S> = {
+  [P in keyof F | keyof S]: 
+    P extends keyof S 
+    ? S[P] 
+    : P extends keyof F
+      ? F[P]
+      :never
+}
 ```
 
 ---
@@ -542,10 +554,16 @@ type a = 'forBarBaz'
 type b = KebabCase<a> // for-bar-baz
 ```
 
-解答：
+解答：这题的意思是将字母分隔开同时转成小写，根据大写字母开头来判断，比如 AaBb 就应该得到 aa-bb，使用 Uncapitalize 可以将单词转成小写字母，因此我们可以通过判断单词开头是不是小写字母来反推逻辑，
+如果是小写字母我们就继续判断下一个，如果是大写字母，我们就加个 - ，继续判断
 
-```typescript
-
+```ts
+type KebabCase<S> = 
+  S extends `${infer R}${infer U}` 
+  ? U extends Uncapitalize<U>
+    ? `${Uncapitalize<R>}${KebabCase<U>}`
+    : `${Uncapitalize<R>}-${KebabCase<U>}`
+  : S
 ```
 
 ---
@@ -568,10 +586,11 @@ type Result1 = Diff<Foo, Bar> // { b: number, c: boolean }
 type Result2 = Diff<Bar, Foo> // { b: number, c: boolean }
 ```
 
-解答：
-
-```typescript
-
+解答：采用 Exclude 排除掉两个相同的部分，也就是 O | O1，再从 O&O1 （全部）中获取相应的 value 即可
+```ts
+type Diff<O, O1> = {
+  [K in Exclude<keyof (O & O1), keyof(O | O1)>]: (O & O1)[K]
+}
 ```
 
 ---
