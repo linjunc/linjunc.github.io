@@ -646,18 +646,22 @@ type case3 = IsUnion<[string | number]> // false
 ```
 
 :::details 解答
+联合类型的特征只有两个：
+- 在 TS 处理泛型为联合类型时进行分发处理，即将联合类型拆解为独立项一一进行判定，最后再用 | 连接。
+- 用 [] 包裹联合类型可以规避分发的特性
 
+这题利用 `[]` 包裹不分发的特性
+
+也就是 `T extends F` 会分发 T，`[T] extends [F]` 不会分发 T，对于联合类型来说 `[T]` 就是它整个联合类型 `A | B | C`  
 ```typescript
-type IsUnion<T, F = T> = 
-  (T extends F
-  ? F extends T
-    ? true
-    : false
-  : never) extends true
-  ? false
-  : true
+type IsNever<T> = [T] extends [never] ? true : false
+type IsUnion<A, B = A> = IsNever<A> extends true ? false : (
+  A extends A ? (
+    [B] extends [A] ? false : true
+  ) : false
+)
 ```
-:::details 解答
+:::
 
 ## 1130 · ReplaceKeys
 
@@ -690,14 +694,51 @@ type ReplacedNotExistKeys = ReplaceKeys<Nodes, 'name', { aa: number }> // {type:
 ```
 
 :::details 解答
+用 `K in keyof U` 遍历原始对象所有 `Key`
+- 如果这个 `Key` 在描述的 `T` 中，且又在 `Y` 中存在，则返回类型 `Y[K]` 否则返回 `never`
+- 如果不在描述的 `Y` 中则用在对象里本来的类型 `U[K]`
 
 ```typescript
+type ReplaceKeys<U, T, Y> = {
+  [K in keyof U]: K extends T 
+    ? K extends keyof Y 
+      ? Y[K]
+      : never
+    : U[K]
+}
+```
+:::
+
+## 1367 · Remove Index Signature
+题目：Implement `RemoveIndexSignature<T>` ,从对象类型中排除索引签名。
+
+```ts
+type Foo = {
+  [key: string]: any;
+  foo(): void;
+}
+
+type A = RemoveIndexSignature<Foo>  // expected { foo(): void }
+```
+:::details 解答
+```typescript
+type RemoveIndexSignature<T> = {
+  // [K in keyof T as K extends `${infer P}` ? P : never]: T[K]
+  [k in keyof T as string extends k
+    ? never
+    : number extends k
+      ? never
+      : symbol extends k
+        ? never
+        : k
+  ]
+  : T[k] 
+}
 
 ```
 :::
 
-
-## Percentage Parser
+## 1978 · Percentage Parser
 
 题目： 实现类型 `PercentageParser<T>`。根据规则 `/^(\+|\-)?(\d*)?(\%)?$/` 匹配类型 T。
 
@@ -728,7 +769,7 @@ type R5 = PercentageParser<PString5> // expected ["", "85", ""]
 
 
 
-## Drop Char
+## 2070 · Drop Char
 
 题目： 从字符串中剔除指定字符。
 
@@ -745,9 +786,22 @@ type Butterfly = DropChar<' b u t t e r f l y ! ', ' '> // 'butterfly!'
 ```
 :::
 
+## 2257 · MinusOne
+题目：给定一个正整数作为类型的参数，要求返回的类型是该数字减 1。
 
+例如:
+```typescript
+type Zero = MinusOne<1> // 0
+type FiftyFour = MinusOne<55> // 54
+```
+:::details 解答
 
-## PickByType
+```typescript
+
+```
+:::
+
+## 2595 · PickByType
 
 题目：根据指定值筛选出符合的字段。
 
@@ -774,7 +828,7 @@ type OnlyBoolean = PickByType<
 
 
 
-## StartsWith
+## 2688 · StartsWith
 
 题目：实现`StartsWith<T, U>`,接收两个 string 类型参数,然后判断`T`是否以`U`开头,根据结果返回`true`或`false`
 
@@ -784,8 +838,21 @@ type b = StartsWith<'abc', 'ab'> // expected to be true
 type c = StartsWith<'abc', 'abcd'> // expected to be false
 ```
 
+:::details 解答
 
+```typescript
 
+```
+:::
+
+## 2693 · EndsWith
+题目：实现EndsWith<T, U>,接收两个string类型参数,然后判断T是否以U结尾,根据结果返回true或false
+
+```typescript
+type a = EndsWith<'abc', 'bc'> // expected to be false
+type b = EndsWith<'abc', 'abc'> // expected to be true
+type c = EndsWith<'abc', 'd'> // expected to be false
+```
 :::details 解答
 
 ```typescript
@@ -794,8 +861,7 @@ type c = StartsWith<'abc', 'abcd'> // expected to be false
 :::
 
 
-
-## PartialByKeys
+## 2757 · PartialByKeys
 
 题目： 实现一个通用的`PartialByKeys<T, K>`，它接收两个类型参数`T`和`K`。
 
@@ -811,8 +877,6 @@ interface User {
 type UserPartialName = PartialByKeys<User, 'name'> // { name?:string; age:number; address:string }
 ```
 
-
-
 :::details 解答
 
 ```typescript
@@ -822,7 +886,7 @@ type UserPartialName = PartialByKeys<User, 'name'> // { name?:string; age:number
 
 
 
-## RequiredByKeys
+## 2759 · RequiredByKeys
 
 题目： 实现一个通用的`RequiredByKeys<T, K>`，它接收两个类型参数`T`和`K`。
 
@@ -849,7 +913,7 @@ type UserRequiredName = RequiredByKeys<User, 'name'> // { name: string; age?: nu
 
 
 
-## Mutable
+## 2793 · Mutable
 
 题目： 实现一个通用的类型 `Mutable<T>`，使类型 `T` 的全部属性可变（非只读）。
 
@@ -873,7 +937,7 @@ type MutableTodo = Mutable<Todo> // { title: string; description: string; comple
 
 
 
-## OmitByType
+## 2852 · OmitByType
 
 题目： 根据指定类型排除属性
 
