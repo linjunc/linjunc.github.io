@@ -808,8 +808,15 @@ type Zero = MinusOne<1> // 0
 type FiftyFour = MinusOne<55> // 54
 ```
 :::details 解答
-
+这题没有通过 `1001` 的测试，和负数都不会通过，这里采用的是数组的 `length` 来进行计算，不断的往数组中添加空字符串，来加大数组的 `length` 当 `length` 等于 `T` 的时候就是到终点了，
+用来计算 `length` 的数组比 `arr` 多了一个，因此达到了 `-1` 的效果
 ```typescript
+type MinusOne<T extends number, arr extends any[] = []> = [
+  ...arr,
+  ''
+]['length'] extends T
+  ? arr['length']
+  : MinusOne<T, [...arr, '']>
 
 ```
 :::
