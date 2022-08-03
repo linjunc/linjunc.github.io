@@ -13,7 +13,7 @@ const fn = (v: boolean) => {
 
 type a = MyReturnType<typeof fn> // 应推导出 "1 | 2"
 ```
-:::details 解答
+:::details 查看解答
 通过 infer 来推断返回的参数类型
 
 ```typescript
@@ -39,7 +39,7 @@ const todo: TodoPreview = {
   completed: false
 }
 ```
-:::details 解答
+:::details 查看解答
 extends 有遍历的功能，通过 判断 key 是不是属于 需要排除的参数来实现
 
 ```typescript
@@ -73,7 +73,7 @@ todo.title = 'Hello' // Error: cannot reassign a readonly property
 todo.description = 'barFoo' // Error: cannot reassign a readonly property
 todo.completed = true // OK
 ```
-:::details 解答
+:::details 查看解答
 这题需要结合上一题，需要判断当前的 key 是不是 K 中传入的，如果是 K 中的，那么需要设置为 readonly，要主要其他的也要保持原来的类型。需要注意，当 K 不传入时，所有都需要是 readonly ，因此可以设置 K 为 T
 
 ```typescript
@@ -111,7 +111,7 @@ type Expected = {
 
 const todo: DeepReadonly<X> // should be same as `Expected`
 ```
-:::details 解答
+:::details 查看解答
 通过判断 value 的类型，来递归添加 readonly
 
 ```typescript
@@ -132,7 +132,7 @@ type Arr = ['1', '2', '3']
 
 const a: TupleToUnion<Arr> // expected to be '1' | '2' | '3'
 ```
-:::details 解答
+:::details 查看解答
 通过 infer 来推断数组中每一项的类型
 
 ```typescript
@@ -165,7 +165,7 @@ interface Result {
   }
 }
 ```
-:::details 解答
+:::details 查看解答
 有点难，需要注意 key 重复的情况，会按照后面的类型来定义。将 option 的两个参数设置为 泛型，来判断是否存在于当前的对象中，类似去重，然后返回相应的 value 类型
 
 可以理解为这是一个 class，T 是其中的一个对象，保存了所有的 key value 组合
@@ -196,7 +196,7 @@ type arr2 = [3, 2, 1]
 type tail1 = Last<arr1> // expected to be 'c'
 type tail2 = Last<arr2> // expected to be 1
 ```
-:::details 解答
+:::details 查看解答
 很简单，用 infer 推断一下最后一个参数就好
 
 ```typescript
@@ -216,7 +216,7 @@ type arr2 = [3, 2, 1]
 type re1 = Pop<arr1> // expected to be ['a', 'b', 'c']
 type re2 = Pop<arr2> // expected to be [3, 2]
 ```
-:::details 解答
+:::details 查看解答
 用 infer 推出前面的即可，把最后一个单独弄出来
 
 ```typescript
@@ -239,7 +239,7 @@ const promise3 = new Promise<string>((resolve, reject) => {
 // expected to be `Promise<[number, number, string]>`
 const p = PromiseAll([promise1, promise2, promise3] as const)
 ```
-:::details 解答
+:::details 查看解答
 核心在于处理这个泛型 T，利用类型推断，会得到一个参数类型数组 T，类似于传入 `[1,2]` T 就是 `[number, number]` 后续只需要遍历匹配数组即可
 
 > 遍历数组这里的 P 就是它的 index
@@ -272,7 +272,7 @@ interface Dog {
 
 type MyDog = LookUp<Cat | Dog, 'dog'> // expected to be `Dog`
 ```
-:::details 解答
+:::details 查看解答
 遍历泛型 U，判断是否有 type 为 T 的即可
 
 ```typescript
@@ -288,7 +288,7 @@ type LookUp<U, T extends string> = U extends { type: T} ? U : never
 ```typescript
 type trimed = TrimLeft<'  Hello World  '> // expected to be 'Hello World  '
 ```
-:::details 解答
+:::details 查看解答
 一次判断一个，递归判断，通过 infer 留下最后的，每次清一个
 
 ```typescript
@@ -304,7 +304,7 @@ type TrimLeft<S extends string> = S extends `${' ' | '\n' | '\t'}${infer R}` ? T
 ```typescript
 type trimed = Trim<'  Hello World  '> // expected to be 'Hello World'
 ```
-:::details 解答
+:::details 查看解答
 先删除前面的，删除完再删除后面的，都用 infer 就行
 
 ```typescript
@@ -321,7 +321,7 @@ type Trim<S extends string> = S extends `${Space}${infer R}` ? Trim<R> : S exten
 ```typescript
 type capitalized = Capitalize<'hello world'> // expected to be 'Hello world'
 ```
-:::details 解答
+:::details 查看解答
 通过 infer 取到第一个字母，通过 Uppercase 转化成大写
 
 ```typescript
@@ -337,7 +337,7 @@ type MyCapitalize<S extends string> = S extends `${infer U}${infer R}` ? `${Uppe
 ```typescript
 type replaced = Replace<'types are fun!', 'fun', 'awesome'> // expected to be 'types are awesome!'
 ```
-:::details 解答
+:::details 查看解答
 通过找到 From 替换即可，用模版字符串最方便
 
 ```typescript
@@ -357,7 +357,7 @@ type Replace<S extends string, From extends string, To extends string> = From ex
 ```typescript
 type replaced = ReplaceAll<'t y p e s', ' ', ''> // expected to be 'types'
 ```
-:::details 解答
+:::details 查看解答
 需要注意多个的情况，递归调用 ReplaceAll
 
 ```typescript
@@ -380,7 +380,7 @@ type Fn = (a: number, b: string) => number
 type Result = AppendArgument<Fn, boolean>
 // 期望是 (a: number, b: string, x: boolean) => number
 ```
-:::details 解答
+:::details 查看解答
 利用 args 和 infer，获得 fn 的参数列表类型，再进行添加
 
 ```typescript
@@ -396,7 +396,7 @@ type AppendArgument<Fn extends Function, A> = Fn extends (...args: infer U) => i
 ```typescript
 type perm = Permutation<'A' | 'B' | 'C'> // ['A', 'B', 'C'] | ['A', 'C', 'B'] | ['B', 'A', 'C'] | ['B', 'C', 'A'] | ['C', 'A', 'B'] | ['C', 'B', 'A']
 ```
-:::details 解答
+:::details 查看解答
 很难，[题解](https://github.com/type-challenges/type-challenges/issues/614)
 
 ```typescript
@@ -419,7 +419,7 @@ type a = 'hellow world'
 
 type b = LengthOfString<a> // type b = 12
 ```
-:::details 解答
+:::details 查看解答
 拿一个数组来保存遍历到的每个字符，最后返回数组的 length
 
 ```typescript
@@ -438,7 +438,7 @@ type LengthOfString<S extends string, A extends any[] = []> =
 ```typescript
 type flatten = Flatten<[1, 2, [3, 4], [[[5]]]]> // [1, 2, 3, 4, 5]
 ```
-:::details 解答
+:::details 查看解答
 通过遍历数组的每一项，如果还是数组就再走一遍
 
 ```typescript
@@ -460,7 +460,7 @@ type Flatten<A extends any[]> =
 type Test = { id: '1' }
 type Result = AppendToObject<Test, 'value', 4> // expected to be { id: '1', value: 4 }
 ```
-:::details 解答
+:::details 查看解答
 通过增加一个对 新增 key 的判断，如果是这个 key 就给他匹配 value
 
 ```typescript
@@ -479,7 +479,7 @@ type AppendToObject<T extends Object, U extends string, V> = {
 type Test = -100
 type Result = Absolute<Test> // expected to be "100"
 ```
-:::details 解答
+:::details 查看解答
 通过模板字符串来识别开头是否有 负号，需要注意要把 T 转成字符串来进行考虑
 
 ```typescript
@@ -499,7 +499,7 @@ type Absolute<T extends number | string | bigint> =
 type Test = '123'
 type Result = StringToUnion<Test> // expected to be "1" | "2" | "3"
 ```
-:::details 解答
+:::details 查看解答
 通过 infer 来推第一个字母，递归的形式达成题意
 
 ```typescript
@@ -528,7 +528,7 @@ type b = {
 
 type c = Merge<a, b> // c { x: 1, y: 2, z: 3 }
 ```
-:::details 解答
+:::details 查看解答
 先遍历 key 是否在 F 和 S 中，在的话就再判断它要使用谁的类型，也就是 P extends keyof S,这里是因为 S 会覆盖 F，后面也是依次判断即可
 ```ts
 type Merge<F, S> = {
@@ -552,7 +552,7 @@ type a = 'forBarBaz'
 
 type b = KebabCase<a> // for-bar-baz
 ```
-:::details 解答
+:::details 查看解答
 这题的意思是将字母分隔开同时转成小写，根据大写字母开头来判断，比如 AaBb 就应该得到 aa-bb，使用 Uncapitalize 可以将单词转成小写字母，因此我们可以通过判断单词开头是不是小写字母来反推逻辑，
 如果是小写字母我们就继续判断下一个，如果是大写字母，我们就加个 - ，继续判断
 
@@ -584,7 +584,7 @@ type Bar = {
 type Result1 = Diff<Foo, Bar> // { b: number, c: boolean }
 type Result2 = Diff<Bar, Foo> // { b: number, c: boolean }
 ```
-:::details 解答
+:::details 查看解答
 采用 Exclude 排除掉两个相同的部分，也就是 O | O1，再从 O&O1 （全部）中获取相应的 value 即可
 ```ts
 type Diff<O, O1> = {
@@ -602,7 +602,7 @@ type Diff<O, O1> = {
 type Sample1 = AnyOf<[1, '', false, [], {}]> // expected to be true.
 type Sample2 = AnyOf<[0, '', false, [], {}]> // expected to be false.
 ```
-:::details 解答
+:::details 查看解答
 通过 infer 推断每个数组项的类型，判断是不是这些空值，递归直到得到一个 true 为止，否则返回 false
 
 ```typescript
@@ -627,7 +627,7 @@ type C = IsNever<null> // expected to be false
 type D = IsNever<[]> // expected to be false
 type E = IsNever<number> // expected to be false
 ```
-:::details 解答
+:::details 查看解答
 never 不能 extends never，需要套个数组，never 不会触发 extends 而是直接终结，判断无效
 ```typescript
 type IsNever<T> = [T] extends [never] ? true : false
@@ -645,7 +645,7 @@ type case2 = IsUnion<string | number> // true
 type case3 = IsUnion<[string | number]> // false
 ```
 
-:::details 解答
+:::details 查看解答
 联合类型的特征只有两个：
 - 在 TS 处理泛型为联合类型时进行分发处理，即将联合类型拆解为独立项一一进行判定，最后再用 | 连接。
 - 用 [] 包裹联合类型可以规避分发的特性
@@ -693,7 +693,7 @@ type ReplacedNodes = ReplaceKeys<Nodes, 'name' | 'flag', { name: number; flag: s
 type ReplacedNotExistKeys = ReplaceKeys<Nodes, 'name', { aa: number }> // {type: 'A', name: never, flag: number} | NodeB | {type: 'C', name: never, flag: number} // would replace name to never
 ```
 
-:::details 解答
+:::details 查看解答
 用 `K in keyof U` 遍历原始对象所有 `Key`
 - 如果这个 `Key` 在描述的 `T` 中，且又在 `Y` 中存在，则返回类型 `Y[K]` 否则返回 `never`
 - 如果不在描述的 `Y` 中则用在对象里本来的类型 `U[K]`
@@ -720,7 +720,7 @@ type Foo = {
 
 type A = RemoveIndexSignature<Foo>  // expected { foo(): void }
 ```
-:::details 解答
+:::details 查看解答
 有点难
 ```typescript
 type RemoveIndexSignature<T> = {
@@ -759,7 +759,7 @@ type R4 = PercentageParser<PString4> // expected ["", "85", "%"]
 type R5 = PercentageParser<PString5> // expected ["", "85", ""]
 ```
 
-:::details 解答
+:::details 查看解答
 不断通过 infer 进行分支判断，先判断有符号的情况，再判断没有符号的，最后判断没有符号和单位的
 ```typescript
 type PercentageParser<A extends string> = 
@@ -786,7 +786,7 @@ type PercentageParser<A extends string> =
 type Butterfly = DropChar<' b u t t e r f l y ! ', ' '> // 'butterfly!'
 ```
 
-:::details 解答
+:::details 查看解答
 递归不断把 C 排除掉即可：
 ```typescript
 type DropChar<S extends string, C extends string> = 
@@ -807,7 +807,7 @@ type DropChar<S extends string, C extends string> =
 type Zero = MinusOne<1> // 0
 type FiftyFour = MinusOne<55> // 54
 ```
-:::details 解答
+:::details 查看解答
 这题没有通过 `1001` 的测试，和负数都不会通过，这里采用的是数组的 `length` 来进行计算，不断的往数组中添加空字符串，来加大数组的 `length` 当 `length` 等于 `T` 的时候就是到终点了，
 用来计算 `length` 的数组比 `arr` 多了一个，因此达到了 `-1` 的效果
 ```typescript
@@ -839,7 +839,7 @@ type OnlyBoolean = PickByType<
 
 
 
-:::details 解答
+:::details 查看解答
 
 ```typescript
 
@@ -858,7 +858,7 @@ type b = StartsWith<'abc', 'ab'> // expected to be true
 type c = StartsWith<'abc', 'abcd'> // expected to be false
 ```
 
-:::details 解答
+:::details 查看解答
 
 ```typescript
 
@@ -873,7 +873,7 @@ type a = EndsWith<'abc', 'bc'> // expected to be false
 type b = EndsWith<'abc', 'abc'> // expected to be true
 type c = EndsWith<'abc', 'd'> // expected to be false
 ```
-:::details 解答
+:::details 查看解答
 
 ```typescript
 
@@ -897,7 +897,7 @@ interface User {
 type UserPartialName = PartialByKeys<User, 'name'> // { name?:string; age:number; address:string }
 ```
 
-:::details 解答
+:::details 查看解答
 
 ```typescript
 
@@ -924,7 +924,7 @@ type UserRequiredName = RequiredByKeys<User, 'name'> // { name: string; age?: nu
 
 
 
-:::details 解答
+:::details 查看解答
 
 ```typescript
 
@@ -948,7 +948,7 @@ type MutableTodo = Mutable<Todo> // { title: string; description: string; comple
 ```
 
 
-:::details 解答
+:::details 查看解答
 
 ```typescript
 
@@ -975,7 +975,7 @@ type OmitBoolean = OmitByType<
 
 
 
-:::details 解答
+:::details 查看解答
 
 ```typescript
 
@@ -999,7 +999,7 @@ type modelEntries = ObjectEntries<Model> // ['name', string] | ['age', number] |
 
 
 
-:::details 解答
+:::details 查看解答
 
 ```typescript
 
@@ -1018,7 +1018,7 @@ type Result = Shift<[3, 2, 1]> // [2, 1]
 
 
 
-:::details 解答
+:::details 查看解答
 
 ```typescript
 
@@ -1037,7 +1037,7 @@ type b = TupleToNestedObject<['a', 'b'], number> // {a: {b: number}}
 type c = TupleToNestedObject<[], boolean> // boolean. if the tuple is empty, just return the U type
 ```
 
-:::details 解答
+:::details 查看解答
 
 ```typescript
 
@@ -1057,7 +1057,7 @@ type b = Reverse<['a', 'b', 'c']> // ['c', 'b', 'a']
 
 
 
-:::details 解答
+:::details 查看解答
 
 ```typescript
 
@@ -1076,7 +1076,7 @@ type Flipped = FlipArguments<(arg0: string, arg1: number, arg2: boolean) => void
 ```
 
 
-:::details 解答
+:::details 查看解答
 
 ```typescript
 
@@ -1096,7 +1096,7 @@ type b = FlattenDepth<[1, 2, [3, 4], [[[5]]]]> // [1, 2, 3, 4, [[5]]]. Depth def
 
 
 
-:::details 解答
+:::details 查看解答
 
 ```typescript
 
@@ -1115,7 +1115,7 @@ type ClassNames2 = BEM<'btn', ['price'], ['warning', 'success']> // 'btn__price-
 type ClassNames3 = BEM<'btn', [], ['small', 'medium', 'large']> // 'btn--small' | 'btn--medium' | 'btn--large'
 ```
 
-:::details 解答
+:::details 查看解答
 
 ```typescript
 
@@ -1134,7 +1134,7 @@ Flip<{ a: 1, b: 2, c: 3 }>; // {1: 'a', 2: 'b', 3: 'c'}
 Flip<{ a: false, b: true }>; // {false: 'a', true: 'b'}
 ```
 
-:::details 解答
+:::details 查看解答
 
 ```typescript
 
@@ -1151,7 +1151,7 @@ type a = Zip<[1, 2], [true, false]> // expected to be [[1, true], [2, false]]
 type b = Zip<[1, 2, 3], ['1', '2']> //  [[1, '1'], [2, '2']]
 ```
 
-:::details 解答
+:::details 查看解答
 
 ```typescript
 
@@ -1168,7 +1168,7 @@ type case2 = IsTuple<readonly [number]> // true
 type case3 = IsTuple<number[]> // false
 ```
 
-:::details 解答
+:::details 查看解答
 
 ```typescript
 

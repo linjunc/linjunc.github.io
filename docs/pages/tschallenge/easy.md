@@ -10,7 +10,7 @@ type HelloWorld = any
 // 你需要使得如下这行不会抛出异常
 type test = Expect<Equal<HelloWorld, string>>
 ```
-:::details 解答
+:::details 查看解答
 ```ts
 type HelloWorld = string
 ```
@@ -35,7 +35,7 @@ const todo: TodoPreview = {
 }
 ```
 
-:::details 解答
+:::details 查看解答
 
 ```ts
 type MyPick<T, U extends keyof T> = {
@@ -63,7 +63,7 @@ const todo: MyReadonly<Todo> = {
 todo.title = 'Hello' // Error: cannot reassign a readonly property
 todo.description = 'barFoo' // Error: cannot reassign a readonly property
 ```
-:::details 解答
+:::details 查看解答
 ```ts
 type MyReadOnly<T> {
   readonly[K in keyof T]: T[K]
@@ -82,7 +82,7 @@ const tuple = ['tesla', 'model 3', 'model X', 'model Y'] as const
 
 type result = TupleToObject<typeof tuple> // expected { tesla: 'tesla', 'model 3': 'model 3', 'model X': 'model X', 'model Y': 'model Y'}
 ```
-:::details 解答
+:::details 查看解答
 ```ts
 type TupleToObject<T extends readonly (string | number)[]> {
   [K in keyof T[number]]: K
@@ -102,7 +102,7 @@ type arr2 = [3, 2, 1]
 type head1 = First<arr1> // expected to be 'a'
 type head2 = First<arr2> // expected to be 3
 ```
-:::details 解答
+:::details 查看解答
 ```ts
 type First<T extends any[]> = T extends [infer F, ...infer Rest] ? F : never
 
@@ -124,7 +124,7 @@ type spaceX = ['FALCON 9', 'FALCON HEAVY', 'DRAGON', 'STARSHIP', 'HUMAN SPACEFLI
 type teslaLength = Length<tesla> // expected 4
 type spaceXLength = Length<spaceX> // expected 5
 ```
-:::details 解答
+:::details 查看解答
 ```ts
 type Length<T extends readonly any[]> = T['length']
 ```
@@ -141,7 +141,7 @@ type Length<T extends readonly any[]> = T['length']
 ```ts
 type Result = MyExclude<'a' | 'b' | 'c', 'a'> // 'b' | 'c'
 ```
-:::details 解答
+:::details 查看解答
 通过 判断 T 是不是 U，不是才返回 T
 ```ts
 type MyExclude<T, U> = T extends U ? never : T;
@@ -158,7 +158,7 @@ type ExampleType = Promise<string>
 
 type Result = MyAwaited<ExampleType> // string
 ```
-:::details 解答
+:::details 查看解答
 通过 infer 来自动推断类型，需要注意 Promise 套 Promise 的情况
 ```ts
 type MyAwaited<T extends Promise<any>> = T extends Promise<infer R>
@@ -178,7 +178,7 @@ type MyAwaited<T extends Promise<any>> = T extends Promise<infer R>
 type A = If<true, 'a', 'b'>  // expected to be 'a'
 type B = If<false, 'a', 'b'> // expected to be 'b'
 ```
-:::details 解答
+:::details 查看解答
 简单 if 判断，需要注意类型 boolean 和 true
 ```ts
 type If<C extends boolean, T, F> = C extends true ? T : F;
@@ -193,7 +193,7 @@ type If<C extends boolean, T, F> = C extends true ? T : F;
 ```ts
 type Result = Concat<[1], [2]> // expected to be [1, 2]
 ```
-:::details 解答
+:::details 查看解答
 注意接收泛型的类型，展开返回即可
 ```ts
 type Concat<T extends Array<any>, U extends Array<any>> = [...T, ...U];
@@ -209,7 +209,7 @@ type Concat<T extends Array<any>, U extends Array<any>> = [...T, ...U];
 type isPillarMen = Includes<['Kars', 'Esidisi', 'Wamuu', 'Santana'], 'Dio'> // expected to be `false`
 ```
 
-:::details 解答
+:::details 查看解答
 ```ts
 type Includes<T extends readonly any[], U> = T extends [infer F, ...infer R] ? (IsEqual<U, F> extends true ? true : Includes<R, U>) : false
 type IsEqual<A, B> = ((<T>() => T extends A ? true : false) extends (<T>() => T  extends B ? true : false) ? true : false )
@@ -225,7 +225,7 @@ type IsEqual<A, B> = ((<T>() => T extends A ? true : false) extends (<T>() => T 
 ```typescript
 type Result = Push<[1, 2], '3'> // [1, 2, '3']
 ```
-:::details 解答
+:::details 查看解答
 直接展开就好了
 ```ts
 type Push<T extends any[], U> = [...T, U]
@@ -240,7 +240,7 @@ type Push<T extends any[], U> = [...T, U]
 ```typescript
 type Result = Unshift<[1, 2], 0> // [0, 1, 2,]
 ```
-:::details 解答
+:::details 查看解答
 ```ts
 type Unshift<T extends any[], U> = [U, ...T]
 ```
@@ -257,7 +257,7 @@ const foo = (arg1: string, arg2: number): void => {}
 
 type FunctionParamsType = MyParameters<typeof foo> // [arg1: string, arg2: number]
 ```
-:::details 解答
+:::details 查看解答
 这题的意思是返回参数的类型，通过 infer 推断参数的类型，返回数组形式
 ```ts
 type MyParameters<T extends (...args: any[]) => any> = T extends (...args: infer R) => any ? [...R] : never
