@@ -709,7 +709,7 @@ type ReplaceKeys<U, T, Y> = {
 ```
 :::
 
-## 1367 · Remove Index Signature
+## 1367 · Remove Index Signature 🌟
 题目：Implement `RemoveIndexSignature<T>` ,从对象类型中排除索引签名。
 
 ```ts
@@ -721,6 +721,7 @@ type Foo = {
 type A = RemoveIndexSignature<Foo>  // expected { foo(): void }
 ```
 :::details 解答
+有点难
 ```typescript
 type RemoveIndexSignature<T> = {
   // [K in keyof T as K extends `${infer P}` ? P : never]: T[K]
@@ -758,11 +759,19 @@ type R4 = PercentageParser<PString4> // expected ["", "85", "%"]
 type R5 = PercentageParser<PString5> // expected ["", "85", ""]
 ```
 
-
-
 :::details 解答
-
+不断通过 infer 进行分支判断，先判断有符号的情况，再判断没有符号的，最后判断没有符号和单位的
 ```typescript
+type PercentageParser<A extends string> = 
+  A extends `${infer R extends '+' | '-'}${infer U}%`
+    ? [R, U, '%']
+    : A extends `${infer R extends '+' | '-'}${infer U}`
+      ? [R, U, '']
+      : A extends `${infer U}%`
+        ? ['', U, '%']
+        : A extends `${infer U}`
+          ? ['', U, '']
+          : never
 
 ```
 :::
@@ -777,11 +786,15 @@ type R5 = PercentageParser<PString5> // expected ["", "85", ""]
 type Butterfly = DropChar<' b u t t e r f l y ! ', ' '> // 'butterfly!'
 ```
 
-
-
 :::details 解答
-
+递归不断把 C 排除掉即可：
 ```typescript
+type DropChar<S extends string, C extends string> = 
+  C extends ''
+  ? S
+  : S extends `${infer L}${C}${infer R}`
+    ? `${L}${DropChar<R, C>}`
+    : S
 
 ```
 :::
