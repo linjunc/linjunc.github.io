@@ -604,10 +604,15 @@ type Sample1 = AnyOf<[1, '', false, [], {}]> // expected to be true.
 type Sample2 = AnyOf<[0, '', false, [], {}]> // expected to be false.
 ```
 
-解答：
+解答：通过 infer 推断每个数组项的类型，判断是不是这些空值，递归直到得到一个 true 为止，否则返回 false
 
 ```typescript
-
+type AnyOf<T extends readonly any[]> = 
+  T extends [infer R, ...infer U]
+  ? R extends 0 | '' | [] | false | Record<string,never>
+    ?  AnyOf<U>
+    : true
+  : false
 ```
 
 ---
@@ -624,9 +629,10 @@ type D = IsNever<[]> // expected to be false
 type E = IsNever<number> // expected to be false
 ```
 
-解答：
+解答：never 不能 extends never，需要套个数组
 
 ```typescript
+type IsNever<T> = [T] extends [never] ? true : false
 
 ```
 
