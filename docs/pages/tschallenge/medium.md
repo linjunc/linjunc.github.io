@@ -13,14 +13,15 @@ const fn = (v: boolean) => {
 
 type a = MyReturnType<typeof fn> // 应推导出 "1 | 2"
 ```
+
 :::details 查看解答
 通过 infer 来推断返回的参数类型
 
 ```typescript
 type MyReturnType<T> = T extends (...args: any) => infer R ? R : never
 ```
-:::
 
+:::
 
 ## 3 · 实现 Omit
 
@@ -39,6 +40,7 @@ const todo: TodoPreview = {
   completed: false
 }
 ```
+
 :::details 查看解答
 extends 有遍历的功能，通过 判断 key 是不是属于 需要排除的参数来实现
 
@@ -47,8 +49,8 @@ type MyOmit<T, K extends keyof T> = {
   [R in keyof T as R extends K ? never: R ]: T[R]
 }
 ```
-:::
 
+:::
 
 ## 8 · Readonly 2
 
@@ -73,7 +75,9 @@ todo.title = 'Hello' // Error: cannot reassign a readonly property
 todo.description = 'barFoo' // Error: cannot reassign a readonly property
 todo.completed = true // OK
 ```
+
 :::details 查看解答
+
 这题需要结合上一题，需要判断当前的 key 是不是 K 中传入的，如果是 K 中的，那么需要设置为 readonly，要主要其他的也要保持原来的类型。需要注意，当 K 不传入时，所有都需要是 readonly ，因此可以设置 K 为 T
 
 ```typescript
@@ -83,8 +87,8 @@ type MyReadonly2<T, K extends keyof T = keyof T> = {
   [P in Exclude<keyof T, K>]: T[P]
 }
 ```
-:::
 
+:::
 
 ## 9 · 深度 Readonly
 
@@ -111,6 +115,7 @@ type Expected = {
 
 const todo: DeepReadonly<X> // should be same as `Expected`
 ```
+
 :::details 查看解答
 通过判断 value 的类型，来递归添加 readonly
 
@@ -120,8 +125,8 @@ type DeepReadonly<T> = {
 }
 // 也可以用 keyof T[P] extends never 来判断
 ```
-:::
 
+:::
 
 ## 10 · 元组转合集
 
@@ -132,14 +137,15 @@ type Arr = ['1', '2', '3']
 
 const a: TupleToUnion<Arr> // expected to be '1' | '2' | '3'
 ```
+
 :::details 查看解答
 通过 infer 来推断数组中每一项的类型
 
 ```typescript
 type TupleToUnion<T extends any[]> = T extends (infer R)[] ? R :never
 ```
-:::
 
+:::
 
 ## 12 · 可串联构造器
 
@@ -165,6 +171,7 @@ interface Result {
   }
 }
 ```
+
 :::details 查看解答
 有点难，需要注意 key 重复的情况，会按照后面的类型来定义。将 option 的两个参数设置为 泛型，来判断是否存在于当前的对象中，类似去重，然后返回相应的 value 类型
 
@@ -183,6 +190,7 @@ type Chainable<T = {}> = {
   get(): T
 }
 ```
+
 :::
 
 ## 15 · 最后一个元素
@@ -196,14 +204,15 @@ type arr2 = [3, 2, 1]
 type tail1 = Last<arr1> // expected to be 'c'
 type tail2 = Last<arr2> // expected to be 1
 ```
+
 :::details 查看解答
 很简单，用 infer 推断一下最后一个参数就好
 
 ```typescript
 type Last<T extends any[]> = T extends [...any[], infer R] ? R: never
 ```
-:::
 
+:::
 
 ## 16 · 出堆
 
@@ -216,14 +225,15 @@ type arr2 = [3, 2, 1]
 type re1 = Pop<arr1> // expected to be ['a', 'b', 'c']
 type re2 = Pop<arr2> // expected to be [3, 2]
 ```
+
 :::details 查看解答
 用 infer 推出前面的即可，把最后一个单独弄出来
 
 ```typescript
 type Pop<T extends any[]> = T extends [...infer R, any] ? R : never
 ```
-:::
 
+:::
 
 ## 20 · Promise.all
 
@@ -239,6 +249,7 @@ const promise3 = new Promise<string>((resolve, reject) => {
 // expected to be `Promise<[number, number, string]>`
 const p = PromiseAll([promise1, promise2, promise3] as const)
 ```
+
 :::details 查看解答
 核心在于处理这个泛型 T，利用类型推断，会得到一个参数类型数组 T，类似于传入 `[1,2]` T 就是 `[number, number]` 后续只需要遍历匹配数组即可
 
@@ -249,8 +260,8 @@ declare function PromiseAll<T extends any[] >(values: readonly [...T]): Promise<
   [P in keyof T]: T[P] extends Promise<infer U> ? U : T[P]
 }>
 ```
-:::
 
+:::
 
 ## 62 · Type Lookup
 
@@ -272,14 +283,15 @@ interface Dog {
 
 type MyDog = LookUp<Cat | Dog, 'dog'> // expected to be `Dog`
 ```
+
 :::details 查看解答
 遍历泛型 U，判断是否有 type 为 T 的即可
 
 ```typescript
 type LookUp<U, T extends string> = U extends { type: T} ? U : never
 ```
-:::
 
+:::
 
 ## 106 · Trim Left
 
@@ -288,14 +300,15 @@ type LookUp<U, T extends string> = U extends { type: T} ? U : never
 ```typescript
 type trimed = TrimLeft<'  Hello World  '> // expected to be 'Hello World  '
 ```
+
 :::details 查看解答
 一次判断一个，递归判断，通过 infer 留下最后的，每次清一个
 
 ```typescript
 type TrimLeft<S extends string> = S extends `${' ' | '\n' | '\t'}${infer R}` ? TrimLeft<R> : S
 ```
-:::
 
+:::
 
 ## 108 · Trim
 
@@ -304,6 +317,7 @@ type TrimLeft<S extends string> = S extends `${' ' | '\n' | '\t'}${infer R}` ? T
 ```typescript
 type trimed = Trim<'  Hello World  '> // expected to be 'Hello World'
 ```
+
 :::details 查看解答
 先删除前面的，删除完再删除后面的，都用 infer 就行
 
@@ -311,8 +325,8 @@ type trimed = Trim<'  Hello World  '> // expected to be 'Hello World'
 type Space = ' ' | '\n' | '\t'
 type Trim<S extends string> = S extends `${Space}${infer R}` ? Trim<R> : S extends `${infer R}${Space}` ? Trim<R> : S
 ```
-:::
 
+:::
 
 ## 110 · Capitalize
 
@@ -321,14 +335,15 @@ type Trim<S extends string> = S extends `${Space}${infer R}` ? Trim<R> : S exten
 ```typescript
 type capitalized = Capitalize<'hello world'> // expected to be 'Hello world'
 ```
+
 :::details 查看解答
 通过 infer 取到第一个字母，通过 Uppercase 转化成大写
 
 ```typescript
 type MyCapitalize<S extends string> = S extends `${infer U}${infer R}` ? `${Uppercase<U>}${R}` : S
 ```
-:::
 
+:::
 
 ## 116 · Replace
 
@@ -337,6 +352,7 @@ type MyCapitalize<S extends string> = S extends `${infer U}${infer R}` ? `${Uppe
 ```typescript
 type replaced = Replace<'types are fun!', 'fun', 'awesome'> // expected to be 'types are awesome!'
 ```
+
 :::details 查看解答
 通过找到 From 替换即可，用模版字符串最方便
 
@@ -347,8 +363,8 @@ type Replace<S extends string, From extends string, To extends string> = From ex
     ? `${R}${To}${U}`
     : S
 ```
-:::
 
+:::
 
 ## 119 · ReplaceAll
 
@@ -357,6 +373,7 @@ type Replace<S extends string, From extends string, To extends string> = From ex
 ```typescript
 type replaced = ReplaceAll<'t y p e s', ' ', ''> // expected to be 'types'
 ```
+
 :::details 查看解答
 需要注意多个的情况，递归调用 ReplaceAll
 
@@ -367,8 +384,8 @@ type ReplaceAll<S extends string, From extends string, To extends string> = From
     ? `${R}${To}${ReplaceAll<U, From, To>}`
     : S
 ```
-:::
 
+:::
 
 ## 191 · 追加参数
 
@@ -380,14 +397,15 @@ type Fn = (a: number, b: string) => number
 type Result = AppendArgument<Fn, boolean>
 // 期望是 (a: number, b: string, x: boolean) => number
 ```
+
 :::details 查看解答
 利用 args 和 infer，获得 fn 的参数列表类型，再进行添加
 
 ```typescript
 type AppendArgument<Fn extends Function, A> = Fn extends (...args: infer U) => infer R ? (...args: [...U, A]) => R : never
 ```
-:::
 
+:::
 
 ## 296 · Permutation 🌟
 
@@ -396,6 +414,7 @@ type AppendArgument<Fn extends Function, A> = Fn extends (...args: infer U) => i
 ```typescript
 type perm = Permutation<'A' | 'B' | 'C'> // ['A', 'B', 'C'] | ['A', 'C', 'B'] | ['B', 'A', 'C'] | ['B', 'C', 'A'] | ['C', 'A', 'B'] | ['C', 'B', 'A']
 ```
+
 :::details 查看解答
 很难，[题解](https://github.com/type-challenges/type-challenges/issues/614)
 
@@ -407,8 +426,8 @@ type Permutation<T, U = T> =
       ? [U, ...Permutation<Exclude<T, U>>]
       : never
 ```
-:::
 
+:::
 
 ## 298 · Length of String
 
@@ -419,6 +438,7 @@ type a = 'hellow world'
 
 type b = LengthOfString<a> // type b = 12
 ```
+
 :::details 查看解答
 拿一个数组来保存遍历到的每个字符，最后返回数组的 length
 
@@ -428,8 +448,8 @@ type LengthOfString<S extends string, A extends any[] = []> =
   ? LengthOfString<U, [...A, R]>
   : A['length']
 ```
-:::
 
+:::
 
 ## 459 · Flatten
 
@@ -438,6 +458,7 @@ type LengthOfString<S extends string, A extends any[] = []> =
 ```typescript
 type flatten = Flatten<[1, 2, [3, 4], [[[5]]]]> // [1, 2, 3, 4, 5]
 ```
+
 :::details 查看解答
 通过遍历数组的每一项，如果还是数组就再走一遍
 
@@ -449,8 +470,8 @@ type Flatten<A extends any[]> =
     : [R, ...Flatten<K>]
   : A
 ```
-:::
 
+:::
 
 ## 527 · Append to object
 
@@ -460,6 +481,7 @@ type Flatten<A extends any[]> =
 type Test = { id: '1' }
 type Result = AppendToObject<Test, 'value', 4> // expected to be { id: '1', value: 4 }
 ```
+
 :::details 查看解答
 通过增加一个对 新增 key 的判断，如果是这个 key 就给他匹配 value
 
@@ -468,8 +490,8 @@ type AppendToObject<T extends Object, U extends string, V> = {
   [P in keyof T | U]: P extends keyof T ? T[P] : V
 }
 ```
-:::
 
+:::
 
 ## 529 · Absolute
 
@@ -479,6 +501,7 @@ type AppendToObject<T extends Object, U extends string, V> = {
 type Test = -100
 type Result = Absolute<Test> // expected to be "100"
 ```
+
 :::details 查看解答
 通过模板字符串来识别开头是否有 负号，需要注意要把 T 转成字符串来进行考虑
 
@@ -488,8 +511,8 @@ type Absolute<T extends number | string | bigint> =
   ? R
   : `${T}`
 ```
-:::
 
+:::
 
 ## 531 · String to Union
 
@@ -499,6 +522,7 @@ type Absolute<T extends number | string | bigint> =
 type Test = '123'
 type Result = StringToUnion<Test> // expected to be "1" | "2" | "3"
 ```
+
 :::details 查看解答
 通过 infer 来推第一个字母，递归的形式达成题意
 
@@ -508,8 +532,8 @@ type StringToUnion<T extends string> =
   ? R | StringToUnion<U>
   : never
 ```
-:::
 
+:::
 
 ## 599 · Merge
 
@@ -528,8 +552,10 @@ type b = {
 
 type c = Merge<a, b> // c { x: 1, y: 2, z: 3 }
 ```
+
 :::details 查看解答
 先遍历 key 是否在 F 和 S 中，在的话就再判断它要使用谁的类型，也就是 P extends keyof S,这里是因为 S 会覆盖 F，后面也是依次判断即可
+
 ```ts
 type Merge<F, S> = {
   [P in keyof F | keyof S]: 
@@ -540,8 +566,8 @@ type Merge<F, S> = {
       :never
 }
 ```
-:::
 
+:::
 
 ## 612 · KebabCase
 
@@ -552,6 +578,7 @@ type a = 'forBarBaz'
 
 type b = KebabCase<a> // for-bar-baz
 ```
+
 :::details 查看解答
 这题的意思是将字母分隔开同时转成小写，根据大写字母开头来判断，比如 AaBb 就应该得到 aa-bb，使用 Uncapitalize 可以将单词转成小写字母，因此我们可以通过判断单词开头是不是小写字母来反推逻辑，
 如果是小写字母我们就继续判断下一个，如果是大写字母，我们就加个 - ，继续判断
@@ -564,8 +591,8 @@ type KebabCase<S> =
     : `${Uncapitalize<R>}-${KebabCase<U>}`
   : S
 ```
-:::
 
+:::
 
 ## 645 · Diff
 
@@ -584,15 +611,17 @@ type Bar = {
 type Result1 = Diff<Foo, Bar> // { b: number, c: boolean }
 type Result2 = Diff<Bar, Foo> // { b: number, c: boolean }
 ```
+
 :::details 查看解答
 采用 Exclude 排除掉两个相同的部分，也就是 O | O1，再从 O&O1 （全部）中获取相应的 value 即可
+
 ```ts
 type Diff<O, O1> = {
   [K in Exclude<keyof (O & O1), keyof(O | O1)>]: (O & O1)[K]
 }
 ```
-:::
 
+:::
 
 ## 949 · AnyOf
 
@@ -602,6 +631,7 @@ type Diff<O, O1> = {
 type Sample1 = AnyOf<[1, '', false, [], {}]> // expected to be true.
 type Sample2 = AnyOf<[0, '', false, [], {}]> // expected to be false.
 ```
+
 :::details 查看解答
 通过 infer 推断每个数组项的类型，判断是不是这些空值，递归直到得到一个 true 为止，否则返回 false
 
@@ -613,8 +643,8 @@ type AnyOf<T extends readonly any[]> =
     : true
   : false
 ```
-:::
 
+:::
 
 ## 1042 · IsNever
 
@@ -627,13 +657,15 @@ type C = IsNever<null> // expected to be false
 type D = IsNever<[]> // expected to be false
 type E = IsNever<number> // expected to be false
 ```
+
 :::details 查看解答
 never 不能 extends never，需要套个数组，never 不会触发 extends 而是直接终结，判断无效
+
 ```typescript
 type IsNever<T> = [T] extends [never] ? true : false
 ```
-:::
 
+:::
 
 ## 1097 · IsUnion
 
@@ -647,12 +679,14 @@ type case3 = IsUnion<[string | number]> // false
 
 :::details 查看解答
 联合类型的特征只有两个：
+
 - 在 TS 处理泛型为联合类型时进行分发处理，即将联合类型拆解为独立项一一进行判定，最后再用 | 连接。
 - 用 [] 包裹联合类型可以规避分发的特性
 
 这题利用 `[]` 包裹不分发的特性
 
 也就是 `T extends F` 会分发 T，`[T] extends [F]` 不会分发 T，对于联合类型来说 `[T]` 就是它整个联合类型 `A | B | C`  
+
 ```typescript
 type IsNever<T> = [T] extends [never] ? true : false
 type IsUnion<A, B = A> = IsNever<A> extends true ? false : (
@@ -661,6 +695,7 @@ type IsUnion<A, B = A> = IsNever<A> extends true ? false : (
   ) : false
 )
 ```
+
 :::
 
 ## 1130 · ReplaceKeys
@@ -695,6 +730,7 @@ type ReplacedNotExistKeys = ReplaceKeys<Nodes, 'name', { aa: number }> // {type:
 
 :::details 查看解答
 用 `K in keyof U` 遍历原始对象所有 `Key`
+
 - 如果这个 `Key` 在描述的 `T` 中，且又在 `Y` 中存在，则返回类型 `Y[K]` 否则返回 `never`
 - 如果不在描述的 `Y` 中则用在对象里本来的类型 `U[K]`
 
@@ -707,9 +743,11 @@ type ReplaceKeys<U, T, Y> = {
     : U[K]
 }
 ```
+
 :::
 
 ## 1367 · Remove Index Signature 🌟
+
 题目：Implement `RemoveIndexSignature<T>` ,从对象类型中排除索引签名。
 
 ```ts
@@ -720,8 +758,10 @@ type Foo = {
 
 type A = RemoveIndexSignature<Foo>  // expected { foo(): void }
 ```
+
 :::details 查看解答
 有点难
+
 ```typescript
 type RemoveIndexSignature<T> = {
   // [K in keyof T as K extends `${infer P}` ? P : never]: T[K]
@@ -735,8 +775,8 @@ type RemoveIndexSignature<T> = {
   ]
   : T[k] 
 }
-
 ```
+
 :::
 
 ## 1978 · Percentage Parser
@@ -761,6 +801,7 @@ type R5 = PercentageParser<PString5> // expected ["", "85", ""]
 
 :::details 查看解答
 不断通过 infer 进行分支判断，先判断有符号的情况，再判断没有符号的，最后判断没有符号和单位的
+
 ```typescript
 type PercentageParser<A extends string> = 
   A extends `${infer R extends '+' | '-'}${infer U}%`
@@ -772,11 +813,9 @@ type PercentageParser<A extends string> =
         : A extends `${infer U}`
           ? ['', U, '']
           : never
-
 ```
+
 :::
-
-
 
 ## 2070 · Drop Char
 
@@ -788,6 +827,7 @@ type Butterfly = DropChar<' b u t t e r f l y ! ', ' '> // 'butterfly!'
 
 :::details 查看解答
 递归不断把 C 排除掉即可：
+
 ```typescript
 type DropChar<S extends string, C extends string> = 
   C extends ''
@@ -795,21 +835,26 @@ type DropChar<S extends string, C extends string> =
   : S extends `${infer L}${C}${infer R}`
     ? `${L}${DropChar<R, C>}`
     : S
-
 ```
+
 :::
 
 ## 2257 · MinusOne
+
 题目：给定一个正整数作为类型的参数，要求返回的类型是该数字减 1。
 
 例如:
+
 ```typescript
 type Zero = MinusOne<1> // 0
 type FiftyFour = MinusOne<55> // 54
 ```
+
 :::details 查看解答
+
 这题没有通过 `1001` 的测试，和负数都不会通过，这里采用的是数组的 `length` 来进行计算，不断的往数组中添加空字符串，来加大数组的 `length` 当 `length` 等于 `T` 的时候就是到终点了，
 用来计算 `length` 的数组比 `arr` 多了一个，因此达到了 `-1` 的效果
+
 ```typescript
 type MinusOne<T extends number, arr extends any[] = []> = [
   ...arr,
@@ -817,8 +862,8 @@ type MinusOne<T extends number, arr extends any[] = []> = [
 ]['length'] extends T
   ? arr['length']
   : MinusOne<T, [...arr, '']>
-
 ```
+
 :::
 
 ## 2595 · PickByType
@@ -837,16 +882,13 @@ type OnlyBoolean = PickByType<
 > // { isReadonly: boolean; isEnable: boolean; }
 ```
 
-
-
 :::details 查看解答
 
 ```typescript
 
 ```
+
 :::
-
-
 
 ## 2688 · StartsWith
 
@@ -863,23 +905,26 @@ type c = StartsWith<'abc', 'abcd'> // expected to be false
 ```typescript
 
 ```
+
 :::
 
 ## 2693 · EndsWith
-题目：实现EndsWith<T, U>,接收两个string类型参数,然后判断T是否以U结尾,根据结果返回true或false
+
+题目：实现`EndsWith<T, U>`,接收两个 `string` 类型参数,然后判断T是否以 `U` 结尾,根据结果返回 true 或 false
 
 ```typescript
 type a = EndsWith<'abc', 'bc'> // expected to be false
 type b = EndsWith<'abc', 'abc'> // expected to be true
 type c = EndsWith<'abc', 'd'> // expected to be false
 ```
+
 :::details 查看解答
 
 ```typescript
 
 ```
-:::
 
+:::
 
 ## 2757 · PartialByKeys
 
@@ -902,9 +947,8 @@ type UserPartialName = PartialByKeys<User, 'name'> // { name?:string; age:number
 ```typescript
 
 ```
+
 :::
-
-
 
 ## 2759 · RequiredByKeys
 
@@ -922,16 +966,13 @@ interface User {
 type UserRequiredName = RequiredByKeys<User, 'name'> // { name: string; age?: number; address?: string }
 ```
 
-
-
 :::details 查看解答
 
 ```typescript
 
 ```
+
 :::
-
-
 
 ## 2793 · Mutable
 
@@ -947,15 +988,13 @@ interface Todo {
 type MutableTodo = Mutable<Todo> // { title: string; description: string; completed: boolean; }
 ```
 
-
 :::details 查看解答
 
 ```typescript
 
 ```
+
 :::
-
-
 
 ## 2852 · OmitByType
 
@@ -973,18 +1012,15 @@ type OmitBoolean = OmitByType<
 > // { name: string; count: number }
 ```
 
-
-
 :::details 查看解答
 
 ```typescript
 
 ```
+
 :::
 
-
-
-## ObjectEntries
+## 2946 · ObjectEntries
 
 题目： 实现`Object.entries`
 
@@ -997,18 +1033,15 @@ interface Model {
 type modelEntries = ObjectEntries<Model> // ['name', string] | ['age', number] | ['locations', string[] | null];
 ```
 
-
-
 :::details 查看解答
 
 ```typescript
 
 ```
+
 :::
 
-
-
-## Shift
+## 3062 · Shift
 
 题目： 实现`Array.shift`
 
@@ -1016,18 +1049,15 @@ type modelEntries = ObjectEntries<Model> // ['name', string] | ['age', number] |
 type Result = Shift<[3, 2, 1]> // [2, 1]
 ```
 
-
-
 :::details 查看解答
 
 ```typescript
 
 ```
+
 :::
 
-
-
-## Tuple to Nested Object
+## 3188 · Tuple to Nested Object
 
 题目： 将数组转为嵌套的对象
 
@@ -1042,11 +1072,10 @@ type c = TupleToNestedObject<[], boolean> // boolean. if the tuple is empty, jus
 ```typescript
 
 ```
+
 :::
 
-
-
-## Reverse
+## 3192 · Reverse
 
 题目： 实现`Array.reverse`
 
@@ -1055,18 +1084,15 @@ type a = Reverse<['a', 'b']> // ['b', 'a']
 type b = Reverse<['a', 'b', 'c']> // ['c', 'b', 'a']
 ```
 
-
-
 :::details 查看解答
 
 ```typescript
 
 ```
+
 :::
 
-
-
-## Flip Arguments
+## 3196 · Flip Arguments
 
 题目： 返回一个反转了参数的函数类型
 
@@ -1075,37 +1101,32 @@ type Flipped = FlipArguments<(arg0: string, arg1: number, arg2: boolean) => void
 // (arg0: boolean, arg1: number, arg2: string) => void
 ```
 
-
 :::details 查看解答
 
 ```typescript
 
 ```
+
 :::
 
+## 3243 · FlattenDepth
 
-
-## FlattenDepth
-
-题目： 根据给定值对数组执行 Flatten 操作，默认 Flatten 一层
+题目： 根据给定值对数组执行 `Flatten` 操作，默认 `Flatten` 一层
 
 ```typescript
 type a = FlattenDepth<[1, 2, [3, 4], [[[5]]]], 2> // [1, 2, 3, 4, [5]]. flattern 2 times
 type b = FlattenDepth<[1, 2, [3, 4], [[[5]]]]> // [1, 2, 3, 4, [[5]]]. Depth defaults to be 1
 ```
 
-
-
 :::details 查看解答
 
 ```typescript
 
 ```
+
 :::
 
-
-
-## BEM style string
+## 3326 · BEM style string
 
 题目： 给定参数返回类名的组合
 
@@ -1120,13 +1141,43 @@ type ClassNames3 = BEM<'btn', [], ['small', 'medium', 'large']> // 'btn--small' 
 ```typescript
 
 ```
+
 :::
 
+## 3379 · InorderTraversal
 
+实现二叉树中序遍历的类型版本
+例如：
 
-## Flip
+```typescript
+const tree1 = {
+  val: 1,
+  left: null,
+  right: {
+    val: 2,
+    left: {
+      val: 3,
+      left: null,
+      right: null,
+    },
+    right: null,
+  },
+} as const
 
-题目： 反转对象的 key 和 value
+type A = InorderTraversal<typeof tree1> // [1, 3, 2]
+```
+
+:::details 查看解答
+
+```typescript
+
+```
+
+:::
+
+## 4179 · Flip
+
+题目： 反转对象的 `key` 和 `value`
 
 ```typescript
 Flip<{ a: "x", b: "y", c: "z" }>; // {x: 'a', y: 'b', z: 'c'}
@@ -1139,12 +1190,69 @@ Flip<{ a: false, b: true }>; // {false: 'a', true: 'b'}
 ```typescript
 
 ```
+
 :::
 
+## 4182 · 斐波那契序列
 
-## Zip
+题目：实现泛型 `Fibonacci<T>` 传入数字 T 返回正确的 Fibonacci number.
 
-题目： 合并两个数组，将两个数组都具有的项合并到同一项，其他的不要
+The sequence starts: 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, ...
+例如：
+
+```typescript
+type Result1 = Fibonacci<3> // 2
+type Result2 = Fibonacci<8> // 21
+```
+
+:::details 查看解答
+
+```typescript
+
+```
+
+:::
+
+## 4260 · AllCombinations
+
+题目：实现类型 `AllCombinations<S>` 返回所有字符组合.
+例如：
+
+```typescript
+type AllCombinations_ABC = AllCombinations<'ABC'>;
+// should be '' | 'A' | 'B' | 'C' | 'AB' | 'AC' | 'BA' | 'BC' | 'CA' | 'CB' | 'ABC' | 'ACB' | 'BAC' | 'BCA' | 'CAB' | 'CBA'
+```
+
+:::details 查看解答
+
+```typescript
+
+```
+
+:::
+
+## 4425 · Greater Than
+
+题目：实现类型 `GreaterThan<T, U>` 来比较大小，就像 `T > U` 。不需要考虑负数
+
+```typescript
+GreaterThan<2, 1> //should be true
+GreaterThan<1, 1> //should be false
+GreaterThan<10, 100> //should be false
+GreaterThan<111, 11> //should be true
+```
+
+:::details 查看解答
+
+```typescript
+
+```
+
+:::
+
+## 4471 · Zip
+
+题目：合并两个数组，将两个数组都具有的项合并到同一项，其他的不要
 
 ```typescript
 type a = Zip<[1, 2], [true, false]> // expected to be [[1, true], [2, false]]
@@ -1156,11 +1264,12 @@ type b = Zip<[1, 2, 3], ['1', '2']> //  [[1, '1'], [2, '2']]
 ```typescript
 
 ```
+
 :::
 
-## IsTuple
+## 4484 · IsTuple
 
-题目： 判断当前类型是否为元组
+题目：判断当前类型是否为元组
 
 ```typescript
 type case1 = IsTuple<[number]> // true
@@ -1173,4 +1282,235 @@ type case3 = IsTuple<number[]> // false
 ```typescript
 
 ```
+
+:::
+
+## 4499 · Chunk
+
+题目：按照指定的数量将数组划分
+
+```typescript
+type exp1 = Chunk<[1, 2, 3], 2> // expected to be [[1, 2], [3]]
+type exp2 = Chunk<[1, 2, 3], 4> // expected to be [[1, 2, 3]]
+type exp3 = Chunk<[1, 2, 3], 1> // expected to be [[1], [2], [3]]
+```
+
+:::details 查看解答
+
+```typescript
+
+```
+
+:::
+
+## 4803 · Trim Right
+
+题目：实现 `TrimRight<T>` ，它接收确定的字符串类型并返回一个新的字符串，其中新返回的字符串删除了原字符串结尾的空白字符串。
+例如：
+
+```typescript
+type Trimed = TrimLeft<'  Hello World  '> // 应推导出 '  Hello World'
+```
+
+:::details 查看解答
+
+```typescript
+
+```
+
+:::
+
+## 5117 · Without
+
+题目：实现一个像 Lodash.without 函数一样的泛型 Without<T, U>，它接收数组类型的 T 和数字或数组类型的 U 为参数，会返回一个去除 U 中元素的数组 T。
+
+```typescript
+type Res = Without<[1, 2], 1> // expected to be [2]
+type Res1 = Without<[1, 2, 4, 1, 5], [1, 2]> // expected to be [4, 5]
+type Res2 = Without<[2, 3, 2, 3, 2, 3, 2, 3], [2, 3]> // expected to be []
+```
+
+:::details 查看解答
+
+```typescript
+
+```
+
+:::
+
+## 5140 · Trunc
+
+题目：实现`Math.Trunc`
+
+```typescript
+type A = Trunc<12.34> // 12
+```
+
+:::details 查看解答
+
+```typescript
+
+```
+
+:::
+
+## 5153 · IndexOf
+
+题目：实现`Array.indexOf`
+
+```typescript
+type Res = IndexOf<[1, 2, 3], 2> // expected to be 1
+type Res1 = IndexOf<[2, 6, 3, 8, 4, 1, 7, 3, 9], 3> // expected to be 2
+type Res2 = IndexOf<[0, 0, 0], 2> // expected to be -1
+```
+
+:::details 查看解答
+
+```typescript
+
+```
+
+:::
+
+## 5310 · Join
+
+题目：实现`Array.join`
+
+```typescript
+type Res = Join<['a', 'p', 'p', 'l', 'e'], '-'> // expected to be 'a-p-p-l-e'
+type Res1 = Join<['Hello', 'World'], ' '> // expected to be 'Hello World'
+type Res2 = Join<['2', '2', '2'], 1> // expected to be '21212'
+type Res3 = Join<['o'], 'u'> // expected to be 'o'
+```
+
+:::details 查看解答
+
+```typescript
+
+```
+
+:::
+
+## 5317 · lastIndexOf
+
+题目：实现`Array.lastIndexOf`
+
+```typescript
+type Res1 = LastIndexOf<[1, 2, 3, 2, 1], 2> // 3
+type Res2 = LastIndexOf<[0, 0, 0], 2> // -1
+```
+
+:::details 查看解答
+
+```typescript
+
+```
+
+:::
+
+## 5360 · Unique
+
+题目：数组去重
+
+```typescript
+type Res = Unique<[1, 1, 2, 2, 3, 3]> // expected to be [1, 2, 3]
+type Res1 = Unique<[1, 2, 3, 4, 4, 5, 6, 7]> // expected to be [1, 2, 3, 4, 5, 6, 7]
+type Res2 = Unique<[1, 'a', 2, 'b', 2, 'a']> // expected to be [1, "a", 2, "b"]
+type Res3 = Unique<[string, number, 1, 'a', 1, string, 2, 'b', 2, number]> // expected to be [string, number, 1, "a", 2, "b"]
+type Res4 = Unique<[unknown, unknown, any, any, never, never]> // expected to be [unknown, any, never]
+```
+
+:::details 查看解答
+
+```typescript
+
+```
+
+:::
+
+## 5821 · MapTypes
+
+题目：按照给定的类型进行转换
+
+```typescript
+type StringToNumber = { mapFrom: string; mapTo: number }
+type StringToDate = { mapFrom: string; mapTo: Date }
+type A = MapTypes<{ iWillBeNumberOrDate: string }, StringToDate | StringToNumber> // gives { iWillBeNumberOrDate: number | Date; }
+```
+
+:::details 查看解答
+
+```typescript
+
+```
+
+:::
+
+## 7544 · Construct Tuple
+
+题目：构造数组
+
+```typescript
+type result = ConstructTuple<2> // expect to be [unknown, unkonwn]
+```
+
+:::details 查看解答
+
+```typescript
+
+```
+
+:::
+
+## 8640 · Number Range
+
+题目：有时我们想限制数字的范围......例如。
+
+```typescript
+type result = NumberRange<2 , 9> //  | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 
+```
+
+:::details 查看解答
+
+```typescript
+
+```
+
+:::
+
+## 8767 · Combination
+
+题目：给定一个字符串数组，做排列和组合。它对于视频控件列表等道具类型也很有用
+
+```typescript
+// expected to be `"foo" | "bar" | "baz" | "foo bar" | "foo bar baz" | "foo baz" | "foo baz bar" | "bar foo" | "bar foo baz" | "bar baz" | "bar baz foo" | "baz foo" | "baz foo bar" | "baz bar" | "baz bar foo"`
+type Keys = Combination<['foo', 'bar', 'baz']>
+```
+
+:::details 查看解答
+
+```typescript
+
+```
+
+:::
+
+## 8987 · Subsequence
+
+题目：给定一个唯一元素数组，返回所有可能的子序列。
+
+子序列是可以通过删除一些元素或不删除元素而不改变剩余元素的顺序从数组派生的序列。
+
+例如：
+
+```typescript
+type A = Subsequence<[1, 2]> // [] | [1] | [2] | [1, 2]
+```
+
+:::details 查看解答
+
+```typescript
+
+```
+
 :::
