@@ -943,9 +943,18 @@ type UserPartialName = PartialByKeys<User, 'name'> // { name?:string; age:number
 ```
 
 :::details 查看解答
+这题的意思是要把 T 中的部分值转换成可选类型，TS 中同一个对象下只能用一个 keyof 来描述，因此只能通过写两个对象来拣选指定 key 的类型可不可选，由于最后结果是一个对象，我们还需要把它们 `merge` 起来
 
 ```typescript
-
+type MergeType<O> = {
+  [P in keyof O]: O[P]
+}
+type PartialByKeys<T, K = keyof T> = MergeType<{
+  [P in keyof T as P extends K ? P : never]?: T[P]
+} & {
+    [P in keyof T as P extends K ? never : P]: T[P]
+  }
+>;
 ```
 
 :::
@@ -967,9 +976,15 @@ type UserRequiredName = RequiredByKeys<User, 'name'> // { name: string; age?: nu
 ```
 
 :::details 查看解答
+和上题基本一致，换一种写法，我们采用 `Required & Pick` 来实现，因为如果有必选的和非必选的在一起，结果还是必选的，因此需要 `Pick<T, K>` 出来，相对于把 `K` 转成是必选的然后和原始的 T 联合得出
 
 ```typescript
-
+type Merge<T> = {
+  [K in keyof T]: T[K]
+}
+type RequiredByKeys<T, K extends PropertyKey = keyof T> = Merge<
+  T & Required<Pick<T, K extends keyof T ? K : never>>
+>
 ```
 
 :::
@@ -989,9 +1004,22 @@ type MutableTodo = Mutable<Todo> // { title: string; description: string; comple
 ```
 
 :::details 查看解答
+把一个对象变成只读，我们只需要使用 readonly 即可
+也就是这样
 
 ```typescript
+type Mutable<T> = {
+  readonly [P in keyof T]: T[P]
+}
+```
 
+但是这题要的是把类型变成全部可写，不是可读，因此我们只需要变成可写即可，采用 `-readonly`
+本题答案最终答案
+
+```typescript
+type Mutable<T> = {
+  -readonly [P in keyof T]: T[P]
+}
 ```
 
 :::
@@ -1013,9 +1041,12 @@ type OmitBoolean = OmitByType<
 ```
 
 :::details 查看解答
+这题刚好和 `PickByType` 反过来，只需要排除 U 即可
 
 ```typescript
-
+type OmitByType<T, U> = {
+   [P in keyof T as T[P] extends U ? never : P]: T[P] 
+}
 ```
 
 :::
