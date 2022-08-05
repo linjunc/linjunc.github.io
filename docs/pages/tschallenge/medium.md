@@ -927,6 +927,7 @@ type c = EndsWith<'abc', 'd'> // expected to be false
 :::details 查看解答
 
 和上题一样，通过 模板字符串匹配 `U` 是否存在，返回对应结果，这里采用 `${string}` 来替代 `${infer R}` 效果一样
+
 ```typescript
 type EndsWith<T extends string, U extends string> = T extends `${string}${U}` ? true : false
 ```
@@ -1076,6 +1077,7 @@ type modelEntries = ObjectEntries<Model> // ['name', string] | ['age', number] |
 这题需要解决的问题是如何将对象转换成联合类型
 
 数组转联合类型用 `[number]` 作为下标
+
 ```typescript
 ['1', '2']['number'] // '1' | '2'
 ```
@@ -1086,7 +1088,7 @@ type modelEntries = ObjectEntries<Model> // ['name', string] | ['age', number] |
 type ObjectToUnion<T> = T[keyof T]
 ```
 
-看回本题，联合类型的每一项都是数组，因此只需要构造符合结构的对象即可，因为 value 有可能是 `undefined` 需要强制把对象描述为非可选 `Key` 
+看回本题，联合类型的每一项都是数组，因此只需要构造符合结构的对象即可，因为 `value` 有可能是 `undefined` 需要强制把对象描述为非可选 `Key`
 
 ```typescript
 type ObjectEntries<T> = {
@@ -1114,9 +1116,10 @@ type Result = Shift<[3, 2, 1]> // [2, 1]
 ```
 
 :::details 查看解答
+用 `infer` 把第一项抛弃掉即可
 
 ```typescript
-
+type Shift<T extends any[]> = T extends [infer R, ...infer U] ? U : never
 ```
 
 :::
@@ -1132,9 +1135,15 @@ type c = TupleToNestedObject<[], boolean> // boolean. if the tuple is empty, jus
 ```
 
 :::details 查看解答
+这题需要通过 `infer` 结合递归来实现，不断的递归数组的余项，不断的嵌套对象。这里需要注意指定对象 `key` 的方法，可以通过 `K in key` ，但是需要指定 `key` 的类型为 `PropertyKey`
 
 ```typescript
-
+type TupleToNestedObject<T extends Array<unknown>, U> = 
+  T extends [infer R, ...infer Rest] 
+    ? {
+      [K in R as R extends PropertyKey ? R : never]: TupleToNestedObject<Rest, U>
+    }
+  : U
 ```
 
 :::
@@ -1149,16 +1158,20 @@ type b = Reverse<['a', 'b', 'c']> // ['c', 'b', 'a']
 ```
 
 :::details 查看解答
+通过递归实现
 
 ```typescript
-
+type Reverse<T extends any[]> = 
+  T extends [...infer R, infer E] 
+    ? [E, ...Reverse<R>] 
+    : T
 ```
 
 :::
 
 ## 3196 · Flip Arguments
 
-题目： 返回一个反转了参数的函数类型
+题目： 返回一个反转了参数的函数类型，
 
 ```typescript
 type Flipped = FlipArguments<(arg0: string, arg1: number, arg2: boolean) => void>
@@ -1166,9 +1179,14 @@ type Flipped = FlipArguments<(arg0: string, arg1: number, arg2: boolean) => void
 ```
 
 :::details 查看解答
+将函数的参数进行反转，只要用 `infer` 定义出函数的参数，利用 `Reverse` 函数反转即可：
 
 ```typescript
-
+type Reverse<K> = K extends [infer U, ...infer R] ? [...Reverse<R>, U] : K
+type FlipArguments<T> = 
+  T extends (...args: [...infer A]) => infer R 
+    ? (...args: Reverse<A>) => R
+    : never
 ```
 
 :::
@@ -1183,8 +1201,27 @@ type b = FlattenDepth<[1, 2, [3, 4], [[[5]]]]> // [1, 2, 3, 4, [[5]]]. Depth def
 ```
 
 :::details 查看解答
+这道题，需要控制打平的次数，因此需要先实现打平一次的函数，再递归调用即可
+`FlattenOnce` 就是打平一次，同时利用数组长度来辅助计数
+
+当递归没有达到深度 `U` 时，就用 `[...P, any]` 的方式给数组塞一个元素
+
+下次如果能匹配上 `P['length'] extends U` 说明递归深度已达到。
 
 ```typescript
+type FlattenOnce<T extends any[], U extends any[] = []> = T extends [infer X, ...infer Y] ? (
+  X extends any[] ? FlattenOnce<Y, [...U, ...X]> : FlattenOnce<Y, [...U, X]>
+) : U
+
+type FlattenDepth<
+  T extends any[],
+  U extends number = 1,
+  P extends any[] = []
+> = P['length'] extends U ? T : (
+  FlattenOnce<T> extends T ? T : (
+    FlattenDepth<FlattenOnce<T>, U, [...P, any]>
+  )
+)
 
 ```
 
