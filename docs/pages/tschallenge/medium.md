@@ -884,15 +884,19 @@ type OnlyBoolean = PickByType<
 
 :::details 查看解答
 
-```typescript
+通过 `P in keyof T as T[P]` 来对 key 做进一步的类型判断，如果类型 `T[P] extends U` 就保留，不然就 never
 
+```typescript
+type PickByType<T, U> = {
+  [P in keyof T as T[P] extends U ? P : never ]: T[P]
+}
 ```
 
 :::
 
 ## 2688 · StartsWith
 
-题目：实现`StartsWith<T, U>`,接收两个 string 类型参数,然后判断`T`是否以`U`开头,根据结果返回`true`或`false`
+题目：实现 `StartsWith<T, U>` ,接收两个 `string` 类型参数,然后判断 `T` 否以 `U` 开头,根据结果返回 `true` 或 `false`
 
 ```typescript
 type a = StartsWith<'abc', 'ac'> // expected to be false
@@ -902,15 +906,17 @@ type c = StartsWith<'abc', 'abcd'> // expected to be false
 
 :::details 查看解答
 
-```typescript
+用 `infer R` 匹配任意字符串进行 `extends` 判定
 
+```typescript
+type StartsWith<T extends string, U extends string> = T extends `${U}${infer R}` ? true : false
 ```
 
 :::
 
 ## 2693 · EndsWith
 
-题目：实现`EndsWith<T, U>`,接收两个 `string` 类型参数,然后判断T是否以 `U` 结尾,根据结果返回 true 或 false
+题目：实现 `EndsWith<T, U>`,接收两个 `string` 类型参数,然后判断T是否以 `U` 结尾,根据结果返回 `true` 或 `false`
 
 ```typescript
 type a = EndsWith<'abc', 'bc'> // expected to be false
@@ -920,15 +926,16 @@ type c = EndsWith<'abc', 'd'> // expected to be false
 
 :::details 查看解答
 
+和上题一样，通过 模板字符串匹配 `U` 是否存在，返回对应结果，这里采用 `${string}` 来替代 `${infer R}` 效果一样
 ```typescript
-
+type EndsWith<T extends string, U extends string> = T extends `${string}${U}` ? true : false
 ```
 
 :::
 
 ## 2757 · PartialByKeys
 
-题目： 实现一个通用的`PartialByKeys<T, K>`，它接收两个类型参数`T`和`K`。
+题目： 实现一个通用的 `PartialByKeys<T, K>`，它接收两个类型参数 `T` 和 `K`。
 
 `K`指定应设置为可选的`T`的属性集。当没有提供`K`时，它就和普通的`Partial<T>`一样使所有属性都是可选的。
 
@@ -1066,8 +1073,34 @@ type modelEntries = ObjectEntries<Model> // ['name', string] | ['age', number] |
 
 :::details 查看解答
 
-```typescript
+这题需要解决的问题是如何将对象转换成联合类型
 
+数组转联合类型用 `[number]` 作为下标
+```typescript
+['1', '2']['number'] // '1' | '2'
+```
+
+对象则是用 `[keyof T]` 作为下标
+
+```typescript
+type ObjectToUnion<T> = T[keyof T]
+```
+
+看回本题，联合类型的每一项都是数组，因此只需要构造符合结构的对象即可，因为 value 有可能是 `undefined` 需要强制把对象描述为非可选 `Key` 
+
+```typescript
+type ObjectEntries<T> = {
+  [K in keyof T]-?: [K, T[K]]
+}[keyof T]
+```
+
+`value` 为 `undefined` 需要移除，因此再加一个判断
+
+```typescript
+type RemoveUndefined<T> = [T] extends [undefined] ? T : Exclude<T, undefined>
+type ObjectEntries<T> = {
+  [K in keyof T]-?: [K, RemoveUndefined<T[K]>]
+}[keyof T]
 ```
 
 :::
