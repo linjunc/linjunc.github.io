@@ -1635,16 +1635,29 @@ type Trimed = TrimLeft<'  Hello World  '> // 应推导出 '  Hello World'
 ```
 
 :::details 查看解答
+通过 `infer` 把末尾的空格清掉，递归前面的字符串
 
 ```typescript
+type TrimRight<S extends string> = 
+  S extends `${infer R}${' '}`
+    ? TrimRight<R>
+    : S
+```
 
+还有两个用例过不了，`\n` 和 `\t` 都需要清掉，那就补充一下过滤条件
+
+```typescript
+type TrimRight<S extends string> = 
+  S extends `${infer R}${' ' | '\n' | '\t' }`
+    ? TrimRight<R>
+    : S
 ```
 
 :::
 
 ## 5117 · Without
 
-题目：实现一个像 Lodash.without 函数一样的泛型 Without<T, U>，它接收数组类型的 T 和数字或数组类型的 U 为参数，会返回一个去除 U 中元素的数组 T。
+题目：实现一个像 `Lodash.without` 函数一样的泛型 `Without<T, U>`，它接收数组类型的 T 和数字或数组类型的 U 为参数，会返回一个去除 U 中元素的数组 T。
 
 ```typescript
 type Res = Without<[1, 2], 1> // expected to be [2]
@@ -1653,9 +1666,43 @@ type Res2 = Without<[2, 3, 2, 3, 2, 3, 2, 3], [2, 3]> // expected to be []
 ```
 
 :::details 查看解答
+这题我们非常容易想，通过 `infer` 和 递归来实现，用 `infer` 取出数组的第一项
+
+- 如果能够被 `U` 包含，那就丢弃，也就是把剩余的递归，不保留这一项
+- 如果不包含，那就用 `[R, ...]` 把它给留下，剩下的继续递归
+因此很有可能写下这样的代码
 
 ```typescript
+type Without<T, U> = 
+  T extends [infer R, ...infer F]
+    ? R extends U
+      ? Without<F, U>
+      : [R, ...Without<F, U>]
+    : T
+```
 
+但是发现只过了一个用例，问题在于 `U` 有可能是数组，也有可能是字符串，而单纯采用 `extends` 来判断只能处理字符串的情况
+
+因此我们需要解决如何判断字符串和数组两种情况
+
+可以采用数组转 `Union` 的方法来解决
+
+```typescript
+type ToUnion<T> = T extends any[] ? T[number] : T
+type B = ToUnion<['1','b']> // type B = "1" | "b"
+```
+
+这样无论是数字还是数组，都会转成联合类型，而联合类型很方便判断 extends 包含关系：
+
+```typescript
+// 答案
+type ToUnion<T> = T extends any[] ? T[number] : T
+type Without<T, U> = 
+  T extends [infer R, ...infer F]
+    ? R extends ToUnion<U>
+      ? Without<F, U>
+      : [R, ...Without<F, U>]
+    : T
 ```
 
 :::
@@ -1669,9 +1716,25 @@ type A = Trunc<12.34> // 12
 ```
 
 :::details 查看解答
+这题我们很容易想到用模板字符串来实现，把 `.` 给抓出来，比如这样
 
 ```typescript
+type Trunc<S> = 
+  S extends `${infer R}.${infer U}`
+    ? R 
+    : S
+```
 
+但是发现测试用例只过了几个，细心的观察发现，有些入参是数字，有些是字符串，而上面的写法只能处理字符串，因此挂了很多
+
+需要转成字符串即可
+
+```typescript
+// 答案
+type Trunc<S extends string | number> = 
+  `${S}` extends `${infer R}.${infer U}`
+    ? R 
+    : `${S}`
 ```
 
 :::
@@ -1684,12 +1747,37 @@ type A = Trunc<12.34> // 12
 type Res = IndexOf<[1, 2, 3], 2> // expected to be 1
 type Res1 = IndexOf<[2, 6, 3, 8, 4, 1, 7, 3, 9], 3> // expected to be 2
 type Res2 = IndexOf<[0, 0, 0], 2> // expected to be -1
+type Res3 = IndexOf<[string, 1, number, 'a'], number> // 2
 ```
 
 :::details 查看解答
+又是一道关于数的题目，这种题大概率需要引入数组来计算它的 `length`，递归判断是否匹配
 
 ```typescript
+type IndexOf<T, U, Count extends any[] = []> = 
+  T extends [infer L, ...infer R]
+    ? L extends U
+      ? Count['length'] extends 0
+        ? '-1'
+        : Count['length']
+      : IndexOf<R, U, [...Count, 0]>
+    : -1 
+```
 
+但是挂了几个，其实写的时候就发现有坑了，这题的测试用例里有字符串，数字，布尔，因此单纯采用 `extends` 判断大概率挂了
+
+因为 `1 extends number` 是返回 `true` 的，因此需要使用 `Equal` 来判断是否相等
+
+```typescript
+// 答案
+type IndexOf<T, U, Count extends any[] = []> = 
+  T extends [infer L, ...infer R]
+    ? Equal<L, U> extends true
+      ? Count['length'] extends 0
+        ? '-1'
+        : Count['length']
+      : IndexOf<R, U, [...Count, 0]>
+    : -1 
 ```
 
 :::
