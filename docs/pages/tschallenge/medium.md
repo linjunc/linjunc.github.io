@@ -1513,9 +1513,15 @@ type b = Zip<[1, 2, 3], ['1', '2']> //  [[1, '1'], [2, '2']]
 ```
 
 :::details 查看解答
+采用递归 + `infer` 实现， `[[A, M], ...Zip<B, N>]` 是满足题意的二维数组，当数组长度不一样是，因为在前面已经规避掉了，因此能够实现
 
 ```typescript
-
+type Zip<T extends any[], R extends any[], Res extends any[] = []> = 
+  T extends [infer A, ...infer B]
+    ? R extends [infer M, ...infer N]
+      ? [[A, M], ...Zip<B, N>]
+      : []
+    : []
 ```
 
 :::
