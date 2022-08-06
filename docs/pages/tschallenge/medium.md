@@ -1403,14 +1403,13 @@ type Fibonacci<
 > = N['length'] extends T 
     ? Res['length']
     : Fibonacci<T,[...N, 1], Cur, [...Res, ...Cur]> 
-
 ```
 
 :::
 
 ## 4260 · AllCombinations
 
-题目：实现类型 `AllCombinations<S>` 返回所有字符组合.
+题目：实现 `AllCombinations<S>` 对字符串 S 全排列
 例如：
 
 ```typescript
@@ -1419,9 +1418,56 @@ type AllCombinations_ABC = AllCombinations<'ABC'>;
 ```
 
 :::details 查看解答
+记得之前应该也有写过一到全排列的问题，但是这个要难很多
+
+首先我们需要把字符串 `S` 转换成联合类型，这样我们就可以遍历它，再结合上对象转联合类型时的特征实现
+
+1. 首先我们需要实现一个字符串转 Union 的方法
+递归字符串即可
 
 ```typescript
+type StrToUnion<S> = S extends `${infer R}${infer U}` ? R | StrToUnion<U> : never
+```
 
+2. 利用对象转联合
+我们先看看一个对象转成联合类型是什么样子的
+
+会将 `value` 通过 `|` 连接
+
+```typescript
+type ObjToUnion<O> = {
+  [P in keyof O]: O[P]
+}[keyof O]
+
+type B = ObjToUnion<{'a': 1, 'b':2, 'c': 3}> // type B = 1 | 2 | 3
+```
+
+那么我们就可以利用这个特性来处理，也就是这样，我们通过递归的方式，把 `value` 进行排列
+
+```typescript
+{
+  [K in U]: `${K}${AllCombinations<never, Exclude<U, K>>}`
+}[U]
+```
+
+但是这样得到的是字母间的全排列，我们还需要单个字符，因此需要在递归的时候加上 `'' |` 即可
+
+因为每次递归时都会经历 `''、'A'、'AB'、'ABC'` 这样逐渐累加字符的过程，而每次都会遇到 `'' |` 使其自然形成了联合类型
+
+推演：
+
+1. 当输入 `ABC` 时，会通过 `StrToUnion` 转成 `Union` 类型
+2. 判断是不是 `never` ，因为递归过程中可能会有 `never` 出现
+3. `[K in U]` 取类型中的一个，如 `A`, 递归 `Exclude<U,K>`,也就是 `B,C`,这样就从 `ABC` 到了 `BC` 接下来又到 `C` 所有字符都会被考虑
+
+```typescript
+// 答案
+type AllCombinations<S extends string, U extends string = StrToUnion<S>> =
+  [U] extends [never]
+  ? ''
+  : '' | {
+    [K in U]: `${K}${AllCombinations<never, Exclude<U, K>>}`
+  }[U]
 ```
 
 :::
