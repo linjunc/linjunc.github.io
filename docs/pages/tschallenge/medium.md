@@ -1484,9 +1484,21 @@ GreaterThan<111, 11> //should be true
 ```
 
 :::details 查看解答
+又是一道计算题，TS 不支持大小判断，我们还是需要借用数组 `['length']` 来实现
+
+可以采用递归来实现，前面我们也有说过了，数组的很容易爆掉，但是测试用例还算温柔，这题能过
+
+- 思路是拿一个新数组，和 `T`,`U` 进行对比，哪个先追上新数组的长度，哪个就小
+- 简单一点来说就是，两个不一样长的木棍放在一起，我们从一端开始不断往前走，先摸到的那个木棍就是短一点的
 
 ```typescript
-
+// 答案
+type GreaterThan<T extends number, U extends number, R extends any[] = []> = 
+  T extends R['length']
+    ? false
+    : U extends R['length']
+      ? true
+      : GreaterThan<T, U, [...R, 1]>
 ```
 
 :::
