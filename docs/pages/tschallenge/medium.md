@@ -1375,8 +1375,34 @@ type Result2 = Fibonacci<8> // 21
 ```
 
 :::details 查看解答
+让 TS 来做这些真的比较恶心，TS 没有计算能力，遇到这种 TS 计算的题目，我们应该第一时间想到采用数组的 `length` 进行计算，好在测试用例没有非常大的 `case`，不然必挂
+
+首先，我们需要记录当前递归的次数，用来结束循环，这里用 `N` 来表示，数组里面的值给什么都可以，我们只是用来计数
 
 ```typescript
+type Fibonacci<T extends number, N extends number[] = [1]> = N['length'] extends T ? (
+  // 返回结果
+) : Fibonacci<T, [...N, 1]>
+```
+
+现在递归结束条件我们已经处理好了，那么需要开始计算了，我们需要将前面的结果加上当前的值，因此需要引入两个数，一个记录结果 `Res` ，一个记录当前值 `Cur`，关键在于这段代码
+
+```typescript
+Fibonacci<T,[...N, 1], Cur, [...Res, ...Cur]> 
+```
+
+把前面结果 `Res` 数组和 当前的 `Cur` 展开在一起，作为新的 `Cur` 进行递归，而当前的结果也就是 `Cur` 数组，通过数组展开的方式，把每个值都通过项数堆在一起，最后返回 `length` 即可
+
+```typescript
+// 答案
+type Fibonacci<
+    T extends number, 
+    N extends number[] = [1], 
+    Res extends number[] = [1], 
+    Cur extends number[] = [1]
+> = N['length'] extends T 
+    ? Res['length']
+    : Fibonacci<T,[...N, 1], Cur, [...Res, ...Cur]> 
 
 ```
 
