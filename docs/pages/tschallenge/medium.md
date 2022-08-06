@@ -15,7 +15,7 @@ type a = MyReturnType<typeof fn> // 应推导出 "1 | 2"
 ```
 
 :::details 查看解答
-通过 infer 来推断返回的参数类型
+通过 `infer` 来推断返回的参数类型
 
 ```typescript
 type MyReturnType<T> = T extends (...args: any) => infer R ? R : never
@@ -42,7 +42,7 @@ const todo: TodoPreview = {
 ```
 
 :::details 查看解答
-extends 有遍历的功能，通过 判断 key 是不是属于 需要排除的参数来实现
+`extends` 有遍历的功能，通过 判断 `key` 是不是属于 需要排除的参数来实现
 
 ```typescript
 type MyOmit<T, K extends keyof T> = {
@@ -56,7 +56,7 @@ type MyOmit<T, K extends keyof T> = {
 
 题目：实现一个通用`MyReadonly2<T, K>`，它带有两种类型的参数 T 和 K。
 
-K 指定应设置为 Readonly 的 T 的属性集。如果未提供 K，则应使所有属性都变为只读，就像普通的`Readonly<T>`一样。
+K 指定应设置为 `Readonly` 的 T 的属性集。如果未提供 K，则应使所有属性都变为只读，就像普通的`Readonly<T>`一样。
 
 ```typescript
 interface Todo {
@@ -78,7 +78,7 @@ todo.completed = true // OK
 
 :::details 查看解答
 
-这题需要结合上一题，需要判断当前的 key 是不是 K 中传入的，如果是 K 中的，那么需要设置为 readonly，要主要其他的也要保持原来的类型。需要注意，当 K 不传入时，所有都需要是 readonly ，因此可以设置 K 为 T
+这题需要结合上一题，需要判断当前的 `key` 是不是 `K` 中传入的，如果是 `K` 中的，那么需要设置为 `readonly`，要主要其他的也要保持原来的类型。需要注意，当 K 不传入时，所有都需要是 readonly ，因此可以设置 K 为 T
 
 ```typescript
 type MyReadonly2<T, K extends keyof T = keyof T> = {
@@ -117,7 +117,7 @@ const todo: DeepReadonly<X> // should be same as `Expected`
 ```
 
 :::details 查看解答
-通过判断 value 的类型，来递归添加 readonly
+通过判断 `value` 的类型，来递归添加 `readonly`
 
 ```typescript
 type DeepReadonly<T> = {
@@ -139,7 +139,7 @@ const a: TupleToUnion<Arr> // expected to be '1' | '2' | '3'
 ```
 
 :::details 查看解答
-通过 infer 来推断数组中每一项的类型
+通过 `infer` 来推断数组中每一项的类型
 
 ```typescript
 type TupleToUnion<T extends any[]> = T extends (infer R)[] ? R :never
@@ -175,7 +175,7 @@ interface Result {
 :::details 查看解答
 有点难，需要注意 key 重复的情况，会按照后面的类型来定义。将 option 的两个参数设置为 泛型，来判断是否存在于当前的对象中，类似去重，然后返回相应的 value 类型
 
-可以理解为这是一个 class，T 是其中的一个对象，保存了所有的 key value 组合
+可以理解为这是一个 `class`，`T` 是其中的一个对象，保存了所有的 `key` `value` 组合
 
 ```typescript
 type Chainable<T = {}> = {
@@ -206,7 +206,7 @@ type tail2 = Last<arr2> // expected to be 1
 ```
 
 :::details 查看解答
-很简单，用 infer 推断一下最后一个参数就好
+很简单，用 `infer` 推断一下最后一个参数就好
 
 ```typescript
 type Last<T extends any[]> = T extends [...any[], infer R] ? R: never
@@ -227,7 +227,7 @@ type re2 = Pop<arr2> // expected to be [3, 2]
 ```
 
 :::details 查看解答
-用 infer 推出前面的即可，把最后一个单独弄出来
+用 `infer` 推出前面的即可，把最后一个单独弄出来
 
 ```typescript
 type Pop<T extends any[]> = T extends [...infer R, any] ? R : never
@@ -251,7 +251,7 @@ const p = PromiseAll([promise1, promise2, promise3] as const)
 ```
 
 :::details 查看解答
-核心在于处理这个泛型 T，利用类型推断，会得到一个参数类型数组 T，类似于传入 `[1,2]` T 就是 `[number, number]` 后续只需要遍历匹配数组即可
+核心在于处理这个泛型 `T`，利用类型推断，会得到一个参数类型数组 `T`，类似于传入 `[1,2]` T 就是 `[number, number]` 后续只需要遍历匹配数组即可
 
 > 遍历数组这里的 P 就是它的 index
 
@@ -285,7 +285,7 @@ type MyDog = LookUp<Cat | Dog, 'dog'> // expected to be `Dog`
 ```
 
 :::details 查看解答
-遍历泛型 U，判断是否有 type 为 T 的即可
+遍历泛型 `U`，判断是否有 `type` 为 `T` 的即可
 
 ```typescript
 type LookUp<U, T extends string> = U extends { type: T} ? U : never
@@ -302,7 +302,7 @@ type trimed = TrimLeft<'  Hello World  '> // expected to be 'Hello World  '
 ```
 
 :::details 查看解答
-一次判断一个，递归判断，通过 infer 留下最后的，每次清一个
+一次判断一个，递归判断，通过 `infer` 留下最后的，每次清一个
 
 ```typescript
 type TrimLeft<S extends string> = S extends `${' ' | '\n' | '\t'}${infer R}` ? TrimLeft<R> : S
@@ -319,7 +319,7 @@ type trimed = Trim<'  Hello World  '> // expected to be 'Hello World'
 ```
 
 :::details 查看解答
-先删除前面的，删除完再删除后面的，都用 infer 就行
+先删除前面的，删除完再删除后面的，都用 `infer` 就行
 
 ```typescript
 type Space = ' ' | '\n' | '\t'
@@ -337,7 +337,7 @@ type capitalized = Capitalize<'hello world'> // expected to be 'Hello world'
 ```
 
 :::details 查看解答
-通过 infer 取到第一个字母，通过 Uppercase 转化成大写
+通过 `infer` 取到第一个字母，通过 `Uppercase` 转化成大写
 
 ```typescript
 type MyCapitalize<S extends string> = S extends `${infer U}${infer R}` ? `${Uppercase<U>}${R}` : S
@@ -354,7 +354,7 @@ type replaced = Replace<'types are fun!', 'fun', 'awesome'> // expected to be 't
 ```
 
 :::details 查看解答
-通过找到 From 替换即可，用模版字符串最方便
+通过找到 `From` 替换即可，用模版字符串最方便
 
 ```typescript
 type Replace<S extends string, From extends string, To extends string> = From extends ''
@@ -375,7 +375,7 @@ type replaced = ReplaceAll<'t y p e s', ' ', ''> // expected to be 'types'
 ```
 
 :::details 查看解答
-需要注意多个的情况，递归调用 ReplaceAll
+需要注意多个的情况，递归调用 `ReplaceAll`
 
 ```typescript
 type ReplaceAll<S extends string, From extends string, To extends string> = From extends '' 
@@ -399,7 +399,7 @@ type Result = AppendArgument<Fn, boolean>
 ```
 
 :::details 查看解答
-利用 args 和 infer，获得 fn 的参数列表类型，再进行添加
+利用 `args` 和 `infer`，获得 `fn` 的参数列表类型，再进行添加
 
 ```typescript
 type AppendArgument<Fn extends Function, A> = Fn extends (...args: infer U) => infer R ? (...args: [...U, A]) => R : never
@@ -440,7 +440,7 @@ type b = LengthOfString<a> // type b = 12
 ```
 
 :::details 查看解答
-拿一个数组来保存遍历到的每个字符，最后返回数组的 length
+拿一个数组来保存遍历到的每个字符，最后返回数组的 `length`
 
 ```typescript
 type LengthOfString<S extends string, A extends any[] = []> =
@@ -483,7 +483,7 @@ type Result = AppendToObject<Test, 'value', 4> // expected to be { id: '1', valu
 ```
 
 :::details 查看解答
-通过增加一个对 新增 key 的判断，如果是这个 key 就给他匹配 value
+通过增加一个对 新增 `key` 的判断，如果是这个 `key` 就给他匹配 `value`
 
 ```typescript
 type AppendToObject<T extends Object, U extends string, V> = {
@@ -503,7 +503,7 @@ type Result = Absolute<Test> // expected to be "100"
 ```
 
 :::details 查看解答
-通过模板字符串来识别开头是否有 负号，需要注意要把 T 转成字符串来进行考虑
+通过模板字符串来识别开头是否有 负号，需要注意要把 `T` 转成字符串来进行考虑
 
 ```typescript
 type Absolute<T extends number | string | bigint> =
@@ -516,7 +516,7 @@ type Absolute<T extends number | string | bigint> =
 
 ## 531 · String to Union
 
-题目：实现一个将接收到的 String 参数转换为一个字母 Union 的类型。
+题目：实现一个将接收到的 `String` 参数转换为一个字母 `Union` 的类型。
 
 ```typescript
 type Test = '123'
@@ -524,7 +524,7 @@ type Result = StringToUnion<Test> // expected to be "1" | "2" | "3"
 ```
 
 :::details 查看解答
-通过 infer 来推第一个字母，递归的形式达成题意
+通过 `infer` 来推第一个字母，递归的形式达成题意
 
 ```typescript
 type StringToUnion<T extends string> = 
@@ -537,7 +537,7 @@ type StringToUnion<T extends string> =
 
 ## 599 · Merge
 
-题目：合并两个类型，key 相同的类型由第二个覆盖第一个
+题目：合并两个类型，`key` 相同的类型由第二个覆盖第一个
 
 ```typescript
 type a = {
@@ -554,7 +554,7 @@ type c = Merge<a, b> // c { x: 1, y: 2, z: 3 }
 ```
 
 :::details 查看解答
-先遍历 key 是否在 F 和 S 中，在的话就再判断它要使用谁的类型，也就是 P extends keyof S,这里是因为 S 会覆盖 F，后面也是依次判断即可
+先遍历 `key` 是否在 `F` 和 `S` 中，在的话就再判断它要使用谁的类型，也就是 `P extends keyof S`,这里是因为 S 会覆盖 F，后面也是依次判断即可
 
 ```ts
 type Merge<F, S> = {
@@ -800,7 +800,7 @@ type R5 = PercentageParser<PString5> // expected ["", "85", ""]
 ```
 
 :::details 查看解答
-不断通过 infer 进行分支判断，先判断有符号的情况，再判断没有符号的，最后判断没有符号和单位的
+不断通过 `infer` 进行分支判断，先判断有符号的情况，再判断没有符号的，最后判断没有符号和单位的
 
 ```typescript
 type PercentageParser<A extends string> = 
@@ -826,7 +826,7 @@ type Butterfly = DropChar<' b u t t e r f l y ! ', ' '> // 'butterfly!'
 ```
 
 :::details 查看解答
-递归不断把 C 排除掉即可：
+递归不断把 `C` 排除掉即可：
 
 ```typescript
 type DropChar<S extends string, C extends string> = 
@@ -884,7 +884,7 @@ type OnlyBoolean = PickByType<
 
 :::details 查看解答
 
-通过 `P in keyof T as T[P]` 来对 key 做进一步的类型判断，如果类型 `T[P] extends U` 就保留，不然就 never
+通过 `P in keyof T as T[P]` 来对 `key` 做进一步的类型判断，如果类型 `T[P] extends U` 就保留，不然就 never
 
 ```typescript
 type PickByType<T, U> = {
@@ -1537,9 +1537,21 @@ type case3 = IsTuple<number[]> // false
 ```
 
 :::details 查看解答
+元组和数组的区别在于，元组的长度是有限的，数组是无限的，也就是他们的 `['length']` 返回的结果是不同的
+
+- 元组返回的是数字
+- 数组返回的是 `number`
+
+因此可以根据这个特征来判断，需要注意 `T extends readonly any[]` 前置判断，因为 `{length : 1}` 的用例会通过
 
 ```typescript
-
+type IsTuple<T> = [T] extends [never]
+  ? false
+  : T extends readonly any[]
+    ? number extends T['length']
+      ? false
+      : true
+    : false
 ```
 
 :::
@@ -1555,9 +1567,60 @@ type exp3 = Chunk<[1, 2, 3], 1> // expected to be [[1], [2], [3]]
 ```
 
 :::details 查看解答
+使用一个变量来记录当前 `Chunk` 的内容，当达到数量时就释放
+
+`C['length'] extends N` 判断 `C` 的长度有没有达到要求的数量
+
+- 有的话那就把它放到数组里，继续递归后续内容，等待返回结果
+- 没有的话就继续往这个临时数组里添加新的元素，作为 C 的新值，继续递归
 
 ```typescript
+type Chunk<T extends any[], N extends number = 1, C extends any[] = []> = 
+  T extends [infer R, ...infer U]
+    ? C['length'] extends N
+      ? [C, ...Chunk<T, N>]
+      : Chunk<U, N, [...C, R]>
+    : C extends []
+      ? C
+      : [C]
+```
 
+:::
+
+## 4518 · Fill
+
+题目： 实现 Fill<T, N, Start?, End?>，将数组 T 的每一项替换为 N：
+
+```typescript
+type exp = Fill<[1, 2, 3], 0> // expected to be [0, 0, 0]
+```
+
+:::details 查看解答
+这题需要引入两个变量，一个用来计数，一个用来作为是否替换的标志
+
+- `Count extends any[] = []`
+- `Flag extends boolean = Count['length'] extends Start ? true : false`
+几个关键点
+
+1. 在 `Count` 等于 `End` 的时候需要结束替换，也就是结束条件
+2. 当 `Count` 等于 `Start` 的时候是开始替换的条件，递归处理数组替换即可，注意需要把 `T` 换成新的
+3. 在开始替换后，需要把 `Flag` 继续传下去，不然 `Flag` 会被置为 `false` 不再替换
+
+```typescript
+type Fill<
+  T extends unknown[],
+  N,
+  Start extends number = 0,
+  End extends number = T['length'],
+  Count extends any[] = [],
+  Flag extends boolean = Count['length'] extends Start ? true : false
+> = Count['length'] extends End
+  ? T
+  : T extends [infer R, ...infer U]
+    ? Flag extends false
+      ? [R, ...Fill<U, N, Start, End, [...Count, 0]>]
+      : [N, ...Fill<U, N, Start, End, [...Count, 0], Flag>]
+    : T
 ```
 
 :::
