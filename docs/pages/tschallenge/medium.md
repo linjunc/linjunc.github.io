@@ -1222,14 +1222,13 @@ type FlattenDepth<
     FlattenDepth<FlattenOnce<T>, U, [...P, any]>
   )
 )
-
 ```
 
 :::
 
 ## 3326 · BEM style string
 
-题目： 给定参数返回类名的组合
+题目： 实现 BEM 函数完成其规则拼接
 
 ```typescript
 type ClassNames1 = BEM<'btn', ['price']> // 'btn__price'
@@ -1238,9 +1237,27 @@ type ClassNames3 = BEM<'btn', [], ['small', 'medium', 'large']> // 'btn--small' 
 ```
 
 :::details 查看解答
+我们知道可以通过下标来将数组或者对象转成联合类型
 
 ```typescript
+// 数组
+T[number]
+// 对象  
+Object[keyof T]
+```
 
+特殊的，当字符串中通过这种方式申明时，会自动生成新的联合类型，例如这题下面的写法，
+
+```typescript
+type BEM<B extends string, E extends string[], M extends string[]> = `${B}__${E[number]}--${M[number]}`
+```
+
+会得到 `type A = "btn__price--warning" | "btn__price--success"` 这样的结果，但是这并没有考虑到空数组的情况，因此需要做提前的判断
+
+```typescript
+type IsNever<T> = [T] extends [never] ? true : false
+type IsUnion<U> = IsNever<U> extends true ? "" : U
+type BEM<B extends string, E extends string[], M extends string[]> = `${B}${IsUnion<`__${E[number]}`>}${IsUnion<`--${M[number]}`>}`
 ```
 
 :::
@@ -1269,9 +1286,42 @@ type A = InorderTraversal<typeof tree1> // [1, 3, 2]
 ```
 
 :::details 查看解答
+这题看上去很难，TS 怎么还能遍历树呢，其实是可以的，非常简单，和 JS 的思路是一致的，我们先看看 JS 是如何实现中序遍历的呢？
+
+```javascript
+const inorderTraversal = (root) => {
+  if(!root) return []
+  const res = []
+  while(root) {
+    inorderTraversal(root.left)
+    res.push(val)
+    inorderTraversal(tree.right)
+  }
+  return res
+}
+```
+
+JS 是在 root 为 `null` 时结束，对于 `TS` 来说，实现递归，需要 `extends TreeNode` 而不是 `null` 来结束
+
+不能使用 `null` 来判断是因为 `TS` 不能判断类型 `T` 是否符合 `TreeNode` 类型
 
 ```typescript
-
+// 答案
+interface TreeNode {
+  val: number
+  left: TreeNode | null
+  right: TreeNode | null
+}
+type InorderTraversal<T extends TreeNode | null> = 
+  [T] extends [TreeNode] 
+    ? (
+      [
+        ...InorderTraversal<T['left']>,
+        T['val'],
+        ...InorderTraversal<T['right']>
+      ]
+    )
+    : []
 ```
 
 :::
@@ -1287,9 +1337,27 @@ Flip<{ a: false, b: true }>; // {false: 'a', true: 'b'}
 ```
 
 :::details 查看解答
+这题需要实现 `key` 和 `value` 的交换，我们可以遍历对象对 `key` 进行追加变形
+
+通过在 `keyof` 描述对象时采用 `as` 追加变形
 
 ```typescript
+type Flip<T> = {
+  [P in keyof T as T[P]]: P
+}
+```
 
+但是这样有几个测试会挂掉，由于 `key` 的位置只能是 `string` 或者 `number` 或者 `boolean` 所以挂了
+
+因此我们可以限定一下 `value` 的类型 `Record<string, string | number | boolean>`
+
+这样还是有挂掉的，是 `Flip<{ pi: 3.14; bool: true }>`，很显然 `boolean` 不能作为 `key`，需要转化成字符串，我们用模版强行转一下即可
+
+```typescript
+// 答案
+type Flip<T extends Record<string, string | number | boolean>> = {
+  [P in keyof T as `${T[P]}`]: P
+}
 ```
 
 :::
