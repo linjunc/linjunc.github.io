@@ -1844,9 +1844,17 @@ type Res2 = LastIndexOf<[0, 0, 0], 2> // -1
 ```
 
 :::details 查看解答
+有了 `IndexOf` 那题的前车之鉴，这题基本不会踩坑，需要注意这里有个非常巧妙的地方
+
+我们没有办法去让数组的下标 `-1` 来获取当前找到元素的位置，但是我们在递归的时候 `F` 是前面包含全部项的数组，因此我们可以直接用它的 `length`
 
 ```typescript
-
+type LastIndexOf<T, U> = 
+  T extends [...infer F, infer R]
+    ? Equal<R, U> extends true
+      ? F['length']
+      : LastIndexOf<F, U>
+    : -1
 ```
 
 :::
