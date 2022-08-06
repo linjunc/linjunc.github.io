@@ -1794,9 +1794,42 @@ type Res3 = Join<['o'], 'u'> // expected to be 'o'
 ```
 
 :::details 查看解答
+首先这题我们会想到用 `infer` 来取每一项，然后递归拼插入的字符，因此我们会这么干
 
 ```typescript
+type Join<T extends string[], U extends string | number> = 
+  T extends [infer L, ...infer R]
+    ? `${L}${U}${Join<R, U>}`
+    : ''
+```
 
+很好，一个用例都没有过，还有很多的飘红，大概就是 `L, R` 的类型有问题
+
+```typescript
+type Join<T extends string[], U extends string | number> = 
+  T extends [infer L extends string, ...infer R extends string[]]
+    ? `${L}${U}${Join<R, U>}`
+    : ''
+```
+
+补了一下类型，没有飘红了，但是还是一个没过
+
+```typescript
+type A = Join<['a', 'p', 'p', 'l', 'e'], '-'> // type A = "a-p-p-l-e-"
+```
+
+测了一下，发现原来末尾加多了一个 `-`，那么我们需要判断是不是到最后一个了，最后一个就不拼接了
+
+我们直接判断 `R` 的 `length` 是否为 `0` 即可实现，很好都过了
+
+```typescript
+// 答案
+type Join<T extends string[], U extends string | number> = 
+  T extends [infer L extends string, ...infer R extends string[]]
+    ? R['length'] extends 0
+      ?  L
+      : `${L}${U}${Join<R, U>}`
+    : ''
 ```
 
 :::
