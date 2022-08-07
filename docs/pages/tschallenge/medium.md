@@ -2038,9 +2038,29 @@ type Keys = Combination<['foo', 'bar', 'baz']>
 ```
 
 :::details 查看解答
+全排列的问题已经做过几次了
+
+由于入参是一个数组，我们没办法 `extends` 操作，需要转成联合类型，通过 `extends` 一次取一个
+
+通过 `${I} ${Combination<[], Exclude<A, I>>}` 来递归剩余区域的内容，非常巧妙的通过 `I |` 来返回所有联合类型
+
+但是你可以会这么写，会有很多的报错，大概就是 `A` 和 `U` 的类型不对
 
 ```typescript
+type Combination<T extends string[], A = T[number], U = A> = 
+  U extends A
+    ? U | `${U} ${Combination<[], Exclude<A, U>>}`
+    :never
+```
 
+我们需要通过 `infer` 来推一下 `U`
+
+```typescript
+// 答案
+type Combination<T extends string[], A = T[number], U = A> = 
+  U extends infer I extends string
+    ? I | `${I} ${Combination<[], Exclude<A, I>>}`
+    :never
 ```
 
 :::
