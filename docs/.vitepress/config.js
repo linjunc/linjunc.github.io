@@ -18,8 +18,8 @@ module.exports = {
       { icon: "github", link: "https://github.com/linjunc/linjunc.github.io" },
     ],
     footer: {
-      message: 'Released under the MIT License.',
-      copyright: 'Copyright © 2022-present linjunc'
+      message: "Released under the MIT License.",
+      copyright: "Copyright © 2022-present linjunc",
     },
     lastUpdated: true, // string | boolean
     nav: [
@@ -27,8 +27,8 @@ module.exports = {
       {
         text: "各类知识点",
         items: [
-          { text: "前端总结", link: "/pages/summary/qrcode.md" },
-          { text: "TS 类型挑战", link: "/pages/tschallenge/easy.md"},
+          { text: "前端总结", link: "/pages/summary/ts.md" },
+          { text: "TS 类型挑战", link: "/pages/tschallenge/easy.md" },
           {
             text: "数据结构和算法",
             link: "/pages/structure/start.md",
@@ -357,6 +357,10 @@ module.exports = {
           sidebarDepth: 2, // 可选的, 默认值是 1
           items: [
             {
+              link: "pages/summary/ts.md",
+              text: "TS 类型体操还能这么玩，太秀了！",
+            },
+            {
               link: "/pages/summary/event.md",
               text: "Event 对象，这些你都知道吗？",
             },
@@ -493,19 +497,19 @@ module.exports = {
           items: [
             {
               link: "/pages/tschallenge/easy.md",
-              text: "Easy 题"
+              text: "Easy 题",
             },
             {
               link: "/pages/tschallenge/medium.md",
-              text: "Medium 题"
+              text: "Medium 题",
             },
             {
               link: "/pages/tschallenge/hard.md",
-              text: "Hard 题"
+              text: "Hard 题",
             },
-          ]
-        }
-      ]
+          ],
+        },
+      ],
     },
   },
 };
