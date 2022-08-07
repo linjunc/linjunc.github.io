@@ -1872,9 +1872,34 @@ type Res4 = Unique<[unknown, unknown, any, any, never, never]> // expected to be
 ```
 
 :::details 查看解答
+这题需要借助辅助数组，通过递归的方式，依次把数组中没有的内容塞进去
 
 ```typescript
+Includes<R, U> extends true
+      ? Unique<F, [...U]>
+      : Unique<F, [...U, R]>
+```
 
+这里就是递归的核心逻辑，如果数组 `U` 中不包含该元素，就塞进去，有就不塞
+
+一开始判断数组中是否存在该元素，采用的是 `R extends U[number]` 但是发现有很多 case 没有考虑到
+
+因此需要实现一个 `Includes` 方法来判断是否有该值，这个方法也是常规的递归实现，不多赘述
+
+```typescript
+// 答案
+type Includes<T, U> = U extends [infer F, ...infer Rest] 
+  ? Equal<F, T> extends true 
+    ? true 
+    : Includes<T, Rest> 
+  : false;
+
+type Unique<T, U extends any[] = []> = 
+  T extends [infer R, ...infer F]
+    ? Includes<R, U> extends true
+      ? Unique<F, [...U]>
+      : Unique<F, [...U, R]>
+    : U
 ```
 
 :::
