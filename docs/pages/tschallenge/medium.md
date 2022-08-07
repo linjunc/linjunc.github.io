@@ -1,6 +1,10 @@
 
 # Middle 题
 
+::: tip 我的 Issue 提交记录
+Github Issue 记录，[点击查看](https://github.com/type-challenges/type-challenges/issues/created_by/linjunc)
+:::
+
 ## 2 · 获取函数返回类型
 
 题目：不使用 `ReturnType` 实现 TypeScript 的 `ReturnType<T>` 范型。

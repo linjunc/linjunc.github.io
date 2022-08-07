@@ -1,5 +1,8 @@
 # TS 类型挑战 - Easy 题
 
+::: tip 我的 Issue 提交记录
+Github Issue 记录，[点击查看](https://github.com/type-challenges/type-challenges/issues/created_by/linjunc)
+:::
 ## Hello World
 
 在这个挑战中，你需要修改下方的代码使得测试通过（使其没有类型错误）。
