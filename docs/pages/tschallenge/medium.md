@@ -2007,9 +2007,23 @@ type result = NumberRange<2 , 9> //  | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
 ```
 
 :::details 查看解答
+这题做到这里了，已经没什么难度了，合理的使用变量即可，采用 `Count` 来计数，采用 `Res` 来存储返回的结果，采用 `Flag` 来标志开始插入
+
+整体来看：根据 Flag 来判断是否开始插入 `Res`，如果不可以就说明还没到开始的点，继续计数，一旦开始插入，最终的结果就是在 `H` 的位置返回
+
+因此在开始之后，我们需要 `Count['length'] extends H` 判断是否结束
+
+`NumberRange<L, H, [...Count, ''], [...Res,  Count['length']], Flag>` 不断的构造数组
+
+最后返回的是联合类型，我们需要 `[number]` 转一下，同时发现最后一项没有加入，需要强行塞进去
 
 ```typescript
-
+type NumberRange<L, H, Count extends any[] = [], Res extends any[] = [] , Flag extends boolean = Count['length'] extends L ? true : false> = 
+  Flag extends true
+    ? Count['length'] extends H
+      ? [...Res, Count['length']][number]
+      : NumberRange<L, H, [...Count, ''], [...Res,  Count['length']], Flag>
+    : NumberRange<L, H, [...Count, '']>
 ```
 
 :::
