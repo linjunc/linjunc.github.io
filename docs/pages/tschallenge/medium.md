@@ -2078,9 +2078,13 @@ type A = Subsequence<[1, 2]> // [] | [1] | [2] | [1, 2]
 ```
 
 :::details 查看解答
+好啦，最后一题非常顺利，又是一道全排列，这里结果都是数组，那就更好办了，我们直接递归就好了，采用 `|` 连接，这样每次递归都会生成其中一项
 
 ```typescript
-
+type Subsequence<T extends any[]> = 
+  T extends [infer F, ...infer Rest]
+    ? [F, ...Subsequence<Rest>] | Subsequence<Rest>
+    : T
 ```
 
 :::
