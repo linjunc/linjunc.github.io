@@ -357,7 +357,7 @@ module.exports = {
           sidebarDepth: 2, // 可选的, 默认值是 1
           items: [
             {
-              link: "pages/summary/ts.md",
+              link: "/pages/summary/ts.md",
               text: "TS 类型体操还能这么玩，太秀了！",
             },
             {
