@@ -17,11 +17,11 @@ module.exports = {
     socialLinks: [
       { icon: "github", link: "https://github.com/linjunc/linjunc.github.io" },
     ],
-
+    footer: {
+      message: 'Released under the MIT License.',
+      copyright: 'Copyright © 2022-present linjunc'
+    },
     lastUpdated: true, // string | boolean
-    // sidebar: 'auto',
-    // search: false,
-    // smoothScroll: true,
     nav: [
       { text: "首页", link: "/" },
       {

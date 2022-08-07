@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { VPDocAsideSponsors } from 'vitepress/theme'
-import { useSponsor } from '../composables/sponsor'
 const { data } = useSponsor()
 const sponsors = computed(() => {
   return (
@@ -16,19 +15,18 @@ const sponsors = computed(() => {
 </script>
 
 <template>
-  <a class="viteconf" href="https://viteconf.org" target="_blank">
-    <img width="22" height="22" src="/viteconf.svg" />
+  <a class="wechat" target="_blank">
+    <img width="22" height="22" src="https://www.github.com/linjunc.png" />
     <span>
-      <p class="extra-info">Conferencia Online Gratis</p>
-      <p class="heading">ViteConf - Oct 11</p>
-      <p class="extra-info">¡Adquiere tu entrada!</p>
+      <p class="extra-info">About Me</p>
+      <p class="heading">小丞同学</p>
+      <p class="extra-info">A FrontEnd 𝑫𝒆𝒗𝒆𝒍𝒐𝒑𝒆𝒓</p>
     </span>
   </a>
-  <VPDocAsideSponsors v-if="data" :data="sponsors" />
 </template>
 
 <style>
-.viteconf {
+.wechat {
   margin-top: 1rem;
   margin-bottom: 1rem;
   border-radius: 14px;
@@ -48,19 +46,19 @@ const sponsors = computed(() => {
   border: 2px solid var(--vp-c-bg-alt);
   transition: border-color 0.5s;
 }
-.viteconf:hover {
+.wechat:hover {
   filter: grayscale(0%);
   border: 2px solid var(--vp-c-brand-light);
 }
-.viteconf img {
+.wechat img {
   position: absolute;
   left: 1.5rem;
   transition: transform 0.5s;
 }
-.viteconf:hover img {
+.wechat:hover img {
   transform: scale(1.75);
 }
-.viteconf:hover .heading {
+.wechat:hover .heading {
   background-image: linear-gradient(
     120deg,
     #bd34fe 16%,
@@ -71,14 +69,14 @@ const sponsors = computed(() => {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
-.viteconf .extra-info {
+.wechat .extra-info {
   color: var(--vp-c-text-1);
   opacity: 0;
   font-size: 0.7rem;
   padding-left: 0.1rem;
   transition: opacity 0.5s;
 }
-.viteconf:hover .extra-info {
+.wechat:hover .extra-info {
   opacity: 0.9;
 }
 </style>
