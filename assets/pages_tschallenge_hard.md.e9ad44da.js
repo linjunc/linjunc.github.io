@@ -1,1 +1,0 @@
-import{_ as e,c as a,o as t}from"./app.ab117e7d.js";const i=JSON.parse('{"title":"","description":"","frontmatter":{},"headers":[],"relativePath":"pages/tschallenge/hard.md"}'),r={name:"pages/tschallenge/hard.md"};function s(c,n,o,p,d,_){return t(),a("div")}var h=e(r,[["render",s]]);export{i as __pageData,h as default};
