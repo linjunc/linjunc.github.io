@@ -65,3 +65,29 @@ declare function SimpleVue<TData, TComputed, TMethods>(
 ```
 
 :::
+
+## 17 · currying
+
+[Currying]（<https://en.wikipedia.org/wiki/Currying>）是一种将带有多个参数的函数转换为每个带有一个参数的函数序列的技术。
+
+例如：
+
+```typescript
+const add = (a: number, b: number) => a + b
+const three = add(1, 2)
+
+const curriedAdd = Currying(add)
+const five = curriedAdd(2)(3)
+```
+
+传递给Currying的函数可能有多个参数，您需要正确键入它。
+
+在此挑战中，curried函数一次仅接受一个参数。分配完所有参数后，它应返回其结果。
+
+:::details 查看解答
+
+```ts
+
+```
+
+:::
