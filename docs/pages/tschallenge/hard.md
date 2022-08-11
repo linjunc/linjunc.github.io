@@ -1,3 +1,9 @@
+
+# Hard 题
+::: tip 我的 Issue 提交记录
+Github Issue 记录，[点击查看](https://github.com/type-challenges/type-challenges/issues/created_by/linjunc)
+:::
+
 ## 6 · Simple Vue
 
 实现类似Vue的类型支持的简化版本。
