@@ -105,7 +105,7 @@ export function renderWithHooks<Props, SecondArg>(
 }
 ```
 
-根据上面的代码我们可以总结出 3 点，也就是 Hooks 对象在 React 中存在的 3 种形态，
+根据上面的代码我们可以总结出 3 点，也就是 Hooks 对象在 React 中存在的 4 种形态，
 
 - 在组件挂载时，将 `ReactCurrentDispatcher.current` 赋值为 `HooksDispatcherOnMount` ,这时候 hooks 的作用就是建立 Fiber 和 hooks 的桥梁，初次建立 Fiber 和 Hooks 的关系。
 - 在组件更新时，将 `ReactCurrentDispatcher.current` 赋值为 `HooksDispatcherOnUpdate`，这个形态hooks 需要去获取更新维护状态。
