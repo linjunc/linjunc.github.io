@@ -255,7 +255,7 @@ module.exports = {
           collapsable: true,
           sidebarDepth: 2,
           items: [
-            { link: "/pages/react/hard/writing.md", text: "Hooks 实现原理" },
+            { link: "/pages/react/hard/hooks.md", text: "Hooks 实现原理" },
             {
               link: "/pages/react/hard/writing.md",
               text: "useContext 源码解读",
