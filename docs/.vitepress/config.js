@@ -257,12 +257,12 @@ module.exports = {
           items: [
             { link: "/pages/react/hard/hooks.md", text: "Hooks 实现原理" },
             {
-              link: "/pages/react/hard/writing.md",
-              text: "useContext 源码解读",
+              link: "/pages/react/hard/useState.md",
+              text: "useState  源码解读",
             },
             {
               link: "/pages/react/hard/writing.md",
-              text: "useState  源码解读",
+              text: "useContext 源码解读",
             },
             {
               link: "/pages/react/hard/writing.md",
