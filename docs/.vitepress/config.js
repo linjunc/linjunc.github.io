@@ -261,19 +261,20 @@ module.exports = {
               text: "useState  源码解读",
             },
             {
-              link: "/pages/react/hard/writing.md",
-              text: "useContext 源码解读",
-            },
-            {
-              link: "/pages/react/hard/writing.md",
+              link: "/pages/react/hard/usereducer.md",
               text: "useReducer  源码解读",
             },
             {
-              link: "/pages/react/hard/writing.md",
+              link: "/pages/react/hard/usecontext.md",
+              text: "useContext 源码解读",
+            },
+
+            {
+              link: "/pages/react/hard/uselayouteffect.md",
               text: "useLayoutEffect  源码解读",
             },
             {
-              link: "/pages/react/hard/writing.md",
+              link: "/pages/react/hard/useeffect.md",
               text: "useEffect  源码解读",
             },
             { link: "/pages/react/hard/writing.md", text: "useRef  源码解读" },
