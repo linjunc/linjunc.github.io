@@ -382,7 +382,7 @@ function updateReducer<S, I, A>(
 
 对于高优先级的更新，也会加到更新队列尾部，但会计算新的更新
 
-具体的状态更新的源码解析在[前面](./updatecode.html)有讲过了，这里跳过
+具体的状态更新的源码解析在[前面](../update/updatecode.html)有讲过了，这里跳过
 
 主要来说一个 `updateWorkInProgressHook` 方法
 

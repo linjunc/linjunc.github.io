@@ -186,11 +186,11 @@ module.exports = {
           sidebarDepth: 2, // 可选的, 默认值是 1
           items: [
             {
-              link: "/pages/react/hard/beginwork.md",
+              link: "/pages/react/hard/render/beginwork.md",
               text: "Render 阶段 -- Beginwork",
             },
             {
-              link: "/pages/react/hard/completework.md",
+              link: "/pages/react/hard/render/completework.md",
               text: "Render 阶段 -- Completework",
             },
           ],
@@ -200,13 +200,16 @@ module.exports = {
           collapsable: true, // 可选的, 默认值是 true,
           sidebarDepth: 2, // 可选的, 默认值是 1
           items: [
-            { link: "/pages/react/hard/commit.md", text: "流程概览" },
+            { link: "/pages/react/hard/commit/commit.md", text: "流程概览" },
             {
-              link: "/pages/react/hard/beforemutation.md",
+              link: "/pages/react/hard/commit/beforemutation.md",
               text: "Before Mutation 阶段",
             },
-            { link: "/pages/react/hard/mutation.md", text: "Mutation 阶段" },
-            { link: "/pages/react/hard/layout.md", text: "Layout 阶段" },
+            {
+              link: "/pages/react/hard/commit/mutation.md",
+              text: "Mutation 阶段",
+            },
+            { link: "/pages/react/hard/commit/layout.md", text: "Layout 阶段" },
           ],
         },
         {
@@ -214,12 +217,18 @@ module.exports = {
           collapsable: true,
           sidebarDepth: 2,
           items: [
-            { link: "/pages/react/hard/diffpre.md", text: "Diff 算法概览" },
             {
-              link: "/pages/react/hard/singlediff.md",
+              link: "/pages/react/hard/diff/diffpre.md",
+              text: "Diff 算法概览",
+            },
+            {
+              link: "/pages/react/hard/diff/singlediff.md",
               text: "单一节点的 Diff",
             },
-            { link: "/pages/react/hard/arraydiff.md", text: "多节点的 Diff" },
+            {
+              link: "/pages/react/hard/diff/arraydiff.md",
+              text: "多节点的 Diff",
+            },
           ],
         },
         {
@@ -227,10 +236,16 @@ module.exports = {
           collapsable: true,
           sidebarDepth: 2,
           items: [
-            { link: "/pages/react/hard/update.md", text: "状态更新流程概览" },
-            { link: "/pages/react/hard/priority.md", text: "优先级更新" },
             {
-              link: "/pages/react/hard/updatecode.md",
+              link: "/pages/react/hard/update/update.md",
+              text: "状态更新流程概览",
+            },
+            {
+              link: "/pages/react/hard/update/priority.md",
+              text: "优先级更新",
+            },
+            {
+              link: "/pages/react/hard/update/updatecode.md",
               text: "状态更新调度源码解析",
             },
           ],
@@ -255,26 +270,29 @@ module.exports = {
           collapsable: true,
           sidebarDepth: 2,
           items: [
-            { link: "/pages/react/hard/hooks.md", text: "Hooks 实现原理" },
             {
-              link: "/pages/react/hard/useState.md",
+              link: "/pages/react/hard/hooks/hooks.md",
+              text: "Hooks 实现原理",
+            },
+            {
+              link: "/pages/react/hard/hooks/useState.md",
               text: "useState  源码解读",
             },
             {
-              link: "/pages/react/hard/usereducer.md",
+              link: "/pages/react/hard/hooks/usereducer.md",
               text: "useReducer  源码解读",
             },
             {
-              link: "/pages/react/hard/usecontext.md",
+              link: "/pages/react/hard/hooks/usecontext.md",
               text: "useContext 源码解读",
             },
 
             {
-              link: "/pages/react/hard/uselayouteffect.md",
+              link: "/pages/react/hard/hooks/uselayouteffect.md",
               text: "useLayoutEffect  源码解读",
             },
             {
-              link: "/pages/react/hard/useeffect.md",
+              link: "/pages/react/hard/hooks/useeffect.md",
               text: "useEffect  源码解读",
             },
             { link: "/pages/react/hard/writing.md", text: "useRef  源码解读" },
