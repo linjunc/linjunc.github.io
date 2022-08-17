@@ -160,4 +160,93 @@ function pushEffect(tag, create, destroy, deps) {
    2. 初始化依赖项
    3. 设置 `flags`
    4. 初始化 effect 链表
-3. 初始化 effect 链表的逻辑在 `pushEffect` 中，会创建 effect 对象，并维护 `UpdateQueue` 上的 effect 链表
+3. 初始化 effect 链表的逻辑在 `pushEffect` 中，会创建 effect 对象，并维护 `UpdateQueue` 上的 effect 环状链表
+4. 在渲染完成后会，会循环这个环状链表，执行每个对象的 destroy 和 create
+
+## update 时 --〉updateEffect 
+
+在页面更新时，会执行 `updateEffect`，调用 `updateEffectImpl` 完成 `effect` 链表的构建，这个过程会根据前后依赖的是否变化，来创建不同的 effect 对象，
+
+- 首先会根据 `hook` 单向链表获取对应的更新时的 hook 对象，创建新的 hook 对象，加入 hook 的单向链表
+- 如果拿到 `effect` 的 `deps` 不为 null，或者 undefined，会从当前 hook 对象拿到上一次 `effect` 对象，再从 `effect` 对象拿到 `deps` 和 `destroy`，用新的 `deps` 与之比较
+  - 如果新老 `deps` 相等，push 一个不带 `HookHasEffect` 的 tag 给 effect 对象，加入 `updateQueue` 环状链表(没有副作用），不更新 `hook.memoizedState`
+  - 如果新老 `deps` 不相等，更新 `effect` 对象，在 `effect` 的 tag 中加入 `HookHasEffect` 和上一次 `create` 执行的 `destroy`，更新 `hook.memoizedState`
+
+```js
+function updateEffectImpl(fiberFlags, hookFlags, create, deps): void {
+  // 获取 更新时的 hook 对象
+  const hook = updateWorkInProgressHook();
+  const nextDeps = deps === undefined ? null : deps;
+  let destroy = undefined;
+
+  if (currentHook !== null) {
+    // 从 currentHook 获取上一次的 effect
+    const prevEffect = currentHook.memoizedState;
+    destroy = prevEffect.destroy;
+    if (nextDeps !== null) {
+      const prevDeps = prevEffect.deps;
+      // 比较前后的 deps 是否相等，push 一个不带 hasEffect 的 effect
+      if (areHookInputsEqual(nextDeps, prevDeps)) {
+        hook.memoizedState = pushEffect(hookFlags, create, destroy, nextDeps);
+        return;
+      }
+    }
+  }
+  // 如果 deps 有变化，那就 push 一个 有 hookHasEffect 的 effect，并挂到 hook.memoizedState 上
+  currentlyRenderingFiber.flags |= fiberFlags;
+
+  hook.memoizedState = pushEffect(
+    HookHasEffect | hookFlags,
+    create,
+    destroy,
+    nextDeps,
+  );
+}
+```
+
+和 `mountEffectImpl` 有一些不同，在挂载时调用的 `pushEffect` 去创建 `effect` 对象，并没有传递 `destroy` 方法，而 `update` 的时候传了，
+这是因为 `effect` 执行之前，都会先执行前一次的销毁函数，再执行新 `effect` 的创建函数，而 `mount` 时，并没有上一个 `effect` ，因此无需先销毁
+
+再来看看这个 `areHookInputsEqual` 方法
+
+### areHookInputsEqual 比较
+
+这个方法是用来比较两个 `deps` 是否相等的
+
+```js
+function areHookInputsEqual(
+  nextDeps: Array<mixed>,
+  prevDeps: Array<mixed> | null,
+) {
+  if (prevDeps === null) {
+    return false;
+  }
+  // 循环遍历
+  for (let i = 0; i < prevDeps.length && i < nextDeps.length; i++) {
+    // is 比较函数是浅比较
+    if (is(nextDeps[i], prevDeps[i])) {
+      continue;
+    }
+    return false;
+  }
+  return true;
+}
+```
+
+首先会遍历 `deps` ，调用 `is` 方法来比较依赖项数组中的每个依赖
+
+`is` 方法是一个浅比较的方法
+
+```js
+function is(x: any, y: any) {
+  return (
+    (x === y && (x !== 0 || 1 / x === 1 / y)) || (x !== x && y !== y) // eslint-disable-line no-self-compare
+  );
+}
+
+const objectIs: (x: any, y: any) => boolean =
+  typeof Object.is === 'function' ? Object.is : is;
+```
+
+若当前浏览器支持 `Object.is()` 方法，则调用该方法来判断两个值是否相同，若不支持，则调用 React 自己实现 is 方法来比较。
+
