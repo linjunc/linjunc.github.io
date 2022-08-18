@@ -141,3 +141,8 @@ function dispatchReducerAction<S, A>(
 
 这个其实依赖的是 React 的 Scheduler 调度器实现的，当 `dispatch` 触发后，并不会立刻的去更新，而是调用的 `scheduleUpdateOnFiber` 来调度更新，在这里面，会把
 更新处理添加到一个微任务队列里，好像叫 `scheduleMicrotask` （忘记了，不想找），这样可以调用多次 `dispatch` ，而只执行一次更新
+
+## 总结
+`useState` 和 `useReducer` 的执行过程
+
+![usestate-reducer](/img/hooks/usestate-reducer.png)
