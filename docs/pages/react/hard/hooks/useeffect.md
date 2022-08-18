@@ -27,7 +27,7 @@ useEffect(() => {
 在 render 阶段，函数组件开始渲染，在 beginWork 阶段，会对特定类型的 component 进行差异化处理，对于 FC 会进入 `updateComponent` 的逻辑，会调用
 `renderWithHooks` 方法来处理 `hooks` ，初始化时会创建 hook 链表挂载到 `workInProgress` 的 `memoizedState` 上，并创建 effect 链表，这个链表会根据依赖项有差异。
 
-如果依赖项没有变化的话， effect 时不会被处理的，也就不会存在于链表中
+**如果依赖项没有变化的话， effect 时不会被处理的，也就不会存在于链表中**
 
 在 `commit` 阶段的 `before Mutation` 阶段，会发起 `useEffect` 的异步调度，但是不会直接处理 `effect`，而是要等到 `commit` 阶段完成，更新已经处理完，才会开始处理 `useEffect` 产生的 `effect` 副作用
 
@@ -163,7 +163,7 @@ function pushEffect(tag, create, destroy, deps) {
 3. 初始化 effect 链表的逻辑在 `pushEffect` 中，会创建 effect 对象，并维护 `UpdateQueue` 上的 effect 环状链表
 4. 在渲染完成后会，会循环这个环状链表，执行每个对象的 destroy 和 create
 
-## update 时 --〉updateEffect 
+## update 时 --〉updateEffect
 
 在页面更新时，会执行 `updateEffect`，调用 `updateEffectImpl` 完成 `effect` 链表的构建，这个过程会根据前后依赖的是否变化，来创建不同的 effect 对象，
 
@@ -250,3 +250,136 @@ const objectIs: (x: any, y: any) => boolean =
 
 若当前浏览器支持 `Object.is()` 方法，则调用该方法来判断两个值是否相同，若不支持，则调用 React 自己实现 is 方法来比较。
 
+这块就是 `update` 时所做的工作了
+
+## 如何调度
+
+由于 `useEffect` 回调延迟调用的设计，在实现上利用 `Scheduler` 的异步调度函数：`scheduleCallback`，将执行 `useEffect` 回调的动作作为一个任务去调度，这个任务会异步调用。
+
+> 与 componentDidMount、componentDidUpdate 不同的是，在浏览器完成布局与绘制之后，传给 useEffect 的函数会延迟调用。
+> 这使得它适用于许多常见的副作用场景，比如设置订阅和事件处理等情况，因此不应在函数中执行阻塞浏览器更新屏幕的操作。
+
+和 `useEffect` 调度相关的部分在 React 的 commit 阶段，commit 阶段的具体工作可以看[这部分](../commit/commit.md)
+
+主要分为 `beforeMutation` 、`mutation`、`layout` 三个阶段
+
+```js
+function commitRootImpl(root, renderPriorityLevel) {
+  // 进入 commit 阶段，先执行一次之前未执行的 useEffect
+  do {
+    flushPassiveEffects();
+  } while (rootWithPendingPassiveEffects !== null);
+  ...
+  do {
+    try {
+      // beforeMutation阶段 异步调度useEffect
+      commitBeforeMutationEffects();
+    } catch (error) {
+      ...
+    }
+  } while (nextEffect !== null);
+  ...
+  const rootDidHavePassiveEffects = rootDoesHavePassiveEffects;
+  if (rootDoesHavePassiveEffects) {
+    // 记录有副作用的effect
+    rootWithPendingPassiveEffects = root;
+  }
+}
+```
+
+其中和 `useEffect` 有关的在 `commit` 阶段开始、`beforeMutation` 、`layout` 阶段
+具体如下：
+
+1. 在 `commit` 阶段开始时，会先将之前还没有处理完的 `useEffect` 全部处理完成，这里采用的是 `do while` 循环。在这里这么处理的作用是因为
+由于 `useEffect` 是被以一个低优先级的任务进行调度的，因此在过程中有可能会被其他高优先级的任务打断，高优先级的任务会先进入到 `commit` 阶段，
+而低优先级的 `useEffect` 还没有被执行，所以需要先将之前的 `effect` 全部处理掉，保证本次调度的产生的更新是由当前的 `useEffect` 产生的
+
+```js
+// 进入 commit 阶段，先执行一次之前未执行的 useEffect
+do {
+    flushPassiveEffects();
+} while (rootWithPendingPassiveEffects !== null);
+```
+
+2. `useEffect` 在 `beforeMutation` 阶段会被交给 `scheduleCallback`，发起一个 `NormalPriority` 低优先级的调度，这一点上面也提到了
+
+由于 `rootDoesHavePassiveEffects` 的限制，只会发起一次 `useEffect` 调度
+
+::: info 提示
+引用之前的写的
+
+- before mutation 阶段在 scheduleCallback 中调度 flushPassiveEffects
+- layout 阶段之后将 effectList 赋值给 rootWithPendingPassiveEffects
+- scheduleCallback 触发 flushPassiveEffects，flushPassiveEffects内部遍历rootWithPendingPassiveEffects
+:::
+
+```js
+// commitImpl
+  if (
+    (finishedWork.subtreeFlags & PassiveMask) !== NoFlags ||
+    (finishedWork.flags & PassiveMask) !== NoFlags
+  ) {
+    if (!rootDoesHavePassiveEffects) {
+      scheduleCallback(NormalSchedulerPriority, () => {
+        flushPassiveEffects();
+        return null;
+      });
+    }
+  }
+```
+
+3. 在 layout 阶段会去补齐 `effect` 链表，真正 `useEffect` 执行的时候，实际上是先执行上一次 effect 的销毁(destroy)，再执行本次 effect 的创建(create)
+
+可以看到 `commitHookEffectListMount` 和 `commitHookEffectListUnMount` 这两个方法
+
+```js
+function commitHookEffectListUnmount(
+  flags: HookFlags,
+  finishedWork: Fiber,
+  nearestMountedAncestor: Fiber | null,
+) {
+  const updateQueue: FunctionComponentUpdateQueue | null = (finishedWork.updateQueue: any);
+  const lastEffect = updateQueue !== null ? updateQueue.lastEffect : null;
+  if (lastEffect !== null) {
+    const firstEffect = lastEffect.next;
+    let effect = firstEffect;
+    do {
+      if ((effect.tag & flags) === flags) {
+        // Unmount
+        const destroy = effect.destroy;
+        effect.destroy = undefined;
+        if (destroy !== undefined) {
+          safelyCallDestroy(finishedWork, nearestMountedAncestor, destroy);
+        }
+      }
+      effect = effect.next;
+    } while (effect !== firstEffect);
+  }
+}
+```
+
+执行 create
+
+```js
+function commitHookEffectListMount(flags: HookFlags, finishedWork: Fiber) {
+  const updateQueue: FunctionComponentUpdateQueue | null = (finishedWork.updateQueue: any);
+  const lastEffect = updateQueue !== null ? updateQueue.lastEffect : null;
+  if (lastEffect !== null) {
+    const firstEffect = lastEffect.next;
+    let effect = firstEffect;
+    do {
+      if ((effect.tag & flags) === flags) {
+        // Mount
+        const create = effect.create;
+        effect.destroy = create();
+      }
+      effect = effect.next;
+    } while (effect !== firstEffect);
+  }
+}
+```
+
+## 总结
+
+`useEffect` 的大体流程如下：
+![useEffect](/img/hooks/useEffect.jpg)
