@@ -91,7 +91,4 @@ Effect 对象通过 tag 字段区分是 useEffect 还是 useLayoutEffect，`Hook
 
 网上找了个对比图，非常明显，useEffect 会闪动一下，就因为引起了页面的重新渲染嘛
 
-**useEffect**
-![useEffect](/img/hooks/useeffectgif.awebp)
-**useLayoutEffect**
-![uselayout](/img/hooks/uselayoutgif.awebp)
+![useEffect](/img/hooks/layout-effect.gif)
