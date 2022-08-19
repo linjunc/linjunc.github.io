@@ -16,9 +16,150 @@ React Hooks 就是诞生于这样的背景下
 - 解决逻辑复用难的问题。
 - 放弃面向对象编程，拥抱函数式编程。
 
-但是这也不是说，Function Component 就一定会比 Class Component 会更好，单纯的谈这件事也很不公平，这应该要落地到业务中去衡量是采用 FC 还是 CC，FC 对于业务组件的编写会更加的友好，CC 有更为丰富的生命周期函数，因此这件事没有对错之分，只有哪个更加的合适
+但是这也不是说，`Function Component` 就一定会比 `Class Component` 会更好，单纯的谈这件事也很不公平，这应该要落地到业务中去衡量是采用 FC 还是 CC，FC 对于业务组件的编写会更加的友好，CC 有更为丰富的生命周期函数，因此这件事没有对错之分，只有哪个更加的合适
 
 这篇是 Hooks 源码的导读，我们先来看看 React 中大体是如何实现的呢？
+
+**这一篇会分为几个部分去讲**
+
+1. 首先先讲讲在 hooks 设计中会使用到的数据结构
+2. 然后会简单讲讲 hooks 的入口，以及从使用到触发的流程
+3. 后面的文章都会介绍每个 hook 的原理，如何设计的，如何被调度、被处理的
+
+## Hooks 相关的数据结构
+
+::: tip 注意
+这里临时再补多一部分的内容，在写后面的内容的时候，重新阅读了一下这几篇，发现还是有一些门槛的，因此先了解一下一些 Hooks 相关的数据结构是如何设计的
+:::
+
+### Hook
+
+每一个 `hooks` 方法都会生成一个**特定类型为 Hook 的对象**，用来存储一些信息，许多的 Hooks 对象，会被连接形成 Hooks 链表，挂到 Fiber 的 `memoizedState` 字段上
+
+```ts
+// packages/react-reconciler/src/ReactFiberHooks.old.js
+export type Hook = {|
+  memoizedState: any, // 上次渲染时所用的 state
+  baseState: any, // 已处理的 update 计算出的 state
+  baseQueue: Update<any, any> | null, // 未处理完的 update 队列
+  queue: UpdateQueue<any, any> | null, // 当前出发的 update 队列
+  next: Hook | null, // 指向下一个 hook，形成链表结构
+|};
+```
+
+例如我们调用两个 `useState`
+
+```ts
+const [count, setCount] = useState(0)
+const [num, setNum] = useState(1)
+```
+
+则 hook 链表的结构会是这样的
+
+```ts
+{
+  memoizedState: 0,
+  baseState: 0,
+  baseQueue: null,
+  queue: null,
+  next: {
+    memoizedState: 1,
+    baseState: 1,
+    baseQueue: null,
+    queue: null,
+  }
+}
+```
+
+同时不同的 hook 对应的 Hook 对象是不一样的，在 `memoizedState` 中存放的数据也是不一样的，这些我们可以在官网以及 React Devtools 工具上能感知到
+
+- useState 存放的是 State
+- useEffect 存放的是一个 effect 对象，在 devtools 上表现出来就是一个 fn
+- useRef 存放的就是一个包含 current 的对象
+- useMemo 存放的就是它的回调和依赖项数组
+
+### Update & UpdateQueue
+
+Update 和 UpdateQueue 是存储 `useState` 的 state 及 `useReducer` 的 reducer 相关内容的数据结构。
+
+```ts
+// packages/react-reconciler/src/ReactFiberHooks.old.js
+
+type Update<S, A> = {|
+  lane: Lane, // 优先级
+  // reducer 对应要执行的 action
+  action: A,
+  // 触发 dispatch 时的 reducer
+  eagerReducer: ((S, A) => S) | null,
+  // 触发 dispatch 是的 state
+  eagerState: S | null,
+  // 下一个要执行的 Update
+  next: Update<S, A>,
+  // react 的优先级权重
+  priority?: ReactPriorityLevel,
+|};
+
+type UpdateQueue<S, A> = {|
+  // 当前要触发的 update
+  pending: Update<S, A> | null,
+  // 存放 dispatchAction.bind() 的值
+  dispatch: (A => mixed) | null,
+  // 上一次 render 的 reducer
+  lastRenderedReducer: ((S, A) => S) | null,
+  // 上一次 render 的 state
+  lastRenderedState: S | null,
+|};
+```
+
+每次调用 `useState` 或者 `useReducer` 的 dispatch 时，都会生成一个 Update 类型的对象，并将其添加到 UpdateQueue 队列中。
+
+最后 react 会遍历 `UpdateQueue` 中的每个 Update 去进行更新。
+
+### Effect
+
+Effect 结构是和 `useEffect` 等 effect hooks 相关的，先看一下它的结构：
+
+```ts
+// packages/react-reconciler/src/ReactFiberHooks.old.js
+
+export type Effect = {|
+  tag: HookFlags, // 标记是否有 effect 需要执行
+  create: () => (() => void) | void, // 回调函数
+  destroy: (() => void) | void, // 销毁时触发的回调
+  deps: Array<mixed> | null, // 依赖的数组
+  next: Effect, // 下一个要执行的 Effect
+|};
+```
+
+当我们的函数组件中使用了如下的 `useEffect` 时：
+
+```ts
+useEffect(() => {
+  console.log('create');
+  return () => {
+    console.log('destroy');
+  };
+}, []);
+```
+
+对应的 Hook 如下：
+
+```ts
+{
+  memoizedState: {
+    create: () => { console.log('create') },
+    destroy: () => { console.log('destroy') },
+    deps: [],
+    // ...
+  },
+  baseState: null,
+  baseQueue: null,
+  queue: null,
+  next: null,
+}
+```
+
+这就是和 Hook 这部分强相关的三个对象
 
 ## Hooks 源码入口
 
