@@ -210,6 +210,7 @@ module.exports = {
               text: "Mutation 阶段",
             },
             { link: "/pages/react/hard/commit/layout.md", text: "Layout 阶段" },
+            { link: "/pages/react/hard/commit/qa.md", text: "Q & A" },
           ],
         },
         {
@@ -286,21 +287,23 @@ module.exports = {
               link: "/pages/react/hard/hooks/usecontext.md",
               text: "useContext 源码解读",
             },
-
-            {
-              link: "/pages/react/hard/hooks/uselayouteffect.md",
-              text: "useLayoutEffect  源码解读",
-            },
             {
               link: "/pages/react/hard/hooks/useeffect.md",
-              text: "useEffect  源码解读",
+              text: "useEffect 源码解读",
             },
-            { link: "/pages/react/hard/writing.md", text: "useRef  源码解读" },
-            { link: "/pages/react/hard/writing.md", text: "useMemo  源码解读" },
             {
-              link: "/pages/react/hard/writing.md",
-              text: "useCallback  源码解读",
+              link: "/pages/react/hard/hooks/uselayouteffect.md",
+              text: "useLayoutEffect 源码解读",
             },
+            {
+              link: "/pages/react/hard/hooks/useref.md",
+              text: "useRef  源码解读",
+            },
+            {
+              link: "/pages/react/hard/hooks/usememo-callback.md",
+              text: "useMemo & useCallback 源码解读",
+            },
+            { link: "/pages/react/hard/hooks/qa.md", text: "Q & A" },
           ],
         },
         {
