@@ -1,4 +1,5 @@
 # 专栏介绍
+
 ## 前言
 
 Hello，大家好，我是小丞同学！半年时间，带来了一个新的专栏：React 源码解析<br />这段时间，一直在深入 React 源码学习，学习了卡颂老师的 [React 技术揭秘](https://react.iamkasong.com/)、外星人老师的 [React 进阶实践指南小册](https://juejin.cn/book/6945998773818490884)等优秀的博文。最终结合自己的理解和思考，写下了这个专栏，希望我的理解能够为你的源码学习之路带来一定的启发。<br />文中内容如有错误之处，欢迎指出，我们共同成长，一起进步。
@@ -12,7 +13,7 @@ Hello，大家好，我是小丞同学！半年时间，带来了一个新的专
 
 ### 二、Render 阶段
 
-- ✅ Render 阶段 -- beginWork 
+- ✅ Render 阶段 -- beginWork
 - ✅ Render 阶段 -- completeWork
 
 ### 三、Commit 阶段
@@ -45,11 +46,12 @@ Hello，大家好，我是小丞同学！半年时间，带来了一个新的专
 - ✅  useState 源码解读
 - ✅  useReducer 源码解读
 - ✅  useContext 源码解读
-- 🖍 useLayoutEffect 源码解读
-- 🖍 useEffect 源码解读
-- 🖍 useRef 源码解读
-- 🖍 useMemo 源码解读
-- 🖍 useCallback 源码解读
+- ✅ useLayoutEffect 源码解读
+- ✅ useEffect 源码解读
+- ✅ useRef 源码解读
+- ✅ useMemo & useCallback 源码解读
+- 🖍 useTransition 源码解读
+- 🖍 useId 源码解读
 
 ### 八、事件系统
 
