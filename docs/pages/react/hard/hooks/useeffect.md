@@ -1,8 +1,10 @@
 # useEffect 源码解析
 
+这篇文章会从 useEffect 的使用开始，到 `useEffect` API 的实现原理，再到 `useEffect` 的源码实现，最后会从 render 阶段到 commit 阶段介绍 useEffect 是如何被调度的
+
 ## 基本使用
 
-首先我们先看看 `useEffect` 的使用方法，有助于理解源码里为什么要这么实现，这么做是为了说明
+首先我们先看看 `useEffect` 的使用方法，有助于理解源码里为什么要这么实现，这么做的目的是什么
 
 `useEffect` 是一个接受两个参数的函数。传递给 `useEffect` 的参数
 
@@ -328,9 +330,11 @@ do {
   }
 ```
 
-3. 在 layout 阶段会去补齐 `effect` 链表，真正 `useEffect` 执行的时候，实际上是先执行上一次 effect 的销毁(destroy)，再执行本次 effect 的创建(create)
+1. 在 layout 阶段 DOM 更新完成之后，会执行 `flushPassiveEffectsImpl`,会先执行上一次 effect 的销毁(destroy)，再执行本次 effect 的创建(create)
 
-可以看到 `commitHookEffectListMount` 和 `commitHookEffectListUnMount` 这两个方法
+可以看到在 `flushPassiveEffectsImpl` 中调用的 UnmountEffects 和 MountEffects 中调用的 `commitHookEffectListMount` 和 `commitHookEffectListUnMount` 这两个方法
+
+`commitHookEffectListUnmount` 执行 `effect` 的 `destroy`
 
 ```js
 function commitHookEffectListUnmount(
@@ -358,7 +362,7 @@ function commitHookEffectListUnmount(
 }
 ```
 
-执行 create
+`commitHookEffectListMount` 先执行 create
 
 ```js
 function commitHookEffectListMount(flags: HookFlags, finishedWork: Fiber) {
@@ -379,7 +383,11 @@ function commitHookEffectListMount(flags: HookFlags, finishedWork: Fiber) {
 }
 ```
 
+可以注意到这里采用的是 `flags` 来遍历 `updateQueue`，只有 `flags` 全等才会执行，而这个 flags 就是决定当前 Fiber **是否因为依赖变化而需要执行回调**
+
+这也是为什么在依赖不变的时候仍然需要 `pushEffect` 进入 `updateQueue` 中，因为在组件销毁的时候需要执行全部 effect 的 destroy 函数，即使依赖不变，也需要 `pushEffect`
+
 ## 总结
 
 `useEffect` 的大体流程如下：
-![useEffect](/img/hooks/useEffect.jpg)
+![useEffect](/img/hooks/useEffect.svg)
