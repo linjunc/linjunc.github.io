@@ -88,3 +88,10 @@ Effect 对象通过 tag 字段区分是 useEffect 还是 useLayoutEffect，`Hook
 因此不会有中间状态的产生，可以有效的避免闪动问题。因此当业务中出现需要在 effect 中修改视图，且执行的上一帧中视图变更，就可以考虑是否将逻辑放入 `useLayoutEffect` 中处理。
 
 当然，`useLayoutEffect` 的使用也应当是谨慎的。由于 js 线程和渲染进程是互斥的，因此 `useLayoutEffects` 中不宜加入很耗时的计算，否则会导致浏览器没有时间重绘而阻塞渲染。
+
+网上找了个对比图，非常明显，useEffect 会闪动一下，就因为引起了页面的重新渲染嘛
+
+**useEffect**
+![useEffect](/img/hooks/useeffectgif.awebp)
+**useLayoutEffect**
+![uselayout](/img/hooks/uselayoutgif.awebp)
