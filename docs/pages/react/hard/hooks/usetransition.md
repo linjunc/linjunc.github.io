@@ -1,6 +1,10 @@
 # useTransition 源码解析
 
-和 useId 一样，`useTransition` 也是 React 18 带来的全新的 Hook，这也是 React 18 并发模式下才能使用的一个 hook,它用来来帮助我们实现更新协调可中断，能极大的提升用户体验。它的作用非常之大，当然前提是你要先知道它有什么作用
+和 useId 一样，`useTransition` 也是 React 18 带来的全新的 Hook，它用来帮助我们实现更新协调可中断，能极大的提升用户体验。它的作用非常之大，当然前提是你要先知道它有什么作用
+
+:::warning
+`startTransition` 依赖于 `concurrent Mode` 渲染并发模式。也就是说在 React 18 中使用 `startTransition` ，那么要先开启并发模式，也就是需要通过 createRoot 创建 Root
+:::
 
 在开始 `useTransition` 之前，需要了解一下 `transition` 设计相关的东西
 
@@ -118,7 +122,7 @@ function startTransition(setPending, callback, options) {
   setPending(true);
   // 设置了一个全局过渡标记位
   const prevTransition = ReactCurrentBatchConfig.transition;
-  ReactCurrentBatchConfig.transition = {};
+  ReactCurrentBatchConfig.transition = {}; // 更新上下文
   const currentTransition = ReactCurrentBatchConfig.transition;
 
   if (enableTransitionTracing) {
@@ -191,3 +195,7 @@ function updateTransition(): [
 ## 参考
 
 [React 18 discussion](https://github.com/reactwg/react-18/discussions/65)
+
+[漫谈 React 系列(四): React18 自己的防抖节流 - useTransition](https://juejin.cn/post/7038402899860258847#heading-4)
+
+[New feature: startTransition](https://github.com/reactwg/react-18/discussions/41)
