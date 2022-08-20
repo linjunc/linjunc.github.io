@@ -37,8 +37,7 @@ Hello，大家好，我是小丞同学！半年时间，带来了一个新的专
 
 ### 六、Scheduler 模块
 
-- 🖍 Scheduler 核心流程概览
-- 🖍 Scheduler 调度源码解析
+- ✅ Scheduler 源码解析
 
 ### 七、Hooks 实现
 
