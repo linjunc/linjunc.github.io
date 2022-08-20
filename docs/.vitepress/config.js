@@ -307,6 +307,10 @@ module.exports = {
               link: "/pages/react/hard/hooks/useId.md",
               text: "useId 源码解读",
             },
+            {
+              link: "/pages/react/hard/hooks/usetransition.md",
+              text: "useTransition 源码解读",
+            },
             { link: "/pages/react/hard/hooks/qa.md", text: "Q & A" },
           ],
         },
