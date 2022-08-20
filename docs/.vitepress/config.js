@@ -257,11 +257,11 @@ module.exports = {
           sidebarDepth: 2,
           items: [
             {
-              link: "/pages/react/hard/writing.md",
+              link: "/pages/react/hard/scheduler.md",
               text: "Scheduler 核心流程概览",
             },
             {
-              link: "/pages/react/hard/writing.md",
+              link: "/pages/react/hard/scheduler.md",
               text: "Scheduler 调度源码解析",
             },
           ],
