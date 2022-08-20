@@ -166,7 +166,7 @@ module.exports = {
         {
           text: "React 源码解析",
           collapsable: false,
-          items: [{ link: "/pages/react/hard/start.md", text: "专栏介绍" }],
+          items: [{ link: "/pages/react/hard/readme.md", text: "专栏介绍" }],
         },
         {
           text: "React 哲学", // 必要的

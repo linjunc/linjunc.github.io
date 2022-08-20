@@ -10,7 +10,7 @@ There's a lot of front-end knowledge here, and it's also a treasure trove of my 
 - JavaScript
 - CSS
 - Interview
-- React
+- [React](./docs/pages/react/hard/)
 - React Source Code
 - FE Summary
 - Structure
