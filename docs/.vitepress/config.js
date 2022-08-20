@@ -257,12 +257,8 @@ module.exports = {
           sidebarDepth: 2,
           items: [
             {
-              link: "/pages/react/hard/scheduler.md",
-              text: "Scheduler 核心流程概览",
-            },
-            {
-              link: "/pages/react/hard/scheduler.md",
-              text: "Scheduler 调度源码解析",
+              link: "/pages/react/hard/scheduler/scheduler.md",
+              text: "Scheduler 源码解析",
             },
           ],
         },
@@ -314,59 +310,55 @@ module.exports = {
             { link: "/pages/react/hard/hooks/qa.md", text: "Q & A" },
           ],
         },
-        {
-          text: "事件系统",
-          collapsable: true,
-          sidebarDepth: 2,
-          items: [
-            {
-              link: "/pages/react/hard/writing.md",
-              text: "React 事件系统概览",
-            },
-            {
-              link: "/pages/react/hard/writing.md",
-              text: "React 事件系统源码解析",
-            },
-          ],
-        },
-        {
-          text: "Context 状态原理",
-          collapsable: true,
-          sidebarDepth: 2,
-          items: [
-            {
-              link: "/pages/react/hard/writing.md",
-              text: "Context 状态原理概览",
-            },
-            {
-              link: "/pages/react/hard/writing.md",
-              text: "Context 状态原理源码解析",
-            },
-          ],
-        },
-        {
-          text: "React 全家桶",
-          collapsable: true,
-          sidebarDepth: 2,
-          items: [
-            {
-              link: "/pages/react/hard/writing.md",
-              text: "React Redux 源码解析",
-            },
-            {
-              link: "/pages/react/hard/writing.md",
-              text: "React MobX 源码解析",
-            },
-            {
-              link: "/pages/react/hard/writing.md",
-              text: "React Router 源码解析",
-            },
+        // {
+        //   text: "事件系统",
+        //   collapsable: true,
+        //   sidebarDepth: 2,
+        //   items: [
+        //     {
+        //       link: "/pages/react/hard/writing.md",
+        //       text: "React 事件系统源码解析",
+        //     },
+        //   ],
+        // },
+        // {
+        //   text: "Context 状态原理",
+        //   collapsable: true,
+        //   sidebarDepth: 2,
+        //   items: [
+        //     {
+        //       link: "/pages/react/hard/writing.md",
+        //       text: "Context 状态原理概览",
+        //     },
+        //     {
+        //       link: "/pages/react/hard/writing.md",
+        //       text: "Context 状态原理源码解析",
+        //     },
+        //   ],
+        // },
+        // {
+        //   text: "React 全家桶",
+        //   collapsable: true,
+        //   sidebarDepth: 2,
+        //   items: [
+        //     {
+        //       link: "/pages/react/hard/writing.md",
+        //       text: "React Redux 源码解析",
+        //     },
+        //     {
+        //       link: "/pages/react/hard/writing.md",
+        //       text: "React MobX 源码解析",
+        //     },
+        //     {
+        //       link: "/pages/react/hard/writing.md",
+        //       text: "React Router 源码解析",
+        //     },
 
-            ["writing.md", "React Redux 源码解析"],
-            ["writing.md", "React MobX 源码解析"],
-            ["writing.md", "React Router 源码解析"],
-          ],
-        },
+        //     ["writing.md", "React Redux 源码解析"],
+        //     ["writing.md", "React MobX 源码解析"],
+        //     ["writing.md", "React Router 源码解析"],
+        //   ],
+        // },
       ],
       "/pages/interview/heading/": [
         {
