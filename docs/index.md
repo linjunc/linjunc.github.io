@@ -13,7 +13,7 @@ hero:
   actions:
     - theme: brand
       text: 开启热爱 →
-      link: /pages/react/hard/start.html
+      link: /pages/react/hard/readme.html
     - theme: alt
       text: About me
       link: https://github.com/linjunc
