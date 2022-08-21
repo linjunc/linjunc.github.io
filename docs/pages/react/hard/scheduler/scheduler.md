@@ -4,93 +4,7 @@
 终于开始写这篇了，只想快快的把这个系列收尾了，这篇文章可能会引用比较多的内容，天色已晚，不宜久留
 :::
 
-在正式开始 `Scheduler` 源码前，先来简单的了解一下 `Scheduler` 的作用以及它产生的意义
-
-`Scheduler` 是一个**任务调度器**，它会根据任务的**优先级**对任务进行调用执行。 在有多个任务的情况下，它**会先执行优先级高**的任务。如果一个任务执行的时间过长，
-`Scheduler` 会中断当前任务，让出线程的执行权，**避免造成用户操作时界面的卡顿**。在下一次恢复未完成的任务的执行。
-
-::: warning 扩展
-Scheduler 作为一个独立的包，可以独自承担起**任务调度**的职责，你只需要将任务和任务的优先级交给它，它就可以帮你管理任务，安排任务的执行。这就是 React 和 Scheduler 配合工作的模式。
-对于多个任务，它会先执行优先级高的，对于单个任务，它会有节制地去执行。换句话说，**线程只有一个，它不会一直占用着线程去执行任务**。而是执行一会，中断一下，如此往复。
-用这样的模式，来避免一直占用有限的资源执行耗时较长的任务，解决用户操作时页面卡顿的问题，实现更快的响应。
-:::
-
-## 基本概念
-
-为了实现可中断的更新，Scheduler 中引入了两个重要的概念：任务优先级和时间片
-
-- 任务优先级让任务按照自身的紧急程度排序，这样可以**让优先级最高的任务最先被执行到**，并拥有打断低优先级任务的能力
-- 时间片规定的是单个任务在这一帧内最大的执行时间，任务一旦执行时间超过时间片，则会被打断，有节制地执行任务。这样可以保证页面不会因为任务连续执行的时间过长而产生卡顿
-
-## 原理概述
-
-基于**任务优先级和时间片**的概念，Scheduler 围绕着它的核心目标 - 任务调度，衍生出了两大核心功能：**任务队列管理 和 时间片下任务的中断和恢复**。
-
-那么就有了这两个问题？
-
-- 任务队列是如何管理的？
-- 任务是怎么执行的，执行时是怎么被中断的，然后又是怎么恢复执行的？
-
-### 任务队列管理
-
-任务队列管理对应了 `Scheduler` 的多任务管理这一行为。在 `Scheduler` 内部，把任务分成了两种：**未过期的和已过期的**，分别用两个队列存储
-
-- 前者存到 `timerQueue` 中
-- 后者存到 `taskQueue` 中。
-
-### 如何区分任务是否过期
-
-用任务的开始时间（startTime）和当前时间（currentTime）作比较。
-
-- 开始时间大于当前时间，说明未过期，放到 `timerQueue`
-- 开始时间小于等于当前时间，说明已过期，放到 `taskQueue`
-
-### 不同队列中的任务如何排序？
-
-当任务一个个入队的时候，自然要对它们进行排序，保证**紧急的任务排在前面**，所以排序的依据就是任务的紧急程度。而 `taskQueue` 和 `timerQueue` 中任务紧急程度的判定标准是有区别的。
-
-- `taskQueue` 中，依据任务的过期时间（expirationTime）排序，过期时间越早，说明越紧急，过期时间小的排在前面。过期时间根据任务优先级计算得出，优先级越高，过期时间越早。
-
-- `timerQueue` 中，依据任务的开始时间（startTime）排序，开始时间越早，说明会越早开始，开始时间小的排在前面。任务进来的时候，开始时间默认是当前时间，如果进入调度的时候传了延迟时间，开始时间则是当前时间与延迟时间的和。
-
-### 任务入队两个队列，会发生什么？
-
-如果放到了 `taskQueue`，那么**立即调度**一个函数去循环 `taskQueue`，挨个执行里面的任务。
-
-如果放到了 `timerQueue`，那么说明它里面的任务都不会立即执行，那就等到了 `timerQueue` 里面排在第一个任务的开始时间，看这个**任务是否过期**，
-
-- 如果是，则把任务从 `timerQueue` 中拿出来放入 `taskQueue` ，调度一个函数去循环它，执行掉里面的任务；
-- 否则过一会继续检查这第一个任务是否过期。
-
-任务队列管理相对于单个任务的执行，是宏观层面的概念，它**利用任务的优先级去管理任务队列中的任务顺序，始终让最紧急的任务被优先处理。**
-
-### 单个任务的中断以及恢复
-
-单个任务的中断以及恢复对应了 `Scheduler` 的单个任务执行控制这一行为。在循环 `taskQueue` 执行每一个任务时，如果某个任务执行时间过长，达到了时间片限制的时间，那么该任务必须中断，以便于让位给更重要的事情（如浏览器绘制），等事情完成，再恢复执行任务。
-
-::: info 提问
-Scheduler要实现这样的调度效果需要两个角色：**任务的调度者、任务的执行者**。
-
-调度者调度一个执行者，执行者去循环taskQueue，逐个执行任务。当某个任务的执行时间比较长，执行者会根据时间片中断任务执行，然后告诉调度者：我现在正执行的这个任务被中断了，还有一部分没完成，但现在必须让位给更重要的事情，你再调度一个执行者吧，好让这个任务能在之后被继续执行完（任务的恢复）。
-
-于是，调度者知道了任务还没完成，需要继续做，它会再调度一个执行者去继续完成这个任务。
-
-:::
-
-**通过执行者和调度者的配合，可以实现任务的中断和恢复。**
-
-### 原理小结
-
-`Scheduler` 管理着 `taskQueue` 和 `timerQueue` 两个队列，它会定期将 `timerQueue` 中的过期任务放到 `taskQueue` 中，然后让调度者通知执行者循环 `taskQueue` 执行掉每一个任务。
-
-执行者控制着每个任务的执行，**一旦某个任务的执行时间超出时间片的限制，就会被中断**，然后当前的执行者退场，退场之前会通知调度者再去**调度一个新的执行者**继续完成这个任务，
-新的执行者在执行任务时依旧会根据时间片中断任务，然后退场，重复这一过程，直到当前这个任务彻底完成后，将任务从 `taskQueue` 出队。
-
-`taskQueue` 中每一个任务都被这样处理，最终完成所有任务，这就是 `Scheduler` 的完整工作流程。
-
-这里面有一个关键点，就是执行者如何知道这个任务到底完成没完成呢？这是另一个话题了，也就是判断任务的完成状态。在讲解执行者执行任务的细节时会重点突出。
-
-以上是 `Scheduler` 原理的概述，下面开始是对 React 和 `Scheduler` 联合工作机制的详细解读。涉及 React 与 `Scheduler` 的连接、调度入口、任务优先级、任务过期时间、任务中断和恢复、判断任务的完成状态等内容。
+上篇讲了 Scheduler 的实现原理，下面来看看它是如何实现的
 
 ## 详细流程
 
@@ -196,26 +110,7 @@ function unstable_scheduleCallback(priorityLevel, callback, options) {
   }
 
   var timeout; //任务延时的时间
-
-  switch (priorityLevel) {
-    case ImmediatePriority:
-      timeout = IMMEDIATE_PRIORITY_TIMEOUT;
-      break;
-    case UserBlockingPriority:
-      timeout = USER_BLOCKING_PRIORITY_TIMEOUT;
-      break;
-    case IdlePriority:
-      timeout = IDLE_PRIORITY_TIMEOUT;
-      break;
-    case LowPriority:
-      timeout = LOW_PRIORITY_TIMEOUT;
-      break;
-    case NormalPriority:
-    default:
-      timeout = NORMAL_PRIORITY_TIMEOUT;
-      break;
-  }
-
+  ...
   var expirationTime = startTime + timeout; //任务过期时间
 
   //以react产生的事件来创建一个新的任务
@@ -227,9 +122,7 @@ function unstable_scheduleCallback(priorityLevel, callback, options) {
     expirationTime,
     sortIndex: -1,
   };
-  if (enableProfiling) {
-    newTask.isQueued = false;
-  }
+  
   if (startTime > currentTime) {
     // This is a delayed task.
     //将开始时间作为排序id，越小排在越靠前
@@ -273,13 +166,9 @@ function unstable_scheduleCallback(priorityLevel, callback, options) {
 ```js
 function handleTimeout(currentTime) {
   isHostTimeoutScheduled = false;
-
-  //检查延时任务队列中是否有已过期的任务
-  //有的话则将过期任务拿出添加到过期任务队列中进行执行
+  //检查延时任务队列中是否有已过期的任务，有的话则将过期任务拿出添加到过期任务队列中进行执行
   advanceTimers(currentTime);
-
-  //isHostCallbackScheduled判断是否已经发起过调度
-  //如果当前没有正在执行的调度，则会创建一个调度去执行任务
+  //isHostCallbackScheduled判断是否已经发起过调度，如果当前没有正在执行的调度，则会创建一个调度去执行任务
   if (!isHostCallbackScheduled) {
     if (peek(taskQueue) !== null) {
       isHostCallbackScheduled = true;
@@ -298,9 +187,7 @@ function handleTimeout(currentTime) {
 
 ```js
 function advanceTimers(currentTime) {
-  //检查延时任务队列中是否有已过期的任务
-  //有的话则将过期任务拿出添加到过期任务队列中进行执行
-  // Check for tasks that are no longer delayed and add them to the queue.
+  //检查延时任务队列中是否有已过期的任务，有的话则将过期任务拿出添加到过期任务队列中进行执行
   let timer = peek(timerQueue);
   while (timer !== null) {
     if (timer.callback === null) {
@@ -477,7 +364,6 @@ function workLoop(hasTimeRemaining, initialTime) {
     }
     currentTask = peek(taskQueue);
   }
-  // Return whether there's additional work
   // return 的结果会作为 performWorkUntilDeadline 中hasMoreWork的依据
   // 高优先级任务完成后，currentTask.callback为null，任务从taskQueue中删除，此时队列中还有低优先级任务，
   // currentTask = peek(taskQueue)  currentTask不为空，说明还有任务，继续postMessage执行workLoop，但它被取消过，导致currentTask.callback为null
@@ -680,7 +566,7 @@ function performConcurrentWorkOnRoot(root, didTimeout) {
 }
 ```
 
-如果当 任务执行到 `commit` 阶段 ，那么任务肯定已经完成了， `root.callbackNode` 会被置为null ，那么 if 判断肯定是不相等的，所以会返回null， 
+如果当 任务执行到 `commit` 阶段 ，那么任务肯定已经完成了， `root.callbackNode` 会被置为null ，那么 if 判断肯定是不相等的，所以会返回null，
 那么 `workLoop` 中的 `continuationCallback` 的值也会置为 null ，表示任务已执行完成。
 
 **那么任务在执行过程中被中断了呢？**
