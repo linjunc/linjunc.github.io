@@ -257,6 +257,10 @@ module.exports = {
           sidebarDepth: 2,
           items: [
             {
+              link: "/pages/react/hard/scheduler/scheduler-origin.md",
+              text: "Scheduler 实现原理",
+            },
+            {
               link: "/pages/react/hard/scheduler/scheduler.md",
               text: "Scheduler 源码解析",
             },
