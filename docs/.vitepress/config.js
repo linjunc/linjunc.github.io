@@ -29,6 +29,7 @@ module.exports = {
         items: [
           { text: "前端总结", link: "/pages/summary/ts.md" },
           { text: "TS 类型挑战", link: "/pages/tschallenge/easy.md" },
+          { text: "计算机网络", link: "/pages/network/overview.md" },
           {
             text: "数据结构和算法",
             link: "/pages/structure/start.md",
@@ -81,6 +82,14 @@ module.exports = {
       },
     ],
     sidebar: {
+      "/pages/network/": [
+        {
+          text: "计算机网络",
+          collapsable: true,
+          sidebarDepth: 2,
+          items: [{ link: "/pages/network/overview.md", text: "概述" }],
+        },
+      ],
       "/pages/react/primary/": [
         {
           text: "React 入门学习", // 必要的
