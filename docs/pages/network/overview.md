@@ -1,19 +1,19 @@
 # 概述
 
-![overview-summary](/img/network/overview-summary.png)
+![overview-summary](/img/network/overview/overview-summary.png)
 
 ## 计算机网络的概念
 
 计算机网络：是一个将分散的、具有独立功能的**计算机系统**，通过**通信设备**与**线路**连接起来，由功能完善的**软件**实现资源共享和信息传递的系统。
 
-![](/img/network/overview-1.png)
+![](/img/network/overview/overview-1.png)
 
 这里需要注意的是，按分布范围，计算机网络里有**局域网** LAN 和**广域网** WAN, 其中局域网的代表以太网，以及这两种网络最重要的区分点，
 **局域网**基于**广播技术**，**广域网**基于**分组交换**技术。
 
 ## 计算机网络性能的衡量指标
 
-![overview-graph-1](/img/network/overview-graph-1.png)
+![overview-graph-1](/img/network/overview/overview-graph-1.png)
 
 ### 速率
 
@@ -67,7 +67,7 @@
 
 使用高速链路(提高网速)，**只能减小发送时延**，无法减少其他三个时延
 
-![](/img/network/overview-2.png)
+![](/img/network/overview/overview-2.png)
 
 ### 时延带宽积
 
@@ -124,13 +124,13 @@ RTT包括：
 
 ## OSI 参考模型
 
-![overview-e2e](/img/network/overview-e2e.png)
+![overview-e2e](/img/network/overview/overview-e2e.png)
 
 - 网络层、传输层、回话层、表示层、应用层，每一层都要对上一层发送的数据**进行处理**（加个头部）
 - 数据链路层不仅需要加头部，还**需要加尾部**
 - 物理层什么都不加，**只管发送数据**（比特流）
 
-![overview-osi](/img/network/overview-osi.png)
+![overview-osi](/img/network/overview/overview-osi.png)
 
 ### 应用层
 
@@ -206,7 +206,7 @@ RTT包括：
 
 ## 五层协议
 
-![overview-osi-tcp-5](/img/network/overview-osi-tcp-5.png)
+![overview-osi-tcp-5](/img/network/overview/overview-osi-tcp-5.png)
 
 - 应用层 ：为特定应用程序提供数据传输服务，例如 HTTP、DNS 等协议。数据单位为报文。
 
@@ -220,7 +220,7 @@ RTT包括：
 
 ## TCP / IP 参考模型
 
-![overview-tcp](/img/network/overview-tcp.png)
+![overview-tcp](/img/network/overview/overview-tcp.png)
 
 它只有四层，相当于五层协议中数据链路层和物理层合并为网络接口层。
 
@@ -228,4 +228,4 @@ TCP/IP 体系结构不严格遵循 OSI 分层概念，应用层可能会直接�
 
 ## 总结
 
-![overview-summary](/img/network/overview-summary.png)
+![overview-summary](/img/network/overview/overview-summary.png)
