@@ -87,7 +87,10 @@ module.exports = {
           text: "计算机网络",
           collapsable: true,
           sidebarDepth: 2,
-          items: [{ link: "/pages/network/overview.md", text: "概述" }],
+          items: [
+            { link: "/pages/network/overview.md", text: "概述" },
+            { link: "/pages/network/physics.md", text: "物理层" },
+          ],
         },
       ],
       "/pages/react/primary/": [
