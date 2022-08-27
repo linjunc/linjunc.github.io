@@ -44,6 +44,10 @@ module.exports = {
             text: "面试题精选",
             link: "/pages/interview/heading/best1.md",
           },
+          {
+            text: "算法合集",
+            link: "/pages/interview/algorithm/algorithm.md",
+          },
           // { text: '前端基础', link: '/pages/interview/test1.md' },
           // { text: '框架进阶', link: '/pages/interview/test2.md' },
           // { text: '计算机网络', link: '/pages/interview/test3.md' },
