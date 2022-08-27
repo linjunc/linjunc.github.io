@@ -226,6 +226,9 @@ RTT包括：
 
 TCP/IP 体系结构不严格遵循 OSI 分层概念，应用层可能会直接使用 IP 层或者网络接口层。
 
+- 应用层：负责 Web 浏览器的 HTTP 协议，文件传输的 FTP 协议，负责
+
 ## 总结
 
 ![overview-summary](/img/network/overview/overview-summary.png)
+    
