@@ -1,0 +1,1 @@
+import{_ as t,c as r,o as e,a as n}from"./app.cf9208fe.js";const m=JSON.parse('{"title":"","description":"","frontmatter":{},"headers":[],"relativePath":"pages/structure/README.md"}'),a={name:"pages/structure/README.md"},s=n("",1),d=[s];function o(p,c,h,l,u,_){return e(),r("div",null,d)}var f=t(a,[["render",o]]);export{m as __pageData,f as default};
