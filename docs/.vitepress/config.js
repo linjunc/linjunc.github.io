@@ -95,6 +95,7 @@ module.exports = {
             { link: "/pages/network/overview.md", text: "概述" },
             { link: "/pages/network/physics.md", text: "物理层" },
             { link: "/pages/network/datalink.md", text: "数据链路层" },
+            { link: "/pages/network/web.md", text: "网络层" },
           ],
         },
       ],
