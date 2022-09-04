@@ -229,4 +229,3 @@ TCP/IP 体系结构不严格遵循 OSI 分层概念，应用层可能会直接�
 ## 总结
 
 ![overview-summary](/img/network/overview/overview-summary.png)
-    
