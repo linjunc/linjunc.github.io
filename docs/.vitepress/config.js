@@ -401,7 +401,7 @@ module.exports = {
           items: [
             {
               link: "/pages/summary/engine.md",
-              text: "搭建自己喜欢的开发环境",
+              text: "我是这样搭建 React + TypeScript 项目的",
             },
             {
               link: "/pages/summary/ts.md",
