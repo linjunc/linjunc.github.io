@@ -1,5 +1,6 @@
 
 # Hard 题
+
 ::: tip 我的 Issue 提交记录
 Github Issue 记录，[点击查看](https://github.com/type-challenges/type-challenges/issues/created_by/linjunc)
 :::
@@ -91,9 +92,18 @@ const five = curriedAdd(2)(3)
 在此挑战中，curried函数一次仅接受一个参数。分配完所有参数后，它应返回其结果。
 
 :::details 查看解答
+[链接](https://www.typescriptlang.org/play?ssl=39&ssc=48&pln=33&pc=1#code/PQKgUABBCMDsEFoKHvzQM4mDRlGlEN37ARgJ4QCCAdgC4AWA9uSQGICuEAFAAICGVAZswEoIAYkAPaoD60kVwBO0rkWzZhyiIAyMwHduiqAD4IgRldA7DGAZa0BXgYAqlQN-+gRejAMP+Aia0Bz8RAAKAJQiBOU0Db8dcAUsYHnEwCAGLQhtQAp1QBNrQERjQAwjQFo5QC+9QDrowH95QApXABUiAAcAUwBlAGNpAEtsyggAFgA6AAYQgG0AYWZZIhLyAHMAXUAIf+pKSmyAZwAuYGBc8mqAdxKAazLcgBMSrmraaU7gOcXgFraOzsBIf8B6M0AAOUBZz0AwHUAyPUBIc0AsTUAqOUAh5UAHU0AQt0BfxXfAG3jAEbGgC45QDz1s8Huc3l9foB4vUA6EqfQABRoB6c2CUGwgGj5QBBmoAsf5CAANCZRhthCvRhhUuMtlhAALzsLijCDkZgAWwIuWkABoIAQmSz2ZyhLTdFwIABqXmk8kVGjSXK5OkQKnLNjQHkAJgEITJ5ApEEKrVKK1I1KVB2k7S6bBV2qguv1vBKADdFfTDbISibqWwtWwAMx2iCE-EhQAE8oAkBMAm374i1Wzr4n7vQD3yoBfgKeUJsgAqDQAA6YBAyMAxtaAOw9AHSpgFNFQDB2miINhIrE4jYPcblr9zoBCa0Ao3KAUuNAOvKkI+gUAYEqAWUTADHagAEje4fQBwKjYK4AUvUAK-GAPbVAG6KgGW-QA55tXsLowhAAOIlGjMAgQQBQcoBT80A0O44gZDMYTYmFajVABWww2W2AcGAAC9qAQJoADkwBAYAwEg0AIAAfTg+CEPgiBAAN5T5AGO5QBAD1gxCcJgiBwLASgckVABJVlsgAGwAHkYchdHpWiIFyAAPSgpmWYZ2DYaoeJkToxggDpeE5MgtmGYVdCEkTXCDKA5PkhSoAAflE-imNY9jOIaKTpAgRgeR46odIgVxcgpbpsEUqyFJUth5iZRgJIgMjKKo7jeLEplTIpJzXG0SzrMCryAsChT+VyV1pEg5ZckKCiZEVfhyEKSgSnoCA4yOGi6LYXhyAc8gBCZFzqNo-yoJAbDcIQiBAGlbQBV6LSDEququD8IgkpyM2WViIgABvCAAFEAEdmC4CieUG5i8hSiAAF8IF4aRaFZCAAHIOCIvIEBfcaKKmTozOAZhUoo4Y1sgh0KibL1lmgc0jXjNgbSZClSi6Hk+WZNkOW5A0mQIWhaH2ngnMoaRmFybUroNI1bo1B7DmtF6IDeo5Pv5H7OR5QoAaBkHyB5ZY8eB3IeB5XISYJnleFe8H0YgToqbJwq6V0cHIe1QjesKLhhjMpUGmwKaZsoKiRrG6iAq23JaF4WHPRWdUGTp97OictgvoFX6Ndx3l8ZZsGIdyXdtC5YXptisWJfGqjpeIuWFebDUeRRtGug1rWsekXXmdBtn2GJ-XSf9kV2Ep4OCY12nUfpj2A7YJnI8NgOOZNnQzbACzILAaDWpqwBoOXOQBTaxa1r2tz8AdAgQdAGq5VDAGPIwAVbzvQYRnGYBn1fD8v22X8eGGGZOX-QCQN3CAb2b1uHw7rv30-TY+9gYBhmBk60r1cfABezR4NGn9un2GF9597kegNAgiwCAA)
+
+在有多个参数的函数中，通过调用函数返回函数的思路，每次返回一个只带有一个变量的函数，通过 infer + 递归
 
 ```ts
+type Impl<Fn> = Fn extends ((...args: infer Args) => infer R)
+                  ? Args extends [infer F, ...infer Rest]
+                    ? (k: F) => Impl<(...args: Rest) => R>
+                    : R
+                  : never
 
+declare function Currying<Fn>(fn: Fn): Impl<Fn>
 ```
 
 :::
