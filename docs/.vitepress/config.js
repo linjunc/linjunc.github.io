@@ -45,6 +45,10 @@ module.exports = {
             link: "/pages/interview/heading/best1.md",
           },
           {
+            text: '面试题合集',
+            link: "/pages/interview/all/html.md"
+          },
+          {
             text: "算法合集",
             link: "/pages/interview/algorithm/algorithm.md",
           },
@@ -391,6 +395,18 @@ module.exports = {
             { link: "/pages/interview/heading/best1.md", text: "面试题精选1" },
             { link: "/pages/interview/heading/best2.md", text: "面试题精选2" },
             { link: "/pages/interview/heading/best3.md", text: "面试题精选3" },
+          ],
+        },
+      ],
+      "/pages/interview/all/": [
+        {
+          text: "面试题合集", // 必要的
+          collapsable: true, // 可选的, 默认值是 true,
+          sidebarDepth: 2, // 可选的, 默认值是 1
+          items: [
+            { link: "/pages/interview/all/html.md", text: "HTML 面试题" },
+            { link: "/pages/interview/all/css.md", text: "CSS 面试题" },
+            { link: "/pages/interview/all/js.md", text: "JS 面试题" },
           ],
         },
       ],
