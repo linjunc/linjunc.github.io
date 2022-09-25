@@ -49,6 +49,10 @@ module.exports = {
             link: "/pages/interview/all/html.md"
           },
           {
+            text: '手写系列',
+            link: "/pages/handwriting/handwriting.md"
+          },
+          {
             text: "算法合集",
             link: "/pages/interview/algorithm/algorithm.md",
           },
@@ -407,7 +411,21 @@ module.exports = {
             { link: "/pages/interview/all/html.md", text: "HTML 面试题" },
             { link: "/pages/interview/all/css.md", text: "CSS 面试题" },
             { link: "/pages/interview/all/js.md", text: "JS 面试题" },
-            { link: "/pages/interview/all/handwriting.md", text: "手写题" },
+          ],
+        },
+      ],
+      "/pages/handwriting/": [
+        {
+          text: "手写系列", // 必要的
+          collapsable: true, // 可选的, 默认值是 true,
+          sidebarDepth: 2, // 可选的, 默认值是 1
+          items: [
+            { link: "/pages/handwriting/handwriting.md", text: "手写题" },
+            { link: "/pages/handwriting/array.md", text: "数组方法" },
+            { link: "/pages/handwriting/promise.md", text: "Promise" },
+            { link: "/pages/handwriting/part.md", text: "场景应用" },
+            { link: "/pages/handwriting/reg.md", text: "正则表达式" },
+            { link: "/pages/handwriting/react.md", text: "React 手写" },
           ],
         },
       ],
@@ -577,4 +595,4 @@ module.exports = {
       ],
     },
   },
-};
+}
