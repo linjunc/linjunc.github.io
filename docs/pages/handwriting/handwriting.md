@@ -646,6 +646,12 @@ function debounce(func, wait, immediate) {
 规定在一个单位时间内，只能触发一次函数。如果这个单位时间内触发多次函数，只有一次生效
 :::
 
+使用场景：
+
+- 拖拽：固定时间只执行一次，防止高频次触发位置变动
+- 缩放：resize
+- 动画：避免短时间多次触发引起性能问题
+
 非常好的[一篇文章](https://github.com/mqyqingfeng/Blog/issues/26)
 
 普通版：使用时间戳来实现，立即执行一次，然后每 N 秒执行一次。
@@ -727,6 +733,7 @@ function throttle(func, wait, options = {}) {
     return throttled;
 }
 ```
+
 
 ## 12. 函数柯里化
 
