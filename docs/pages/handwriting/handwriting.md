@@ -734,8 +734,35 @@ function throttle(func, wait, options = {}) {
 }
 ```
 
+:::tip 提示
+后续考虑学习以下 lodash 的 debounce
+:::
 
 ## 12. 函数柯里化
+
+:::tip 什么是柯里化
+其实就是将使用多个参数的函数转换成一系列使用一个参数的函数的技术。
+
+```js
+function add(a, b, c) {
+    return a + b + c
+}
+add(1, 2, 3)
+let addCurry = curry(add)
+addCurry(1)(2)(3)
+```
+
+:::
+
+```js
+function curry(fn) {
+    const judge = (...args) => {
+        if(args.length === fn.length) return fn(...args);
+        return (...arg) => judge(...args, ...arg)
+    }
+    return judge
+}
+```
 
 ## 13. 偏函数
 
