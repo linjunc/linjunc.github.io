@@ -766,6 +766,9 @@ function curry(fn) {
 
 ## 13. 偏函数
 
+```js
+```
+
 ## 14. JSONP
 
 ## 15. AJAX
