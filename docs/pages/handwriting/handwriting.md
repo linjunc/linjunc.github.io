@@ -766,14 +766,133 @@ function curry(fn) {
 
 ## 13. 偏函数
 
+:::tip 什么是偏函数
+偏函数就是将一个有 n 个参数的函数转换成固定 x 参的函数，剩余参数 n - x 个参数将会在下次调用中全部传入
+
+可以理解为能够提前**预设一些参数**的值
+
 ```js
+function add(a, b, c) {
+    return a + b + c
+}
+const partialAdd = partial(add, 1)
+partialAdd(2, 3)
+```
+
+:::
+
+提前传入一个参数，返回已经带了这个参数的函数
+
+```js
+function partial(fn, ...args) {
+    return (...arg) => {
+        return fn(...args, ...arg)
+    }
+}
 ```
 
 ## 14. JSONP
 
-## 15. AJAX
+在我们学习 Ajax 时，都会遇到跨域问题，这时候都会听到采用 JSONP 来解决
 
-## 16. 实现 call、apply、bind
+:::tip JSONP 核心原理
+script 标签不受同源策略约束，所以可以用来进行跨域请求，优点是兼容性好，但是只能用于 GET 请求；
+:::
+
+```js
+const jsonp = ({ url, params, callbackName }) => {
+    // 生成 url 链接
+    const generateUrl = () => {
+        let dataSrc = ''
+        // get 请求拼接 params
+        for(const key in params) {
+            if(params.hasOwnProperty(key)) {
+                dataSrc += `${key}=${params[key]}`
+            }
+        }
+        dataSrc += `callback=${callbackName}`
+        return `${url}?${dataSrc}`
+    }
+    return new Promise((resolve, reject) => {
+        const scriptElement = document.createElement('script')
+        scriptElement.src = generateUrl()
+        // 服务器返回字符串 `${callbackName}(${服务器的数据})`，浏览器解析即可执行
+        window.[callbackName] = data => {
+            resolve(data)
+            document.removeChild(scriptElement)
+        }
+    })
+}
+```
+
+## 15. 实现 AJAX 请求
+
+异步通信，从服务端获取 XML 文档从中提取数据，再更新到网页的对应部分，不刷新整个页面
+
+:::tip 创建 AJAX 请求的步骤
+
+1. 创建 `XMLHttpRequest` 对象
+2. 在对象上使用 open 方法创建一个 HTTP 请求，open 方法需要的参数时请求的方法、请求的地址、是否异步、和用户的认证信息
+3. 在发送请求前，可以为这个对象添加一些信息和监听函数。
+   1. 一个 `XMLHttpRequest` 对象上有 5 个状态，它的状态变化时会触发 `onReadyStateChange` 事件，可以通过监听这个事件来获取状态的变化，来处理请求成功的结果
+   2. 当对象的 `readyState` 为 4 时，表示请求已经完成，可以通过 status 来判断请求是否成功
+   3. 如果状态时 2xx 或者 304，表示请求成功，可以通过 `responseText` 或者 `responseXML` 来获取服务器返回的数据
+4. 调用 sent 方法来向服务器发送请求
+:::
+
+```js
+const SERVER_URL = "/server"
+const xhr = new XMLHttpRequest()
+// 创建 HTTP 请求
+xhr.open("GET", SERVER_URL, true)
+// 监听状态变化
+xhr.onreadystatechange = function() {
+    if(this.readyState !== 4) return;
+    if(this.status === 200) {
+        handleSuccess(this.response)
+    }else {
+        console.error(this.statusText)
+    }
+}
+// 设置请求失败时的监听函数
+xhr.onerror = function() {
+    console.error(this.statusText)
+}
+// 设置请求头信息
+xhr.responseType = "json"
+xhr.setRequestHeader("Accept", "application/json")
+// 发送 HTTP 请求
+xhr.send(null)
+```
+
+## 16. Promise 封装 AJAX 请求
+
+```js
+const request = function(url) {
+    return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', url, false);
+        xhr.setRequestHeader('CONTENT-TYPE', 'application/json');
+        xhr.onreadystatechange = () => {
+            if(xhr.readyState !== 4) return;
+            if(xhr.status === 200 || xhr.status === 304) {
+                resolve(xhr.responseText)
+            }else {
+                reject(new Error(xhr.responseText))
+            }
+        }
+        xhr.responseText = 'json';
+        xhr.setRequestHeader('Accept', 'application/json');
+        xhr.send()
+    })
+}
+```
+
+## 17. 实现 call
+
+## 18. 实现 apply
+
+## 19. 实现 bind
 
 ## 17. 实现 new 关键字
 
