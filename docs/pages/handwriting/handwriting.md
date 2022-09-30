@@ -890,18 +890,119 @@ const request = function(url) {
 
 ## 17. 实现 call
 
+:::tip
+使用一个指定的 this 值和一个或多个参数来调用一个函数。
+:::
+
+1. 判断是不是常规函数调用
+2. 将函数作为上下文对象的一个属性
+3. 使用上下文对象来调用这个方法，并保存返回结果
+4. 删除新增的属性，返回结果
+
+```js
+Function.prototype.myCall = function(context = window, ...args) {
+    if(typeof this !== 'function') {
+        console.log('type error');
+    }
+    // 把函数存入上下文中
+    const key = Symbol('key');
+    context[key] = this;
+    // 然后调用函数 将返回值存起来
+    const result = context[key](...args);
+    delete context[key];
+    return result;
+}
+```
+
 ## 18. 实现 apply
+
+:::tip
+参数列表是数组
+:::
+
+```js
+Function.prototype.myApply = function(context = window, arr) {
+    if(typeof this !== 'function') {
+        console.log('type error');
+    }
+    // 把函数存入上下文中
+    const key = Symbol('key');
+    context[key] = this;
+    // 然后调用函数 将返回值存起来
+    const result = context[key](...arr);
+    delete context[key];
+    return result;
+}
+```
 
 ## 19. 实现 bind
 
-## 17. 实现 new 关键字
+:::tip
+返回的是一个改变 this 指向的函数，函数并没有被执行
+:::
 
-## 18. 实现 instanceof 关键字
+```js
+Function.prototype.myBind = function(context = window, ...outerArgs) {
+    if(typeof this !== 'function') {
+        console.error('typeError')
+    }
+    const _this = this
+    return function fn(...innerArgs) { 
+        const finalArgs = [...outerArgs, ...innerArgs]
+        if(_this.prototype) {
+            // 需要防止这个 prototype 的修改导致 self.prototype 被修改
+            // 直接赋值写法会覆盖原型其他属性
+            this.prototype = Object.create(_this.prototype);
+            this.prototype.constructor = _this;
+        }
+        // 判断是不是被 new 出来的
+        if(this instanceof Fn) {
+            return new _this(...finalArgs)
+        }
+        return _this.apply(context, [...finalArgs]); // 返回改变了 this 的函数
+     }
+}
+```
 
-## 20. 实现 Object.create
+## 20. 实现 new 关键字
 
-## 21. 实现 Object.assign
+:::tip
+用来创建实例对象
 
-## 22. 实现 Object.stringify
+实现要点：
 
-## 23. 实现 JSON.parse
+1. 创建一个新的对象
+2. 新对象需要能够访问到构造函数的属性，所以需要将新对象的原型指向构造函数的原型
+3. 判断函数的返回值，如果是值类型，返回创建的对象，如果是引用类型，返回这个类型的对象
+
+:::
+
+```js
+function myNew() {
+    const newObj = Object.create(null);
+    // 获取参数的第一位
+    const constructor = Array.prototype.slice.call(arguments)
+    const result = null
+    // 判断是不是函数
+    if(typeof constructor !== 'function') {
+        console.error('type error');
+        return;
+    }
+    // 创建一个空对象，对象原型为构造函数的 prototype 对象
+    newObj.__proto__ = constructor.prototype
+    // 将 this 指向新建对象并调用
+    result = constructor.apply(newObj, arguments)
+    // 返回对象
+    return result instanceof Object ? result : newObj;
+}
+```
+
+## 21. 实现 instanceof 关键字
+
+## 22. 实现 Object.create
+
+## 23. 实现 Object.assign
+
+## 24. 实现 Object.stringify
+
+## 25. 实现 JSON.parse
