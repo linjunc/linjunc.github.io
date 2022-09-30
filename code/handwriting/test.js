@@ -108,3 +108,32 @@ function add(a, b, c) {
 }
 let addCurry = curry(add)
 console.log(addCurry(1)(2)(3))
+
+
+function myInstance(left, right) {
+    // 获取对象原型
+    let proto = Object.getPrototypeOf(left)
+    while(true) {
+        // 到原型链的尽头，返回 false
+        if(!proto) return false;
+        if(proto === right.prototype) return true;
+        proto = Object.getPrototypeOf(proto)
+    }
+}
+
+Object.myAssign = function(target, ...source) {
+    if(target === null) {
+        throw new TypeError("Error")
+    }
+    const res = Object(target)
+    source.forEach((obj) => {
+        if(obj !== null) {
+            for(const key in obj) {
+                if(obj.hasOwnProperty(key)) {
+                    res[key] = obj[key]
+                }
+            }
+        }
+    })
+    return res;
+}

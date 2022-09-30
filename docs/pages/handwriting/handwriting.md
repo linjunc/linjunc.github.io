@@ -999,10 +999,57 @@ function myNew() {
 
 ## 21. 实现 instanceof 关键字
 
+```js
+function myInstance(left, right) {
+    // 获取对象原型
+    let proto = Object.getPrototypeOf(left)
+    while(true) {
+        // 到原型链的尽头，返回 false
+        if(!proto) return false;
+        if(proto === right.prototype) return true;
+        proto = Object.getPrototypeOf(proto)
+    }
+}
+```
+
 ## 22. 实现 Object.create
+
+:::tip
+为 Object 创建一个空的原型
+
+思路：将传入的对象作为原型
+:::
+
+```js
+function create(obj) {
+    function F() {}
+    F.prototype = obj;
+    return new F()
+}
+```
 
 ## 23. 实现 Object.assign
 
-## 24. 实现 Object.stringify
+:::tip
+接受的第一个参数是目标对象，其余参数是源对象，用法：Object.assign(target, source_1, ···)，该方法可以实现浅拷贝，也可以实现一维对象的深拷贝。
+:::
 
-## 25. 实现 JSON.parse
+```js
+Object.myAssign = function(target, ...source) {
+    if(target === null) {
+        throw new TypeError("Error")
+    }
+    const res = Object(target)
+    // 遍历所有的项，将其添加到 res 中
+    source.forEach((obj) => {
+        if(obj !== null) {
+            for(const key in obj) {
+                if(obj.hasOwnProperty(key)) {
+                    res[key] = obj[key]
+                }
+            }
+        }
+    })
+    return res;
+}
+```
