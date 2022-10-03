@@ -113,6 +113,70 @@ console.log(arr)      // ["a", "b", "c", "d"] 不变
 
 ## 3. 数组扁平化
 
+### 递归方法
+
+```js
+function flatten(arr) {
+    let result = [];
+    for(let i = 0; i < arr.length; i++) {
+        if(Array.isArray(arr[i])) {
+            result = result.concat(flatten(arr[i]));
+        }else {
+            result.push(arr[i]);
+        }
+    }
+    return result;
+}
+```
+
+### 迭代方法
+
+```js
+function flatten(arr) {
+    return arr.reduce((prev, next) => {
+        return prev.concat(Array.isArray(next) ? flatten(next) : next);
+    }, []);
+}
+```
+
+### 扩展运算符
+
+```js
+function flatten(arr) {
+    while(arr.some(item => Array.isArray(item)) {
+        arr = [].concat(...arr)
+    }
+}
+```
+
+### split 和 toString
+
+缺点是数字会被全部转成字符串
+
+```js
+function flatten(arr) {
+    return arr.toString().split(',')
+}
+```
+
+### ES6 Flat
+
+```js
+function flatten(arr) {
+    return arr.flat(Infinity)
+}
+```
+
+### 可选降几层
+
+```js
+function flatDeep(arr, d = 1) {
+    return d > 0
+        ? arr.reduce((acc, val) => acc.concat(Array.isArray(val) ? flatDeep(val, d - 1) : val), [])
+        : arr.slice()
+}
+```
+
 ## 4. 数组去重
 
 ## 5. flat
