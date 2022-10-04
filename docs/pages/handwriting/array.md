@@ -267,11 +267,53 @@ function unique(arr) {
 
 ## 5. flat
 
+```js
+function flat(arr, depth) {
+    if(!arr || depth < 0) return arr;
+    return arr.reduce((prev, next) => {
+        return prev.concat(Array.isArray(next) ? flat(next, depth - 1) : next)
+    }, [])
+}
+```
+
 ## 6. push
+
+```js
+Array.prototype.push = function() {
+    for(let i = 0; i < arguments.length; i++) {
+        this[this.length] = arguments[i];
+    }
+    return this.length // 返回长度
+}
+```
 
 ## 7. filter
 
+```js
+Array.prototype.filter = function(fn) {
+    if(typeof fn !== 'function') {
+        console.error('type Error')
+    }
+    const res = []
+    for(let i = 0; i < this.length; i++) {
+        fn(this[i] && res.push(this[i]))
+    }
+    return res
+}
+```
+
 ## 8. map
+
+```js
+Array.prototype.map = function(cb, context) {
+    const arr = Array.prototype.slice.call(this)
+    const res = []
+    for(let i = 0; i < arr.length; i++) {
+        res.push(cb.call(context, arr[i], i, this))
+    }
+    return res
+}
+```
 
 ## 9. reduce
 
