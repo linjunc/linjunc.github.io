@@ -461,3 +461,69 @@ function indexOf(items, elem, fromIndex = 0) {
     return sIndexOf(items, elem, fromIndex) 
 }
 ```
+
+## 12. 计算多个区间的交集
+
+:::tip
+
+1.计算多个区间的交集
+
+- 区间用长度为2的数字数组表示，如[2, 5]表示区间2到5（包括2和5）；
+- 区间不限定方向，如[5, 2]等同于[2, 5]；
+-
+
+实现`getIntersection 函数`
+
+可接收多个区间，并返回所有区间的交集（用区间表示），如空集用null表示
+
+示例：
+
+- `getIntersection([5, 2], [4, 9], [3, 6]);` // [4, 5]
+- `getIntersection([1, 7], [8, 9]);` // null
+:::
+
+```js
+function getIntersection(...arr) {
+    if(!arr || !arr.length) return null;
+    // 排序数组
+    arr.forEach(item => {
+        item.sort((a, b) => a - b)
+    })
+    // 排序数组的数组
+    arr.sort((a, b) => a[0] - b[0])
+    const res = [...arr[0]]
+    for(let i = 1; i < arr.length; i++) {
+        if(res[1] < arr[i][0]) return null
+
+        if(res[0] <= arr[i][0]) {
+            res[0] = Math.max(res[0], arr[i][0])
+            res[1] = Math.min(res[1], arr[i][1])
+        }
+    }
+    return res;
+}
+```
+
+## 13. 求数组的交集、差集、并集、补集
+
+```js
+const a = [1, 2, 3, 4, 5];
+const b = [2, 4, 6, 8, 10];
+// 交集
+const c = a.filter(v => b.indexOf(v) > -1)
+// 差集
+const d = a.filter(v => !b.includes(v))
+// 补集
+const e = a.filter(v => !b.includes(v)).concat(b.filter(v => !a.includes(v)))
+// 并集
+const f = a.concat(b.filter(v => !a.includes(v)))
+
+console.log(c, d, e, f);
+```
+
+## 14. 不用for循环快速实现 [1, 2, ...100]
+
+```js
+const t = new Array(100).fill(1).map((_, k) => k + 1)
+const y = Array.from(new Array(100), (_, k) => k + 1)
+```
