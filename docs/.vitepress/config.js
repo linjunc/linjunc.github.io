@@ -54,7 +54,7 @@ module.exports = {
           },
           {
             text: "算法合集",
-            link: "/pages/interview/algorithm/algorithm.md",
+            link: "/pages/algorithm/algorithm.md",
           },
           // { text: '前端基础', link: '/pages/interview/test1.md' },
           // { text: '框架进阶', link: '/pages/interview/test2.md' },
@@ -426,6 +426,23 @@ module.exports = {
             { link: "/pages/handwriting/part.md", text: "场景应用" },
             { link: "/pages/handwriting/reg.md", text: "正则表达式" },
             { link: "/pages/handwriting/react.md", text: "React 手写" },
+          ],
+        },
+      ],
+      "/pages/algorithm/": [
+        {
+          text: "算法合集", // 必要的
+          collapsable: true, // 可选的, 默认值是 true,
+          sidebarDepth: 2, // 可选的, 默认值是 1
+          items: [
+            { link: "/pages/algorithm/algorithm.md", text: "算法合集" },
+            { link: "/pages/algorithm/string.md", text: "字符串" },
+            { link: "/pages/algorithm/dynamic.md", text: "动态规划" },
+            { link: "/pages/algorithm/greedy.md", text: "贪心算法" },
+            { link: "/pages/algorithm/link.md", text: "链表" },
+            { link: "/pages/algorithm/tree.md", text: "树" },
+            { link: "/pages/algorithm/sort.md", text: "排序算法" },
+            { link: "/pages/algorithm/bitwise.md", text: "位运算" },
           ],
         },
       ],
