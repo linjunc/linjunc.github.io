@@ -60,13 +60,13 @@
 
 // 2.0
 function deepClone(target, hash = new WeakMap()) {
-    if(target === null) return target
-    if(target instanceof Date) return new Date(target)
-    if(target instanceof RegExp) return new RegExp(target)
-    if(target instanceof HTMLElement) return target
-    if(typeof target !== 'object') return target
+    if (target === null) return target
+    if (target instanceof Date) return new Date(target)
+    if (target instanceof RegExp) return new RegExp(target)
+    if (target instanceof HTMLElement) return target
+    if (typeof target !== 'object') return target
 
-    if(hash.get(target)) return hash.get(target)
+    if (hash.get(target)) return hash.get(target)
     const cloneTarget = new target.constructor()
     hash.set(target, cloneTarget)
     Reflect.ownKeys(target).forEach(key => {
@@ -80,25 +80,25 @@ function deepClone(target, hash = new WeakMap()) {
 
 // 模板字符串
 function render(template, data) {
-    const reg = /\{\{(\w+)\}\}/; // 模板字符串正则
+    const reg = /\{\{(\w+)\}\}/ // 模板字符串正则
     if (reg.test(template)) { // 判断模板里是否有模板字符串
-        const name = reg.exec(template)[1]; // 查找当前模板里第一个模板字符串的字段
-        template = template.replace(reg, data[name]); // 将第一个模板字符串渲染
-        return render(template, data); // 递归的渲染并返回渲染后的结构
+        const name = reg.exec(template)[1] // 查找当前模板里第一个模板字符串的字段
+        template = template.replace(reg, data[name]) // 将第一个模板字符串渲染
+        return render(template, data) // 递归的渲染并返回渲染后的结构
     }
-    return template; // 如果模板没有模板字符串直接返回
+    return template // 如果模板没有模板字符串直接返回
 }
-const template = '我是{{name}}，年龄{{age}}，性别{{sex}}';
+const template = '我是{{name}}，年龄{{age}}，性别{{sex}}'
 const person = {
     name: 'ljc',
     age: 21
 }
-console.log(render(template, person)); // 我是ljc，年龄21，性别undefined
+console.log(render(template, person)) // 我是ljc，年龄21，性别undefined
 
 // 柯里化
 function curry(fn) {
     const judge = (...args) => {
-        if(args.length === fn.length) return fn(...args);
+        if (args.length === fn.length) return fn(...args)
         return (...arg) => judge(...args, ...arg)
     }
     return judge
@@ -113,27 +113,27 @@ console.log(addCurry(1)(2)(3))
 function myInstance(left, right) {
     // 获取对象原型
     let proto = Object.getPrototypeOf(left)
-    while(true) {
+    while (true) {
         // 到原型链的尽头，返回 false
-        if(!proto) return false;
-        if(proto === right.prototype) return true;
+        if (!proto) return false
+        if (proto === right.prototype) return true
         proto = Object.getPrototypeOf(proto)
     }
 }
 
-Object.myAssign = function(target, ...source) {
-    if(target === null) {
+Object.myAssign = function (target, ...source) {
+    if (target === null) {
         throw new TypeError("Error")
     }
     const res = Object(target)
     source.forEach((obj) => {
-        if(obj !== null) {
-            for(const key in obj) {
-                if(obj.hasOwnProperty(key)) {
+        if (obj !== null) {
+            for (const key in obj) {
+                if (obj.hasOwnProperty(key)) {
                     res[key] = obj[key]
                 }
             }
         }
     })
-    return res;
+    return res
 }
