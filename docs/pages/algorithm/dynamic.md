@@ -396,6 +396,26 @@ var maxProfit = function(prices) {
 
 ### 解答
 
+状态转移方程
+
+```js
+dp[i][k][0] = Math.max(dp[i - 1][k][0], dp[i - 1][k][1] + prices[i])
+//冷却时间1天，所以要从 i - 2 天转移状态
+//买入，卖出 ---- 冷冻期 ----  买入，卖出
+dp[i][k][1] = Math.max(dp[i - 1][k][1], dp[i - 2][k - 1][0] - prices[i])
+```
+
+不限制交易次数 K，所以 k 可以省略
+
+```js
+dp[i][0] = Math.max(dp[i - 1][0], dp[i - 1][1] + prices[i])
+dp[i][1] = Math.max(dp[i - 1][1], dp[i - 2][0] - prices[i])
+
+//降维i
+dp[0] = Math.max(dp[0], dp[1] + prices[i])
+dp[1] = Math.max(dp[1], profit_freeze - prices[i])
+```
+
 ```js
 ```
 
