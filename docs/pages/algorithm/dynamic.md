@@ -155,7 +155,6 @@ var findLength = function(nums1, nums2) {
 
 滚动数组思路
 
-
 ```js
 const findLength = function(nums1, nums2) {
     const len1 = nums1.length, len2 = nums2.length
