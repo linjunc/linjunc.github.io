@@ -38,7 +38,7 @@
 
 用 `dp[i]` 表示以第 i 项结尾的最长上升子序列的长度是多少
 
-那么递推公式可以表示为 `dp[i] = Math.max(dp[i], dp[j] + 1)` 
+那么递推公式可以表示为 `dp[i] = Math.max(dp[i], dp[j] + 1)`
 
 也就是，当前第 i 项的最长上升子序列的长度就等于以当前这个数 `nums[i]` 结尾的最长上升子序列的长度 + 1
 
@@ -56,6 +56,123 @@ var lengthOfLIS = function(nums) {
     }
     return Math.max(...dp)
 };
+```
+
+### 674. 最长连续递增序列
+
+:::tip 题目
+给定一个未经排序的整数数组，找到最长且 连续递增的子序列，并返回该序列的长度。
+
+连续递增的子序列 可以由两个下标 l 和 r（l < r）确定，如果对于每个 `l <= i < r`，都有 `nums[i] < nums[i + 1]` ，那么子序列 `[nums[l], nums[l + 1], ..., nums[r - 1], nums[r]]`就是连续递增子序列。
+:::
+
+**示例 1：**
+
+```js
+输入：nums = [1,3,5,4,7]
+输出：3
+解释：最长连续递增序列是 [1,3,5], 长度为3。
+尽管 [1,3,5,7] 也是升序的子序列, 但它不是连续的，因为 5 和 7 在原数组里被 4 隔开。 
+```
+
+**示例 2：**
+
+```js
+输入：nums = [2,2,2,2,2]
+输出：1
+解释：最长连续递增序列是 [2], 长度为1。
+```
+
+### 解答
+
+和 300 题不同，这题求的是连续的最长递增子序列，是连续的，这也就是这两题的区别，由于是连续的，那么我们的递推公式就不能是 `dp[j] + 1` 了，因为我们需要从上一个也就是 `dp[i]` 开始递推到 `dp[i + 1]`
+
+那么就不再需要两层的 for 循环，只需要从前一项递推到后一项即可
+
+递推公式 `dp[i + 1] = dp[i] + 1`
+
+```js
+var findLengthOfLCIS = function(nums) {
+    const len = nums.length
+    const dp = new Array(len).fill(1)
+    for(let i = 0; i < len; i++) {
+        if(nums[i + 1] > nums[i]) {
+            dp[i + 1] = dp[i] + 1
+        }
+    }
+    return Math.max(...dp)
+};
+```
+
+## 718. 最长重复子数组
+
+:::tip 题目
+给两个整数数组 nums1 和 nums2 ，返回 两个数组中 公共的 、长度最长的子数组的长度 。
+:::
+
+**示例 1：**
+
+```js
+输入：nums1 = [1,2,3,2,1], nums2 = [3,2,1,4,7]
+输出：3
+解释：长度最长的公共子数组是 [3,2,1] 。
+```
+
+**示例 2：**
+
+```js
+输入：nums1 = [0,0,0,0,0], nums2 = [0,0,0,0,0]
+输出：5
+```
+
+### 解答
+
+动态规划思路
+
+1. 确定 dp 数组以及下标的含义
+
+`dp[i][j]` ：以下标 `i - 1` 为结尾的 A，和以下标 `j - 1` 为结尾的 B，最长重复子数组长度为 `dp[i][j]`。
+2. 当 `nums1[i - 1]` 和 `nums2[j - 1]` 相等的时候，`dp[i][j] = dp[i - 1][j - 1] + 1`
+3. dp 数组初始化 `new Array(m + 1).fill(0).map(x => new Array(n + 1).fill(0))`
+
+```js
+var findLength = function(nums1, nums2) {
+    const [m, n] = [nums1.length, nums2.length]
+    // 初始化二维 dp 数组，都为 0
+    const dp = new Array(m + 1).fill(0).map(x => new Array(n + 1).fill(0))
+    let res = 0
+    for(let i = 1; i <= m; i++) {
+        for(let j = 1; j <= n; j++) {
+            if(nums1[i - 1] === nums2[j - 1]) {
+                dp[i][j] = dp[i - 1][j - 1] + 1
+            }
+            res = dp[i][j] > res ? dp[i][j] : res
+        }
+    }
+    return res
+};
+```
+
+滚动数组思路
+
+
+```js
+const findLength = function(nums1, nums2) {
+    const len1 = nums1.length, len2 = nums2.length
+    const dp = new Array(len2 + 1).fill(0)
+    let res = 0
+    for(let i = 1; i <= len1; i++) {
+        for(let j = len2; j > 0; j--) {
+            if(nums1[i - 1] === nums2[j - 1]) {
+                dp[j] = dp[j - 1] + 1
+            }else {
+                dp[j] = 0
+            }
+            res = Math.max(res, dp[j])
+        }
+    }
+    return res
+}
 ```
 
 ## 1014. 最佳观光组合
