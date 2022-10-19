@@ -814,7 +814,7 @@ var uniquePaths = function(m, n) {
  :::
 
 **示例 1：**
-![](/img/algorithm/dynamic/63.1.png)
+![](/img/algorithm/dynamic/63-1.jpg)
 
 ```js
 输入：obstacleGrid = [[0,0,0],[0,1,0],[0,0,0]]
@@ -827,7 +827,7 @@ var uniquePaths = function(m, n) {
 
 **示例 2：**
 
-![](/img/algorithm/dynamic/63.2.png)
+![](/img/algorithm/dynamic/63-2.jpg)
 
 ```js
 输入：obstacleGrid = [[0,1],[0,0]]
