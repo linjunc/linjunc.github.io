@@ -362,6 +362,7 @@ var minimumTotal = function(triangle) {
 
 给定一个代表每个房屋存放金额的非负整数数组，计算你 不触动警报装置的情况下 ，一夜之内能够偷窃到的最高金额。
 :::
+
 **示例 1：**
 
 ```js
@@ -378,10 +379,47 @@ var minimumTotal = function(triangle) {
 输出：12
 解释：偷窃 1 号房屋 (金额 = 2), 偷窃 3 号房屋 (金额 = 9)，接着偷窃 5 号房屋 (金额 = 1)。
      偷窃到的最高金额 = 2 + 9 + 1 = 12 。
-``` 
+```
+
 ### 解答
 
+#### 动态规划
+
+思路：两层循环，第一层遍历第几行，第二层计算这一行的数值，最后返回 rowIndex 行即可
+
+递推公式：`dp[i][j] = dp[i - 1][j - 1] + dp[i - 1][j]` 表示当前的值来自上一行的相邻两个
+
+太慢了，很明显 dp 数组可以优化，没必要存这么多，我们可以用滚动数组的思想来做
+
 ```js
+var getRow = function(rowIndex) {
+    const dp = new Array(rowIndex + 1).fill(0)
+    for(let i = 0; i <= rowIndex; i++) {
+        dp[i] = new Array(i + 1).fill(0)
+        dp[i][0] = dp[i][i] = 1
+        for(let j = 1; j < i; j++){
+            dp[i][j] = dp[i - 1][j - 1] + dp[i - 1][j]
+        }
+    }
+    return dp[rowIndex]
+};
+```
+
+### 滚动数组
+
+注意到对第 i+1i+1 行的计算仅用到了第 ii 行的数据，因此可以使用滚动数组的思想优化空间复杂度。
+
+```js
+const getRow = (rowIndex) => {
+    const row = new Array(rowIndex + 1).fill(0)
+    row[0] = 1
+    for(let i = 1; i <= rowIndex; i++) {
+        for(let j = i; j > 0; j--) {
+            row[j] += row[j - 1]
+        }
+    }
+    return row
+}
 ```
 
 ## 213. 打家劫舍 II
