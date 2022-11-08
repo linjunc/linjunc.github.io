@@ -409,7 +409,7 @@ module.exports = {
           sidebarDepth: 2, // 可选的, 默认值是 1
           items: [
             { link: "/pages/interview/all/html.md", text: "HTML 面试题" },
-            { link: "/pages/interview/all/css.md", text: "CSS 面试题" },
+            { link: "/pages/interview/all/css/css.md", text: "CSS 面试题" },
             { link: "/pages/interview/all/js.md", text: "JS 面试题" },
           ],
         },
