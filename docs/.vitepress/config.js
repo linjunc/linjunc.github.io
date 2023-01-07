@@ -453,6 +453,10 @@ module.exports = {
           sidebarDepth: 2, // 可选的, 默认值是 1
           items: [
             {
+              link: "/pages/summary/jsx2js.md",
+              text: "我们编写的 JSX 是如何通过构建工具转换成 JS 的",
+            },
+            {
               link: "/pages/summary/engine.md",
               text: "我是这样搭建 React + TypeScript 项目的",
             },
