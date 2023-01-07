@@ -315,7 +315,7 @@ function buildCreateElementCall(
 }
 ```
 
-这里的关键应该看到这个 call 方法，这个方法是用来生成 `React.createElement` 方法调用的，通过 `t.callExpression` 来生成，这里的 `get` 方法是用来获取 `id` 的，这里的 `id` 是在 `visitor` 中定义的，是 `React.createElement`，所以这里就是生成了 `React.createElement` 方法调用
+这里的关键应该看到这个 call 方法，这个方法是用来生成 `React.createElement` 方法调用的，通过 `t.callExpression` 来生成，这里的 `get` 方法是用来获取 `id` 的，这里的 `id` 是在 `visitor` 中定义的，传入的是 `createElement`，所以这里就是生成了 `React.createElement` 方法调用
 
 ```js
 // get 方法
@@ -333,9 +333,80 @@ function call(
 }
 ```
 
+### get 和 set 函数
+
+在上面我们看到了 `get` 方法，对应的还有 `set` 方法，这里我们再讲讲这部分的东西
+
+```js
+const get = (pass: PluginPass, name: string) =>
+  pass.get(`@babel/plugin-react-jsx/${name}`);
+const set = (pass: PluginPass, name: string, v: any) =>
+  pass.set(`@babel/plugin-react-jsx/${name}`, v);
+```
+
+在 visitor 的 program 函数中会通过当前的运行上下文环境来决定是否需要生成 `jsx` 的 id
+
+- 如果是经典（classic）的方式也就是手动引入 React 的方式，那么就只需要生成 `createElement` 和 `fragment` 的 id
+- 如果是自动引入 React 时，就还需要设置 jsx 的 id
+
+```js
+if (runtime === "classic") {
+    ...
+    const createElement = toMemberExpression(pragma)
+    const fragment = toMemberExpression(pragmaFrag)
+
+    set(state, "id/createElement", () => t.cloneNode(createElement))
+    set(state, "id/fragment", () => t.cloneNode(fragment))
+
+    set(state, "defaultPure", pragma === DEFAULT.pragma)
+} else if (runtime === "automatic") {
+    ...
+    const define = (name: string, id: string) =>
+        set(state, name, createImportLazily(state, path, id, source))
+
+    define("id/jsx", development ? "jsxDEV" : "jsx")
+    define("id/jsxs", development ? "jsxDEV" : "jsxs")
+    define("id/createElement", "createElement")
+    define("id/fragment", "Fragment")
+
+    set(state, "defaultPure", source === DEFAULT.importSource)
+} 
+```
+
+在上面我们可以看到在 `set` 函数执行时，会传入一个回调，注册对应的方法，当我们调用 `get` 方法时，就会执行这个回调，然后返回对应的值
+
+```js
+const DEFAULT = {
+    pragma: "React.createElement",
+    pragmaFrag: "React.Fragment",
+}
+
+const createElement = toMemberExpression(pragma)
+const fragment = toMemberExpression(pragmaFrag)
+```
+
+可以看到这里的 `toMemberExpression` 方法是用来将 `React.createElement` 转换成 `React.createElement` 的 AST 节点的
+
+在 `toMemberExpression` 方法中会遍历传入的 `id`，也就是这个 DEFAULT 对象定义的值，然后通过 `t.identifier` 方法将每个 id 转换成对应的 AST 节点，然后通过 `t.memberExpression` 方法将每个节点转换成对应的 AST 节点，最后通过 `reduce` 方法将每个节点转换成一个 `MemberExpression` 的 AST 节点
+
+```js
+function toMemberExpression(id: string): Identifier | MemberExpression {
+    return (
+        id
+            .split(".")
+            .map(name => t.identifier(name))
+            // @ts-expect-error - The Array#reduce does not have a signature
+            // where the type of initialial value differs from callback return type
+            .reduce((object, property) => t.memberExpression(object, property))
+    )
+}
+```
+
+这也解释了为什么调用 call 函数能够生成 JSX 对应 createElement 方法对应的 AST 了
+
 ### 替换 JSX 结构
 
-在 JSXElement 方法中，我们可以看到，这里是通过 `buildCreateElementCall` 方法来生成 `React.createElement` 方法调用的，然后通过 `path.replaceWith` 来替换掉原来的 JSX 结构
+在 JSXElement 方法的结尾，我们可以看到，这里是通过 `buildCreateElementCall` 方法来生成 `React.createElement` 方法调用的，然后通过 `path.replaceWith` 来替换掉原来的 JSX 结构，得到一个由 `React.createElement` 方法调用组成的 AST 
 
 ```js
 JSXElement: {
@@ -347,7 +418,7 @@ JSXElement: {
 }
 ```
 
-经过这些就完成了 JSX 到 JS 的转换了，当然这里还有一些特殊的节点没有涉及到，比如 React 中的 Fragment 节点，也有自己的处理逻辑
+经过这些就完成了 JSX 到 JS AST 的转换了，当然这里还有一些特殊的节点没有涉及到，比如 React 中的 Fragment 节点，也有自己的处理逻辑
 
 大致的思路就是将 `<></>` 转换成 `<React.Fragment></React.Fragment>`，然后再通过 `buildCreateElementCall` 方法来生成 `React.createElement` 方法调用，最后通过 `path.replaceWith` 来替换掉原来的 JSX 结构
 
@@ -375,10 +446,12 @@ JSXFragment(path, file) {
 }
 ```
 
+最后再在 generate 阶段完成 AST 到 JS 的转换，这样整个 JSX 就转化完成了
+
 以上就是 JSX 到 JS 的转换过程，更详细的我们可以直接看 plugin 的源码，这部分的代码还算简单
 
 ## 总结
 
-React 的 JSX 会被 Babel 的 `@babel/plugin-transform-react-jsx` 插件转换成 `React.createElement` 方法调用，这样就可以在浏览器中运行了
+React 的 JSX 会被 Babel 的 `@babel/plugin-transform-react-jsx` 插件转换成 `React.createElement` 方法调用，这个插件的核心就是通过 visitor 函数来遍历 AST，然后对不同类型的节点进行处理，比如 JSXElement，JSXFragment 等，最后将 JSX 转换成 `React.createElement` 方法调用，得到一个由 createElement fn 组成的 AST，最后再在 generate 阶段完成 AST 到 JS 的转换
 
-在这个 plugin 中，会通过 visitor 函数，对不同类型的节点进行处理，比如 JSXElement，JSXFragment 等，最后会将 JSX 转换成 `React.createElement` 方法调用
+下一篇，将通过手写 Babel 插件来实现 JSX To JS AST 的转换，这样我们就能更加深入的了解 Babel 的插件机制以及 React JSX transform 的实现
