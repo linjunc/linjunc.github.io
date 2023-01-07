@@ -1,1 +1,0 @@
-import{_ as e,c as s,o as a}from"./app.db577916.js";const i=JSON.parse('{"title":"","description":"","frontmatter":{},"headers":[],"relativePath":"pages/summary/jsx2js.md"}'),t={name:"pages/summary/jsx2js.md"};function r(o,c,n,p,m,_){return a(),s("div")}var f=e(t,[["render",r]]);export{i as __pageData,f as default};
