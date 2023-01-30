@@ -280,6 +280,11 @@
   dependencies:
     vue-demi "*"
 
+a-sync-waterfall@^1.0.0:
+  version "1.0.1"
+  resolved "https://registry.npmmirror.com/a-sync-waterfall/-/a-sync-waterfall-1.0.1.tgz#75b6b6aa72598b497a125e7a2770f14f4c8a1fa7"
+  integrity sha512-RYTOHHdWipFUliRFMCS4X2Yn2X8M87V/OpSqWzKKOGhzqyUxzyVmhHDH9sAvG+ZuQf/TAOFsLCpMw09I1ufUnA==
+
 algoliasearch@^4.0.0:
   version "4.14.2"
   resolved "https://registry.npmmirror.com/algoliasearch/-/algoliasearch-4.14.2.tgz#63f142583bfc3a9bd3cd4a1b098bf6fe58e56f6c"
@@ -300,10 +305,20 @@ algoliasearch@^4.0.0:
     "@algolia/requester-node-http" "4.14.2"
     "@algolia/transporter" "4.14.2"
 
+asap@^2.0.3:
+  version "2.0.6"
+  resolved "https://registry.npmmirror.com/asap/-/asap-2.0.6.tgz#e50347611d7e690943208bbdafebcbc2fb866d46"
+  integrity sha512-BSHWgDSAiKs50o2Re8ppvp3seVHXSRM44cdSsT9FfNEUUZLOGWVCsiWaRPWM1Znn+mqZ1OfVZ3z3DWEzSp7hRA==
+
 body-scroll-lock@^4.0.0-beta.0:
   version "4.0.0-beta.0"
   resolved "https://registry.npmmirror.com/body-scroll-lock/-/body-scroll-lock-4.0.0-beta.0.tgz#4f78789d10e6388115c0460cd6d7d4dd2bbc4f7e"
   integrity sha512-a7tP5+0Mw3YlUJcGAKUqIBkYYGlYxk2fnCasq/FUph1hadxlTRjF+gAcZksxANnaMnALjxEddmSi/H3OR8ugcQ==
+
+commander@^5.1.0:
+  version "5.1.0"
+  resolved "https://registry.npmmirror.com/commander/-/commander-5.1.0.tgz#46abbd1652f8e059bddaef99bbdcb2ad9cf179ae"
+  integrity sha512-P0CysNDQ7rtVw4QIQtm+MRxV66vKFSvlsQvGYXZWR3qFU0jlMKHZZZgw8e+8DSah4UDKMqnknRDQz+xuQXQ/Zg==
 
 csstype@^2.6.8:
   version "2.6.20"
@@ -458,6 +473,13 @@ has@^1.0.3:
   dependencies:
     function-bind "^1.1.1"
 
+hexo-pagination@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.npmmirror.com/hexo-pagination/-/hexo-pagination-0.1.0.tgz#54f0be12e6ae51d1c0a6f0023674ba77ac514ce3"
+  integrity sha512-Ji/LYq7xP7cdBdG15CJ4YZZNA/c6Kf64rXj+Jp2bKsC2JTgcBmz+GGkHwpk6aoMHXRP2XraxGcGjXhITr7ooYg==
+  dependencies:
+    object-assign "^4.1.0"
+
 is-core-module@^2.9.0:
   version "2.9.0"
   resolved "https://registry.npmmirror.com/is-core-module/-/is-core-module-2.9.0.tgz#e1c34429cd51c6dd9e09e0799e396e27b19a9c69"
@@ -470,6 +492,11 @@ jsonc-parser@^3.0.0:
   resolved "https://registry.npmmirror.com/jsonc-parser/-/jsonc-parser-3.1.0.tgz#73b8f0e5c940b83d03476bc2e51a20ef0932615d"
   integrity sha512-DRf0QjnNeCUds3xTjKlQQ3DpJD51GvDjJfnxUVWg6PZTo2otSm+slzNAxU/35hF8/oJIKoG9slq30JYOsF2azg==
 
+lodash.pick@^4.4.0:
+  version "4.4.0"
+  resolved "https://registry.npmmirror.com/lodash.pick/-/lodash.pick-4.4.0.tgz#52f05610fff9ded422611441ed1fc123a03001b3"
+  integrity sha512-hXt6Ul/5yWjfklSGvLQl8vM//l3FtyHZeuelpzK6mm99pNvN9yTDruNZPEJZD1oWrqo+izBmB7oUfWgcCX7s4Q==
+
 magic-string@^0.25.7:
   version "0.25.9"
   resolved "https://registry.npmmirror.com/magic-string/-/magic-string-0.25.9.tgz#de7f9faf91ef8a1c91d02c2e5314c8277dbcdd1c"
@@ -477,10 +504,33 @@ magic-string@^0.25.7:
   dependencies:
     sourcemap-codec "^1.4.8"
 
+markdown-it-custom-attrs@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.npmmirror.com/markdown-it-custom-attrs/-/markdown-it-custom-attrs-1.0.2.tgz#8dd39c0a806b20f05742ae808b151be75ab52b07"
+  integrity sha512-6jiuxs//DhkFe7K3z5Y3nF1E6Lk2GRKGVzk8IpusxPZL90rOOhwEAtYjOGjRBPQctK56kJreCnFmPSUW0n3YeQ==
+  dependencies:
+    hexo-pagination "^0.1.0"
+    lodash.pick "^4.4.0"
+    nunjucks "^3.0.1"
+
 nanoid@^3.3.4:
   version "3.3.4"
   resolved "https://registry.npmmirror.com/nanoid/-/nanoid-3.3.4.tgz#730b67e3cd09e2deacf03c027c81c9d9dbc5e8ab"
   integrity sha512-MqBkQh/OHTS2egovRtLk45wEyNXwF+cokD+1YPf9u5VfJiRdAiRwB2froX5Co9Rh20xs4siNPm8naNotSD6RBw==
+
+nunjucks@^3.0.1:
+  version "3.2.3"
+  resolved "https://registry.npmmirror.com/nunjucks/-/nunjucks-3.2.3.tgz#1b33615247290e94e28263b5d855ece765648a31"
+  integrity sha512-psb6xjLj47+fE76JdZwskvwG4MYsQKXUtMsPh6U0YMvmyjRtKRFcxnlXGWglNybtNTNVmGdp94K62/+NjF5FDQ==
+  dependencies:
+    a-sync-waterfall "^1.0.0"
+    asap "^2.0.3"
+    commander "^5.1.0"
+
+object-assign@^4.1.0:
+  version "4.1.1"
+  resolved "https://registry.npmmirror.com/object-assign/-/object-assign-4.1.1.tgz#2109adc7965887cfc05cbbd442cac8bfbb360863"
+  integrity sha512-rJgTQnkUnH1sFw8yT6VSU3zD3sWmu6sZhIseY8VX+GRu3P6F7Fu+JNDoXfklElbLJSnc3FUQHVe4cU5hj+BcUg==
 
 path-parse@^1.0.7:
   version "1.0.7"
