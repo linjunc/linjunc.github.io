@@ -1,12 +1,20 @@
+import { markdown } from './configs/index'
+
 module.exports = {
   title: "小丞前端日记", // 显示在左上角的网页名称以及首页在浏览器标签显示的text名称
   description: "小丞同学的博客，致力于分享高质量的 React,JS 相关博文", // meta 中的描述文字，用于SEO
   // 注入到当前页面的 HTML <head> 中的标签
   head: [
     ["link", { rel: "icon", href: "/avatar.jpg" }], //浏览器的标签栏的网页图标
+    [
+      "link",
+      { rel: "stylesheet", href: "https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" },
+    ],
+    ["script", { src: "https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js" }],
   ],
   serviceWorker: true,
   appearance: true,
+  markdown,
   themeConfig: {
     markdown: {
       theme: "material-palenight",
