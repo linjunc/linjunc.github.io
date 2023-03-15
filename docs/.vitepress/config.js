@@ -1,4 +1,4 @@
-import { markdown } from './configs/index'
+import { markdown } from "./configs/index";
 
 module.exports = {
   title: "小丞前端日记", // 显示在左上角的网页名称以及首页在浏览器标签显示的text名称
@@ -8,9 +8,17 @@ module.exports = {
     ["link", { rel: "icon", href: "/avatar.jpg" }], //浏览器的标签栏的网页图标
     [
       "link",
-      { rel: "stylesheet", href: "https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" },
+      {
+        rel: "stylesheet",
+        href: "https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css",
+      },
     ],
-    ["script", { src: "https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js" }],
+    [
+      "script",
+      {
+        src: "https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js",
+      },
+    ],
   ],
   serviceWorker: true,
   appearance: true,
@@ -53,12 +61,12 @@ module.exports = {
             link: "/pages/interview/heading/best1.md",
           },
           {
-            text: '面试题合集',
-            link: "/pages/interview/all/html.md"
+            text: "面试题合集",
+            link: "/pages/interview/all/html.md",
           },
           {
-            text: '手写系列',
-            link: "/pages/handwriting/handwriting.md"
+            text: "手写系列",
+            link: "/pages/handwriting/handwriting.md",
           },
           {
             text: "算法合集",
@@ -112,6 +120,7 @@ module.exports = {
             { link: "/pages/network/physics.md", text: "物理层" },
             { link: "/pages/network/datalink.md", text: "数据链路层" },
             { link: "/pages/network/web.md", text: "网络层" },
+            { link: "/pages/network/http.md", text: "HTTP 协议相关面试题" },
           ],
         },
       ],
@@ -624,4 +633,4 @@ module.exports = {
       ],
     },
   },
-}
+};
