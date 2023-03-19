@@ -1,4 +1,4 @@
-import { markdown } from "./configs/index";
+import { markdown } from "./configs/index"
 
 module.exports = {
   title: "小丞前端日记", // 显示在左上角的网页名称以及首页在浏览器标签显示的text名称
@@ -121,6 +121,7 @@ module.exports = {
             { link: "/pages/network/datalink.md", text: "数据链路层" },
             { link: "/pages/network/web.md", text: "网络层" },
             { link: "/pages/network/http.md", text: "HTTP 协议相关面试题" },
+            { link: "/pages/network/statuscode.md", text: "HTTP 状态码" }
           ],
         },
       ],
@@ -633,4 +634,4 @@ module.exports = {
       ],
     },
   },
-};
+}
