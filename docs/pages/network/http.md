@@ -331,6 +331,16 @@ Access-Control-Allow-Headers: X-Requested-With
 
 ## HTTP 1.0 和 HTTP 1.1 之间有哪些区别
 
+:::tip
+首先 HTTP1.1 支持持久连接，这使得可以在单个 TCP 连接上处理多个请求，这比 HTTP1.0 之前的单独连接更加高效。
+
+其次 HTTP1.1 支持管线化机制，使得客户端可以在服务端响应之前发送多个请求。
+
+此外，HTTP1.1 支持更完善的缓存控制机制，其中包括 Etag 和 If-None-Match 等首部字段，可以让客户端和服务端更加灵活地控制缓存。
+
+因此 HTTP1.1 相对于 1.0 有更好的性能，更好的可靠性，更好的缓存控制能力
+:::
+
 - **持久链接**：`HTTP 1.1` 支持持久连接，可以使客户端和服务端之间的连接保持打开状态，使多个 HTTP 请求复用同一个 TCP 连接，从而可以在同一连接上发送多个请求和响应，**减少每个请求的连接建立和关闭时间**，提高了性能
 - **支持压缩**：`HTTP 1.1` 支持使用 gzip、deflate 和 compress 等压缩算法对请求和响应数据进行压缩，减少传输的数据量，提高传输效率
 - **缓存控制**：`HTTP 1.1` 引入了新的缓存机制，包括在**客户端和服务器端指定缓存有效时间的首部字段**。`Etag`、`If-none-match` `Last-Modified`、`If-Modified-Since` 等
@@ -345,12 +355,62 @@ Access-Control-Allow-Headers: X-Requested-With
 
 那么 HTTP 1.0 存在什么问题呢，为什么推出 HTTP1.1 呢？
 
-## HTTP 1.0 存在什么问题呢？为什么需要升级 1.1 版本？
+## （追问）HTTP1.1 的持久连接是怎么实现的？
+
+:::tip
+HTTP 1.1 持久连接的实现方式是在每次请求的头信息中加入了一个 `Connection: keep-alive` 的字段，表示这是一个持久连接，
+
+当服务器收到这个字段后，就会在响应头中加入 `Connection: keep-alive` 和 `Keep-Alive: timeout=xx, max=xx` 字段字段，告诉客户端这个连接可以被重复使用。
+
+客户端在接收到服务器端的响应后，即可**使用同一个连接继续发送其他请求**，避免了频繁地建立和断开TCP连接，提高了网络性能。
+
+当客户端完成请求后，给服务器发送一个 `Connection: close` 字段，表示连接关闭。
+:::
+
+可以看下面这个例子
+
+创建需要请求多个资源的数据，然后向数组中的第一个资源发送请求，并设置 `Connection: keep-alive`，以建立持久连接，当第一个请求完成后，检查响应数量，如果还有资源需要请求，则使用相同的连接请求。
+
+如果资源全部响应，那么添加一个 `Connection: close` 来关闭连接
+
+```js
+// 创建一个 XMLHttpRequest 对象
+const xhr = new XMLHttpRequest();
+// 创建一个 url 数组，需要请求多个页面资源
+const urls = ['/api/data1', '/api/data2', '/api/data3'];
+// 发送第一个请求，设置 connection 为 keep-alive 以建立持久连接
+xhr.open('GET', urls[0], true);
+xhr.setRequestHeader('Connection', 'keep-alive');
+xhr.send();
+// 设置一个计数器，用于跟踪已经请求的资源数量
+let responsesReceived = 0;
+// 当前 XMLHttpRequest 对象的 onload 事件处理程序
+xhr.onload = function() {
+  if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+    // 更新计数器
+    responsesReceived++;
+    // 处理服务器响应
+    console.log(xhr.responseText);
+    if (responsesReceived < urls.length) {
+      // 如果还有其他资源需要请求，则发送另一个请求并保持连接
+      xhr.open('GET', urls[responsesReceived], true);
+      xhr.setRequestHeader('Connection', 'keep-alive');
+      xhr.send();
+    } else {
+      // 在所有资源都已请求后关闭连接
+      xhr.setRequestHeader('Connection', 'close');
+      xhr.abort();
+    }
+  }
+}
+```
+
+## （追问）HTTP 1.0 存在什么问题呢？为什么需要升级 1.1 版本？
 
 主要存在以下的问题
 
 1. `HTTP1.0` **每次请求都需要建立新的 TCP 连接**，导致性能的浪费，因为连接的建立和释放都需要时间和计算资源，而每次只进行少量的数据传输，浪费连接浪费资源
-2. `HTTP1.0` 没有长连接 `keep-alive` 的机制，每个请求结束后连接立即关闭，从而再次传输数据时需要再次建立连接，这种情况下多次连接的建立和释放会增加网络负载，导致请求的延迟和处理时间延长。
+2. `HTTP1.0` **没有长连接** `keep-alive` 的机制，每个请求结束后连接立即关闭，从而再次传输数据时需要再次建立连接，这种情况下多次连接的建立和释放会增加网络负载，导致请求的延迟和处理时间延长。
 3. `HTTP1.0` 缺乏对虚拟主机的支持，**同一个 IP 地址下的多个站点共享一个资源**容易出现混乱，并且会使服务器的资源利用率降低，同时也会增加DNS服务器的负载。
 4. `HTTP1.0` 传输的数据**没有分块传输的功能**，如果传输的数据量比较大，传输时间比较长，那么客户端需要在传输完整个数据之后才能处理响应，这会导致等待时间过长。
 5. `HTTP1.0` 限制最大请求头长度为 1024字节，而最大响应头长度为 256字节，这个长度限制会导致传输的多余信息不能及时被截取，从而影响性能。
@@ -358,3 +418,9 @@ Access-Control-Allow-Headers: X-Requested-With
 `HTTP1.1` 协议能够解决这些问题，通过持久连接、分块传输、虚拟主机的支持等机制，提供了更高效的数据传输方式，同时还支持对安全的加强，提高了网络质量。
 
 同时 `HTTP/1.1` 中没有指定头部长度的具体限制，**但建议不要超过8KB**。这是因为较长的头部可能会导致网络延迟，浪费带宽并增加服务器负担。
+
+## HTTP 1.1 和 HTTP2.0 有什么区别？
+
+## HTTP1.1 存在什么问题？为什么诞生了 HTTP2.0 版本？
+
+## TCP 长连接和短链接的区别
