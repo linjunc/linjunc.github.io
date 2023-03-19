@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <style>
+            body {
+                width: 100vw;
+                height: 100vh;
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
+            }
+            div {
+                color: black;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="root"></div>
+    </body>
+    <script>
+        // const div = document.createElement('div')
+        // const shadow = div.attachShadow()
+        // const content = document.createElement('div')
+        // shadow.appendChild(content)
+        // document.querySelector('#test').appendChild(div)
+
+        // 创建顶层 document 环境的 dom 节点
+        function createContainerInDocument() {
+            const container = document.createElement('div')
+            container.setAttribute('id', 'container')
+            container.classList.add('shadow-container')
+            container.style.position = 'fixed'
+            container.style.zIndex = 2147483647 // 举个例子，css可根据实际情况自行添加
+            return container
+        }
+        // 创建 shadowRoot 环境下的 container 节点（用于挂在 Vue 示例）
+        function containerInShadowRoot() {
+            const div = document.createElement('div')
+            div.id = 'app'
+            return div
+        }
+        // DOM 创建流程：步骤 ① - ③
+        function createDom() {
+            const container = createContainerInDocument()
+            const shadowRoot = container.attachShadow({ mode: 'open' })
+            const containerInShadow = containerInShadowRoot(shadowRoot)
+            shadowRoot.appendChild(containerInShadow)
+            document.body.appendChild(container)
+            loadCss(shadowRoot)
+            return containerInShadow
+        }
+        function loadCss(root) {
+            const link = document.createElement('link')
+            let version = ''
+            link.rel = 'stylesheet'
+            link.href = `${process.env.BASE_URL}css/app.css?v=${version}` // 加载 css 样式文件，路径自行修改
+            root.appendChild(link)
+        }
+        createDom()
+    </script>
+</html>
