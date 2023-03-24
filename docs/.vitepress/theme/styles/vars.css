@@ -107,7 +107,7 @@
 .dark .link.link.active,
 .dark .edit-link-button.edit-link-button,
 .dark .pager-link .title {
-  color: var(--vp-c-brand-lighter);
+  color: var(--vp-c-brand-lighter) !important;
 }
 
 .dark .vp-doc a:hover,
