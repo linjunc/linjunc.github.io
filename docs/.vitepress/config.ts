@@ -31,6 +31,11 @@ export default defineConfig({
     markdown,
     lastUpdated: true, // string | boolean
     themeConfig: {
+        algolia: {
+            appId: '91QLUICXMQ',
+            apiKey: 'eaa087050384cf131e049e11cb4fadbf',
+            indexName: 'linjuncheng'
+        },
         logo: '/avatar.jpg',
         socialLinks: [
             {
@@ -50,6 +55,7 @@ export default defineConfig({
                 items: [
                     { text: '前端总结', link: '/pages/summary/ts.md' },
                     { text: 'TS 类型挑战', link: '/pages/tschallenge/easy.md' },
+
                     { text: '计算机网络', link: '/pages/network/overview.md' },
                     {
                         text: '数据结构和算法',

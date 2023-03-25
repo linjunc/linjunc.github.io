@@ -1,6 +1,8 @@
+import { privateRouter } from "./private";
 import { REACT_SIDE } from "./reactside";
 
 export const sidebar = {
+    ...privateRouter,
     '/pages/network/': [
         {
             text: '计算机网络',
