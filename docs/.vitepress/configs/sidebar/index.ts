@@ -1,5 +1,5 @@
-import { privateRouter } from "./private";
-import { REACT_SIDE } from "./reactside";
+import { privateRouter } from './private'
+import { REACT_SIDE } from './reactside'
 
 export const sidebar = {
     ...privateRouter,
@@ -82,6 +82,10 @@ export const sidebar = {
         {
             text: '前端总结', // 必要的
             items: [
+                {
+                    link: '/pages/summary/login.md',
+                    text: '面对前端鉴权登录，你需要知道的一切。从 Cookie 到 JWT、从 Session 到 SSO'
+                },
                 {
                     link: '/pages/summary/jsx2js.md',
                     text: '我们编写的 JSX 是如何通过构建工具转换成 JS 的'
