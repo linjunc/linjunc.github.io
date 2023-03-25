@@ -2,7 +2,7 @@
 import { VPTeamMembers } from "vitepress/theme";
 const members = [
   {
-    avatar: "https://www.github.com/linjunc.png",
+    avatar: "/avatar.jpg",
     name: "小丞同学",
     title: "Author",
     links: [
