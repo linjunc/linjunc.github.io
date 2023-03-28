@@ -16,7 +16,8 @@ export const sidebar = {
                     link: '/pages/network/statuscode.md',
                     text: 'HTTP 状态码相关'
                 },
-                { link: '/pages/network/tcpudp.md', text: 'TCP 和 UDP 协议' }
+                { link: '/pages/network/tcpudp.md', text: 'TCP 和 UDP 协议' },
+                { link: '/pages/network/cache.md', text: '浏览器缓存' }
             ]
         }
     ],
