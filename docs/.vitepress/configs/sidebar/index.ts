@@ -12,14 +12,14 @@ export const sidebar = {
                 { link: '/pages/network/datalink.md', text: '数据链路层' },
                 { link: '/pages/network/web.md', text: '网络层' },
                 { link: '/pages/network/http.md', text: 'HTTP 协议相关面试题' },
+                { link: '/pages/network/https.md', text: 'HTTPS 相关' },
                 {
                     link: '/pages/network/statuscode.md',
                     text: 'HTTP 状态码相关'
                 },
                 { link: '/pages/network/tcpudp.md', text: 'TCP 和 UDP 协议' },
                 { link: '/pages/network/cache.md', text: '浏览器缓存' },
-                { link: '/pages/network/websocket.md', text: 'WebSocket 相关' },
-                { link: '/pages/network/https.md', text: 'HTTPS 相关' }
+                { link: '/pages/network/websocket.md', text: 'WebSocket 相关' }
             ]
         }
     ],
