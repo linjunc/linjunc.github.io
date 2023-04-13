@@ -104,6 +104,10 @@ export default defineConfig({
             text: "React 源码解析",
             link: "/pages/react/hard/fiberidea.md",
           },
+          {
+            text: "React 面试题合集",
+            link: "/pages/react/reactinterview/common.md"
+          }
           // { text: 'Mobx', link: '/pages/mobx/test2.md' },
         ],
       },

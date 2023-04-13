@@ -267,5 +267,16 @@ export const REACT_SIDE = {
         //     ["writing.md", "React Router 源码解析"],
         //   ],
         // },
+    ],
+    '/pages/react/reactinterview/': [
+        {
+            text: 'React 面试题合集', // 必要的
+            items: [
+                {
+                    link: '/pages/react/reactinterview/common.md',
+                    text: 'React 常见面试题'
+                }
+            ]
+        }
     ]
 }
