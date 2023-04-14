@@ -275,6 +275,10 @@ export const REACT_SIDE = {
                 {
                     link: '/pages/react/reactinterview/common.md',
                     text: 'React 常见面试题'
+                },
+                {
+                    link: '/pages/react/reactinterview/easy.md',
+                    text: 'React 一些比较简单的问题'
                 }
             ]
         }
