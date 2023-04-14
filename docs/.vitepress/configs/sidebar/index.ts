@@ -90,6 +90,14 @@ export const sidebar = {
                     text: '面对前端鉴权登录，你需要知道的一切。从 Cookie 到 JWT、从 Session 到 SSO'
                 },
                 {
+                    link: '/pages/summary/webpack_rollup.md',
+                    text: 'Webpack 和 Rollup：您应该知道的一些事情'
+                },
+                {
+                    link: '/pages/summary/monorepo.md',
+                    text: '为什么越来越多的项目选择 Monorepo?'
+                },
+                {
                     link: '/pages/summary/jsx2js.md',
                     text: '我们编写的 JSX 是如何通过构建工具转换成 JS 的'
                 },

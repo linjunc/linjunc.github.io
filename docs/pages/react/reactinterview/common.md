@@ -5,3 +5,25 @@
 :::tip 写在前面
 如果有什么回答错误的地方，欢迎您在 GitHub 上提 issue，或者直接添加我的微信：**Ljc-10c** ，进行沟通
 :::
+
+## React Hooks 的大致原理？
+
+## React Hooks 解决了什么问题
+
+## 什么是受控组件，什么是非受控组件？
+
+## 什么是虚拟 DOM，它的作用是什么？
+
+## React Diff 的原理？
+
+## React 为什么需要 Diff？
+
+## useState 为什么用数组来声明，为什么不用对象？
+
+数组解构是按照顺序的，对象是按名字的
+
+## React cloneElement 和 createElement 的区别？
+
+## React 中的 key 的作用是什么？
+
+## React 类组件和函数式组件的区别
