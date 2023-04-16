@@ -6,6 +6,30 @@
 如果有什么回答错误的地方，欢迎您在 GitHub 上提 issue，或者直接添加我的微信：**Ljc-10c** ，进行沟通
 :::
 
+## React 为什么要造出 Hooks 呢？
+
+在没有 Hooks 的时候，函数组件能够做的只是接受 Props、渲染 UI，以及触发父组件传过来的事件。所有的处理逻辑都要在类组件中写，这样会使得 Class 类组件内部错综复杂，每一个类组件都有一套独特的状态，相互之间不能复用，即便是使用 mixin 的复用方式也没有很好的解决。
+
+类组件是之间的状态会随着功能的增强变得越来越臃肿，代码维护成本越来越高，不利于 Tree Shaking。
+
+Hooks 出现的本质原因是，为了让函数式组件也能做类组件的事，有自己的状态，可以处理一些副作用、获取 Ref、也能够缓存数据，同时函数组件也能够让复用变得更加简单。
+
+## （追问）React Hooks 如何把状态保存起来？保存的信息存在了哪里？
+
+在 React 的 render 阶段 fiber 调和的过程中，当遇到了 Function Component 类型的 Fiber，就会用 `updateFunctionComponent` 来更新 Fiber，在 `updateFunctionComponent` 的内部会调用 `renderWithHooks`。在 `renderWithHooks` 中，会用 `memoizedState` 保存 hooks 信息。
+
+Hooks 的信息会被保存到 Fiber 的 `memoizedState` 中，这个 `memoizedState` 是一个链表，这个链表的连接关系就是 Hooks 的调用顺序，链表的每个节点都是一个 hooks 的信息，这个 hooks 对象中，保存着当前 hooks 的信息，不同 hooks 保存的形式不同
+
+![](https://ljcimg.oss-cn-beijing.aliyuncs.com/imgtwo/20230417003644.png)
+
+## （追问）为什么 React Hooks 不能写在条件语句中
+
+因为在 React hooks 更新的过程中，首先会从 workInProgress.alternate 中取出对应的 hook，这个取出其实是按照顺序的，然后根据这个 hooks 复制一份，形成新的 hooks 链表关系。
+
+根据这个规则，如果在 if 条件语句中，使用 hooks，有可能导致 前后的 hooks 数量不一致，在复用 hooks 的过程中，会出现错乱的问题，也就导致了前后状态不一致的问题。
+
+![](https://ljcimg.oss-cn-beijing.aliyuncs.com/imgtwo/20230417004301.png)
+
 ## React Hooks 的大致原理？
 
 ## React Hooks 解决了什么问题
@@ -23,4 +47,3 @@
 ## React cloneElement 和 createElement 的区别？
 
 ## React 中的 key 的作用是什么？
-

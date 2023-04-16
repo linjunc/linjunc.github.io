@@ -20,15 +20,15 @@ hero:
 features:
   - icon: 🧩
     title: 前端之路
-    details: 自 2021 年大一开始接触前端，热爱前端，主要技术栈 React + TS，对 React 源码有深入的理解。
+    details: 自 2021 年大一开始接触前端，主要使用的技术栈是 TypeScript。2022 年开始在字节跳动实习，做 Canvas 渲染引擎相关的工作。
   - icon: 🎯
     title: 目前现状
     details: 目前就职于字节跳动（base：广州）-- 前端开发实习生岗位，学习大厂技术、体验团队协作的规范流程、积累实习经验。
   - icon: 💻
     title: 短期规划
-    details: 全力备战 2024 届秋招，期待斩获大厂 offer
+    details: 全力备战 2023 年的秋招，期待斩获大厂 offer
   - icon: 💌
     title: 学习计划
-    details: 正在复习八股 & 计算机网络！欢迎交流
+    details: 正在复习一些前端八股还有项目中的知识！欢迎交流
 ---
 
