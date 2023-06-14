@@ -2120,3 +2120,36 @@ type CheckRepeatedChars<T extends string> = T extends `${infer F}${infer E}`
 ```
 
 :::
+
+## 9286 · FirstUniqueCharIndex
+
+题目：给定一个字符串 s，找到其中的第一个非重复字符并返回它的索引。如果不存在，返回-1。
+
+
+:::details 查看解答
+
+有点蠢但是思路还算清晰，但是算法上来看性能可能不好？
+
+遍历字符串 s，通过 `${infer F}${infer E}` 获取到第一项 F 字符，计算一下 F 字符在字符串 s 中有多少个，这里写了个 RepeatCharCount 类型来计算。
+
+如果只有一个，那么久说明是第一个非重复字符，返回索引。
+
+那么这里就需要记录索引，这种记录索引的，就只能通过数组 length 来处理，通过不断为数组添加元素，来得到当前是第几个
+
+还需要注意的一点是，这里引入了第三个变量 O，用来保存原始的字符串 s，因为每次遍历的字符，都应该判断的是在字符串 s 中的个数
+
+```typescript
+type RepeatCharCount<T extends string, U extends string, N extends any[] = []> = U extends `${infer F}${infer E}`
+  ? T extends F
+    ? RepeatCharCount<T, E, [...N, '']>
+    : RepeatCharCount<T, E, [...N]>
+  : N['length']
+
+type FirstUniqueCharIndex<T extends string, N extends string[] = [], O extends string = T> = T extends `${infer F}${infer E}`
+  ? RepeatCharCount<F, O> extends 1
+    ? N['length']
+    : FirstUniqueCharIndex<E, [...N, ''], T>
+  : -1
+```
+
+:::
