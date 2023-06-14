@@ -2111,6 +2111,8 @@ type CheckRepeatedChars<'aba'>   // true
 
 利用字符串解构，把 T 拆分成 前缀 F 和 后缀 E，按照从前往后的遍历，如果 后缀 E 中包含前缀 F 则表示存在相同字符，如果不包含则递归后缀 E
 
+[playground](https://www.typescriptlang.org/play?#code/PQKgUABBCcCMAsAmCBaCBhAFgUwMYGsAlbAB2wEMAXbAEy3ICcBnSVFdj1gIwE8IAJAPYA7AOYQAFAAFCAFUwjRASggBiQLRygSW81AV2EBLEWqaUG+sWFarrEQBkZgO7dLUQCRKgWtNAAHKAqORNmxgbx9AaPV1QHozQDIVQEhzQA+3QBgVQBC3QHVtQDJvVgADNMoWKEoeMgwcAmIyKlp6ZgAeAHJyLlwKgD4oCGBgCAAzcgAbJmxWbNysPCJSCmo6TEYmSuryesbmiFMdHqg0lKcIBsAKdQgAcX1KTB0uCEAoOUBT80Bod0Asf8xKShImAC5mjNxMADoAKyZ3wQZRYBwJDAABemBQ6AAcmAQMBLKAIAB9ZEo1EoiCAA3lYoBjuUAgB5ItGExEQWGWPrYPKDQojErjcqyCDYAAe1GENCYEB85lEABoIABVCAAXggsgaIoZzNZ7IgKQAJABvcytbAMCAAMQAvorlaqIABRTUpCCsAD8BsZLOwbI58oVXLE2oVWsVDtERtYUHNi2WjUelIKw2KYwmZX1dVY-vaXR6YARRMJEEA0raAVejABSugGj5AkJ9Gk-QAWxIf0oCxyFIVBoAjjpOnz9UyyLgS5q2gxBPmIBUpOSUG9Oh1raJsExgDpKPouhUwAWiwwSxX643KOrOt0+ZDBJR9dXOhAW602x2uz2+x0B2Jh6Px5OyWWILhyN0OSKANqsRd4ShhncdMoDQNFKMpSTFUNT1Hy0bdHUdQ8u+Daft+Na-v+QyAbSoagVw4ELAwSzQbBUAfk2iGdH++SoTSIblBUuBgTBOF4TBcFLiRyHkdSwbAZU2GQdg+FgAAuvCIDZjmxKANBy7iAKbWok5iScKgKwDSAGBKgDVcligDHkYAKt43HcDzPMArwfN8vz-ICCCIMA5DCEwADuqqguCUJKRAlzabp9xPC8TBvF8Px-ACQKWUwggdGOhg2S5gAvZoAWJoOB5+neb5JkBY5ELQqSQA)
+
 ```typescript
 type CheckRepeatedChars<T extends string> = T extends `${infer F}${infer E}` 
   ? E extends `${string}${F}${string}`
@@ -2138,6 +2140,8 @@ type CheckRepeatedChars<T extends string> = T extends `${infer F}${infer E}`
 
 还需要注意的一点是，这里引入了第三个变量 O，用来保存原始的字符串 s，因为每次遍历的字符，都应该判断的是在字符串 s 中的个数
 
+[playground](https://www.typescriptlang.org/play?#code/PQKgUABBCcBMAcA2CBaCAxAlgJwM4BcBVAO0wEcBXAUwGEALAQ2wEliATKgD0lRT-54AjAJ4QAVpgbEA5rkbEIACgACEqbPkBbKvgYBKCAGJtbTBU1GC2TDLA9DDiAEVqBTAHtidqAHFMANyoFBggrG2lQgBoIADMbNgh8OipYnAIIYk8UbCoAByoGfHCIAGNGbAYS-CpsCBs6-AgpBJz8CmwFTHxcOvYuADoIZhiGiDZ3Kh7Mxq5MAmjW9oUUAEZBxVZcXJwqBJEIAG0AGyodEvcOCABmeAB2AF1FOnx8XNwALmBgE7OLqn7zppgLlsO5BCdNLhgHE8PgUBRSJQqCgykxKtVsCgbCgGCgwjJgHo9N4IAA+CAANUwVAA7hBPBA-PgABIUQTvCDPV4fL7dMr9MS4frubDSYBwJBgEDAOygCAAfUVSuVSogAE13O0IDQ-hBmTUUiqjYqINK7PhhPkIAAlPIFfD0Jg6hH4AA8ABUIFxquwevjpNFCF7OD62H78NYZNEAHLB0M9KTCA73CAAXkO93J6aD3qCYYgAAMACQAbxsMRqGAAvqXy5WAKJVgs8AD8EE9ud9GB4UDbtvyhUd2GdxDd7ui9eiB36M+j0QA5PPMz2IBz+-ahyOxxOpzP+tHl1AOdGDvOTjIkkvzZaUlhYSRyNQh6wOJwPXG8+HIwGILHO-n-WTNMM2iAB5D8u39YD3SzdsIPzYsy2ICtanQGskJQiBG2bXsbTtQdyi3V10DA8l-x6FYVzbE8zyCaRL3uFcOTvAgHyRZ8+jfSdDj3OcIEXe5ohgngOVWWUQAVY0VXbSZGhoBhcEmSSpNVM1ME0XIRUaC0rRLLDKAYI4J04fIqggKtYlBCx52UHTkVRI5z2kSZgAoIojlwedrytEoFKU9MDh4esTKoKpXXrAyjmItIiERJ9yhfLhXVo34OHnUlogABlJDKgpCsKIooQzovvOLaASzjkqOdxAh+fBzjSjKIFgHLIjy0y3UK4qWNix9yqYRK33nBgGEEQR0uiVZWva0LOsikrWLKjjX2SibUBWaaoGCjrwvmnq2PigbKuGka1qm3LGLAOUVOVDB2iSSsAGVqjeZSbtNGVQB4clHvKFJhE1WpcHcI43I8YgPk5F43k+YA+ToAUhRFMUJUQYApFwGkam+ylqTpYHQaKTxIa5GHeVwflBWFUVxQQNGCbB4mcYAWRFFJHUcujJg5UmeThimEap5GpRlIA)
+
 ```typescript
 type RepeatCharCount<T extends string, U extends string, N extends any[] = []> = U extends `${infer F}${infer E}`
   ? T extends F
@@ -2150,6 +2154,28 @@ type FirstUniqueCharIndex<T extends string, N extends string[] = [], O extends s
     ? N['length']
     : FirstUniqueCharIndex<E, [...N, ''], T>
   : -1
+```
+
+:::
+
+## 9898 · Appear only once
+
+题目：找出目标数组中只出现过一次的元素。例如：输入[1,2,2,3,3,4,5,6,6,6]，输出[1,4,5]
+
+:::details 查看解答
+
+引入两个泛型，一个用来保存结果，一个用来存储计算过的数字，这样做的目的是，通过 [...Rest, ...O] 我们得到的数组是不包含 F 本身的，不然返回永远都是 true
+
+这样我们通过 [number] 将数组转成联合类型，再递归判断即可
+
+[playground](https://www.typescriptlang.org/play?ssl=19&ssc=6&pln=15&pc=1#code/PQKgUABBCcAccQLQUH5GgvxUHduhwC0A6mgRv0Fo5QK+U1AG50HH4wADlBCa0BC3QYUVACX0iUTfZYCMBPCADQB0ARQEQAwgAsApgDsIACgACnAE6yZUlbAAMAJgDMASggBiAoElvMCxM2IgDIyMVqOmz5iZKnSaAgBkDR8oCDNQCx-wGT4wFNFAG0ARgAaXVjo-QTogBZogFZogDYsrIBdQBh-4LQolPTcpwgAPghACnUIAHEASwAXCQBXTghAKDlAU-NAaHdAiWbmgAcAZwAuYGBmsYBjCQEAKzGBAHsVAHNgODhgAC8JRDEAOTAQYCtQCAB9O-uH+4hAA3laQGO5QEAPW8efm4gLqzNbgjKQQABijRkABMAKIAGykYwAPAAVCBSAAezVkULGEAAhjJuOFctEIABVdFYnF4wnE3IQAC8EBJZIA8lTsdDaUSSUyWblqsy0ZiubiWZCAGaacFkgTyqUygBKiOa5SgAH5wZyaSz5QIVWNmnL5WzcuEZG0ALacTTqqAQLUQ6HwxFIw3Gilk8L6tlksGClhQCbgyGwhHIj3e-Xk-2kvWmuOVFgh8mA4GggCC-Od4bdJQgcULZMSEFLqQgGQg2WrZMygbA11+PwggGlbQCr0YAKV1832bTwBjStIw2zQgQJBEAA3hAYQBHNr4uFkmEYkFzUcAXwgkpUaytEAA5Ipx1JEAtFwiZJtEcA2s1GnCxgewIPhypR9OV2vmmDF2MpGSJxrM0c4LnCEBbjue6HseGZnhIF6yNeYy3vej7PmAJ4QHM+L-nizLhCwX5SOuSKgYuSK5q6yIFkWRaluWZJVjWLGCt6MQQBWaSCpU0REauJHNGR84UVREZIuEdEltJtayfWvECpUvH8d+wlgZRYbURJHH0WxLI6SWPF8eUjYgL2fZ-IA0HKUIAptbmX2-yXKALDVIAYEqANVyryAMeRgAq3oMwzjFMMzzIsKzrFsOzwLAwCEmMADumgHEcpwuRA-S+f5oyTNMswLMsqwbNsuzRWMaxwnejRrDIYypYAL2aAFiaDiZYFOUhfl4XbIcxxnACQA)
+
+```typescript
+type FindEles<T extends any[], U extends any[] = [], O extends any[] = []> = T extends [infer F, ...infer Rest]
+  ? F extends [...Rest, ...O][number]
+    ? FindEles<Rest, U, [...O, F]>
+    : FindEles<Rest, [...U, F], [...O, F]>
+  : U
 ```
 
 :::
