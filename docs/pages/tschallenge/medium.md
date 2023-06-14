@@ -2092,3 +2092,31 @@ type Subsequence<T extends any[]> =
 ```
 
 :::
+
+## 9142 · CheckRepeatedChars
+
+题目：判断一个string类型中是否有相同的字符
+
+例如：
+
+```typescript
+type CheckRepeatedChars<'abc'>   // false
+type CheckRepeatedChars<'aba'>   // true
+```
+
+
+:::details 查看解答
+
+来解新题了，好久没写了。
+
+利用字符串解构，把 T 拆分成 前缀 F 和 后缀 E，按照从前往后的遍历，如果 后缀 E 中包含前缀 F 则表示存在相同字符，如果不包含则递归后缀 E
+
+```typescript
+type CheckRepeatedChars<T extends string> = T extends `${infer F}${infer E}` 
+  ? E extends `${string}${F}${string}`
+    ? true
+    : CheckRepeatedChars<E>
+  : false
+```
+
+:::
