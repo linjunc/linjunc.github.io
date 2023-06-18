@@ -2212,7 +2212,7 @@ type PersonInfo = { name: 'Tom', age: 30, married: false, addr: { home: '123456'
 
 // 要求结果如下： type PersonInfo = { name: string, age: number, married: boolean, addr: { home: string, phone: string } }
 
-:::details 查看解答
+::: details 查看解答
 1. `T extends object ? ... : ...`：这个条件类型判断 T 是否是对象类型。
     - 如果 T 是对象类型，进入第一个分支。
     - 否则，进入第二个分支。
