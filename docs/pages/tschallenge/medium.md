@@ -2179,3 +2179,26 @@ type FindEles<T extends any[], U extends any[] = [], O extends any[] = []> = T e
 ```
 
 :::
+
+## 10969 · Integer
+
+请完成类型 Integer<T>，类型 T 继承于 number，如果 T 是一个整数则返回它，否则返回 never。
+
+:::details 查看解答
+判断是不是整数有两个关键，浮点数整数，正整数
+
+1. number extends T ? never : ...：如果 T 是 number 类型或 number 类型的子类型，按照上面的讨论，通常情况下会进入 : ... 这个分支。如果 T 是 string 类型，会匹配到 never。
+
+2. ${T}：将 T 转换为模板文字类型。如果 T 是 number 类型，这将把数字转换为字符串。例如，如果 T 是 42，${T} 将会是字符串 "42"。
+
+3. `${T} extends ${string}.${string} ? never : T`:接下来检查 ${T}（数字变为字符串的结果，如"42"）是否符合 `${string}.${string}` 的格式。这是一个字符串，其中包含一个或多个字符、一个点号，后跟一个或多个字符。简单地说，就是用来检查 T 是否包含一个小数点。
+
+```typescript
+type Integer<T extends string | number> = number extends T 
+  ? never
+  : `${T}` extends `${string}.${string}` 
+    ? never 
+    : T
+```
+
+:::
