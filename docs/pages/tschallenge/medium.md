@@ -2204,15 +2204,17 @@ type Integer<T extends string | number> = number extends T
 :::
 
 ## 16259 · medium-to-primitive
+
 题目： 
 
-// 将类型为字面类型（标签类型）的属性，转换为基本类型。
+ 将类型为字面类型（标签类型）的属性，转换为基本类型。
 
-type PersonInfo = { name: 'Tom', age: 30, married: false, addr: { home: '123456', phone: '13111111111' } }
+`type PersonInfo = { name: 'Tom', age: 30, married: false, addr: { home: '123456', phone: '13111111111' } }`
 
-// 要求结果如下： type PersonInfo = { name: string, age: number, married: boolean, addr: { home: string, phone: string } }
+ 要求结果如下： `type PersonInfo = { name: string, age: number, married: boolean, addr: { home: string, phone: string } }`
 
-::: details 查看解答
+:::details 查看解答
+
 1. `T extends object ? ... : ...`：这个条件类型判断 T 是否是对象类型。
     - 如果 T 是对象类型，进入第一个分支。
     - 否则，进入第二个分支。
@@ -2232,4 +2234,5 @@ type ToPrimitive<T> = T extends object ? (
     ? P 
     : T;
 ```
+
 :::
