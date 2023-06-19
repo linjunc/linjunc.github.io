@@ -1,12 +1,6 @@
 import { defineConfig } from "vitepress";
 import { markdown, sidebar } from "./configs/index";
-// import { SearchPlugin } from "vitepress-plugin-search";
-//default options
-// const searchOptions = {
-//   previewLength: 62,
-//   buttonLabel: "Search",
-//   placeholder: "Search docs",
-// };
+
 export default defineConfig({
   title: "小丞前端日记", // 显示在左上角的网页名称以及首页在浏览器标签显示的text名称
   description: "小丞同学的博客，致力于分享高质量的 React,JS 相关博文", // meta 中的描述文字，用于SEO
@@ -31,10 +25,8 @@ export default defineConfig({
   markdown,
   lastUpdated: true, // string | boolean
   themeConfig: {
-    algolia: {
-      appId: "91QLUICXMQ",
-      apiKey: "eaa087050384cf131e049e11cb4fadbf",
-      indexName: "linjuncheng",
+    search: {
+      provider: 'local'
     },
     logo: "/avatar.jpg",
     socialLinks: [
