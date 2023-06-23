@@ -2204,7 +2204,7 @@ type Integer<T extends string | number> = number extends T
 
 :::
 
-## 16259 · medium-to-primitive
+## 16259 · to-primitive
 
 题目： 
 
@@ -2234,6 +2234,136 @@ type ToPrimitive<T> = T extends object ? (
 ) : T extends { valueOf: () => infer P } 
     ? P 
     : T;
+```
+
+:::
+
+## 17973 · DeepMutable
+
+题目： 实现一个通用的 DeepMutable ，它使对象的每个属性，及其递归的子属性 - 可变。
+
+例如：
+
+```typescript
+type X = {
+  readonly a: () => 1
+  readonly b: string
+  readonly c: {
+    readonly d: boolean
+    readonly e: {
+      readonly g: {
+        readonly h: {
+          readonly i: true
+          readonly j: "s"
+        }
+        readonly k: "hello"
+      }
+    }
+  }
+}
+
+type Expected = {
+  a: () => 1
+  b: string
+  c: {
+    d: boolean
+    e: {
+      g: {
+        h: {
+          i: true
+          j: "s"
+        }
+        k: "hello"
+      }
+    }
+  }
+}
+
+type Todo = DeepMutable<X> // should be same as `Expected`
+```
+
+:::details 查看解答
+这题一步步来即可
+
+如果 value 是对象则需要继续递归处理，这里注意 `Record<string, any>` 的子类型还有 Function，需要处理一下
+
+因为传入的值都是 readonly 的，需要去除一下，采用 `- readonly` 去除
+
+```typescript
+type DeepMutable<T> = T extends Record<string, any>
+  ? {
+  - readonly [K in keyof T]: T[K] extends Record<string, any> 
+    ? T[K] extends (...args: any[]) => any
+      ? T[K]
+      : DeepMutable<T[K]>
+    : T[K]
+} : T
+```
+
+:::
+
+## 18142 · All
+
+题目：Returns true if all elements of the list are equal to the second parameter passed in, false if there are any mismatches.
+
+例如：
+
+```typescript
+type Test1 = [1, 1, 1]
+type Test2 = [1, 1, 2]
+
+type Todo = All<Test1, 1> // should be same as true
+type Todo2 = All<Test2, 1> // should be same as false
+```
+
+:::details 查看解答
+
+这题常规递归判断每一个值也可以解，通过 infer 取数据的每一位，判断是否和 K 相同，如果有不同就返回 false
+
+下面用了一个工具方法 Equal，可以自己实现。
+
+```typescript
+type All<T extends any[], K> = T extends [infer F, ...infer Rest] 
+  ? Equal<F, K> extends true
+    ? All<Rest, K>
+    : false
+  : true
+```
+
+在 github 上还看到了，这样的解答，很有意思
+
+直接将数组转成联合类型，利用联合类型的遍历特性和 N 逐个比较。
+
+```typescript
+type All<T extends any[], N> = T[number] extends N ? true : false;
+```
+
+:::
+
+## 18220 · Filter
+
+题目：Implement the type `Filter<T, Predicate>` takes an Array T, primitive type or union primitive type Predicate and returns an Array include the elements of Predicate.
+
+:::details 查看解答
+
+这题和上一题很类型，基本一样，通过添加多一个参数 Res 来存储返回结果，遍历生成 Res 数组
+
+```typescript
+type Filter<T extends any[], P, Res extends any[] = []> = T extends [infer F, ...infer Rest] 
+  ? F extends P
+    ? Filter<Rest, P, [...Res, F]>
+    : Filter<Rest, P, Res>
+  : Res
+```
+
+在 github 上还看到了这个回答，可以直接在数组中递归，这样可以减少掉 Res 参数
+
+```typescript
+type Filter<T extends unknown[], P> = T extends [infer F, ...infer R]
+  ? F extends P
+    ? [F, ...Filter<R, P>]
+    : Filter<R, P>
+  : [];
 ```
 
 :::
