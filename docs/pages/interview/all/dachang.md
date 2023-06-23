@@ -5,7 +5,7 @@
 > 百度面经合集
 
 :::tip
-[https://www.nowcoder.com/discuss/399332676883197952?sourceSSR=search](https://www.nowcoder.com/discuss/399332676883197952?sourceSSR=search)
+提前批一面 [https://www.nowcoder.com/discuss/399332676883197952?sourceSSR=search](https://www.nowcoder.com/discuss/399332676883197952?sourceSSR=search)
 :::
 
 1. axios 底层实现，ajax 怎么实现的，优点在哪儿，axios 和 ajax 的关系
@@ -31,7 +31,7 @@
 11. html 渲染的过程 html 和 css 是怎么渲染的，重绘是什么阶段完成的，若果要加载一个js，会引发重绘嘛，怎么判断这个js执行完没有
 
 :::tip
-[https://www.nowcoder.com/discuss/395306690277543936?sourceSSR=search](https://www.nowcoder.com/discuss/395306690277543936?sourceSSR=search)
+提前批一面 [https://www.nowcoder.com/discuss/395306690277543936?sourceSSR=search](https://www.nowcoder.com/discuss/395306690277543936?sourceSSR=search)
 :::
 
 1. 水平垂直居中布局？
@@ -58,9 +58,27 @@
 
 12. get、post区别？长度限制、安全性等？
 
+:::tip
+提前批一面 [https://www.nowcoder.com/discuss/399928752820559872?sourceSSR=search](https://www.nowcoder.com/discuss/399928752820559872?sourceSSR=search)
+:::
+
+1. 手写instanceof
+2. 原型链原理
+3. http和https区别
+4. 对称加密和非对称加密
+5. 跨域
+6. TCP、UDP以及应用场景
+7. 手写CSS垂直居中
+8. BFC
+9. 盒模型
+10. react生命周期
+11. react有哪些hooks
+12. react router
 
 ## 算法
 
 ### 随机打乱一个数组
 
 ### 字符串 kebab-case 转换成 camelCase
+
+### 手写数组括号匹配
