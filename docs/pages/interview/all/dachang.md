@@ -86,6 +86,87 @@
 
 12. react router
 
+:::tip
+提前批一面[https://www.nowcoder.com/discuss/394976882133934080?sourceSSR=search](https://www.nowcoder.com/discuss/394976882133934080?sourceSSR=search)
+:::
+
+水平垂直居中
+
+position有哪些值
+
+说一下BFC
+
+js 基本数据类型
+
+instanceof 原理
+
+说一下ES6新增
+
+for in 和for of区别
+
+Object.defineProperty 定义的对象的属性有哪些
+
+<https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty>
+
+事件循环
+
+HTTP 缓存
+
+HTTP 状态码
+
+HTTP2.0 新增特性
+
+Git常用操作
+
+webpack loader plugin区别
+
+说一下知道的plugin
+
+Vue双向绑定原理 数组是怎么做双向绑定
+
+:::tip
+百度提前批 前端 一二三面面经 [https://www.nowcoder.com/discuss/395239030223384576?sourceSSR=search](https://www.nowcoder.com/discuss/395239030223384576?sourceSSR=search)
+:::
+
+一面：
+
+主要是做了三道题，其他没太问（做太久了后面没时间了）
+
+二分查找（如果排序是逆序怎么处理）
+
+实现 instanceof （null、undefined 怎么处理）
+
+实现水波跳动效果
+
+二面：
+
+key 的作用 -- 虚拟 dom 的构建
+
+防抖节流，简述实现
+
+简述 cookie
+
+闭包为啥会性能不好 -- 变量一直被引用，无法回收 --- 垃圾回收机制：标记清楚法、引用计数法
+
+两个盒子水平垂直居中的方法
+
+简述暂时性死区
+
+简述 async await
+
+promise.all 的返回值，如果有一个报错呢
+
+webpack 打包出来的内容特别大怎么办
+
+实习遇到的问题
+
+实习过程中的收获：技术上、代码规范、逻辑思维
+
+三面
+
+扫码登陆原理
+
+大文件上传(断点上传怎么实现)
 
 ## 算法
 
@@ -94,3 +175,5 @@
 ### 字符串 kebab-case 转换成 camelCase
 
 ### 手写数组括号匹配
+
+### 全排列
