@@ -2367,3 +2367,77 @@ type Filter<T extends unknown[], P> = T extends [infer F, ...infer R]
 ```
 
 :::
+
+## 21106 · Combination key type
+
+题目：
+
+1. 把多个修饰键两两组合，但不可以出现相同的修饰键组合。
+2. 提供的 ModifierKeys 中，前面的值比后面的值高，即 cmd ctrl 是可以的，但 ctrl cmd 是不允许的。
+
+:::details 查看解答
+
+这题大概意思就是把数组的每一项和后面的一一组合起来，那么我们可以遍历数组的每一项，利用数组转联合类型，得到结果
+
+```typescript
+type Combs<T extends any[]> = T extends [infer F extends string, ...infer Rest extends string[]] 
+  ? `${F} ${Rest[number]}` | Combs<Rest>
+  : never
+```
+
+:::
+
+## 25170 · Replace First
+
+题目：Implement the type `ReplaceFirst<T, S, R>` which will replace the first occurrence of S in a tuple T with R. If no such S exists in T, the result should be T.
+
+:::details 查看解答
+
+这题的意思是，替换掉数组 T 中的第一个 S 为 R，因此我们遍历数组，将 S 替换即可
+
+这里用 Res 来保存结果数组，因为需要改变数组的值，需要生成新的数组，把 Res 和 Rest 还有 R 组成新的数组即可
+
+```typescript
+type ReplaceFirst<T extends readonly unknown[], S, R, Res extends readonly unknown[] = []> = T extends [infer F, ...infer Rest] 
+  ? F extends S
+    ? [...Res, R, ...Rest]
+    : ReplaceFirst<Rest, S, R, [...Res, F]>
+  : Res
+```
+
+:::
+
+## 25270 · Transpose
+
+题目：The transpose of a matrix is an operator which flips a matrix over its diagonal; that is, it switches the row and column indices of the matrix A by producing another matrix, often denoted by AT.
+
+例子：
+```typescript
+type Matrix = Transpose <[[1]]>; // expected to be [[1]]
+type Matrix1 = Transpose <[[1, 2], [3, 4]]>; // expected to be [[1, 3], [2, 4]]
+type Matrix2 = Transpose <[[1, 2, 3], [4, 5, 6]]>; // expected to be [[1, 4], [2, 5], [3, 6]]
+```
+
+:::details 查看解答
+
+这题有点变态，意思是，将多个数组按照 index 进行重拍，这里的思路是每次把所有数组的同一位拿出来，构造成一个数组，这样每次可以处理完一位
+
+例如 `[[1, 2], [3, 4]]`，我们先把第一位拿出来 得到数组 `[1, 3]` 再拿第二位 `[2, 4]` ，合并就好
+
+按照这个思路，我们需要一个方法用来获取二元数组中的某一位组成的数组，通过遍历 二维数组 M，递归可以得到结果 `[F[I], ...Temp<Res, I>]`
+
+那么主流程只需要处理 获取的是哪一位即可，可以借助数组 length 来计算当前是获取第几位的值
+
+```typescript
+type Temp<M extends number[][], I extends number> = M extends [infer F extends number[], ...infer Res extends number[][]]
+  ? [F[I], ...Temp<Res, I>]
+  : []
+
+type Transpose<M extends number[][], Res extends number[][] = []> = M extends [infer F extends number[], ...any]
+  ? F['length'] extends Res['length']
+    ? []
+    : [Temp<M, Res['length']>, ...Transpose<M, [...Res, any]>]
+  : []
+```
+
+:::
