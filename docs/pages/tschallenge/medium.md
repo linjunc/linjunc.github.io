@@ -2441,3 +2441,72 @@ type Transpose<M extends number[][], Res extends number[][] = []> = M extends [i
 ```
 
 :::
+
+## 26401 · JSON Schema to TypeScript
+
+题目：Implement the generic type JSONSchema2TS which will return the TypeScript type corresponding to the given JSON schema.
+
+Additional challenges to handle:
+
+additionalProperties
+oneOf, anyOf, allOf
+minLength and maxLength
+
+:::details 查看解答
+
+额，有点恶心的题目，一步步来，根据测试用例里的内容进行拆解
+
+```typescript
+interface PrimitiveMap {
+  string: string
+  number: number
+  boolean: boolean
+}
+
+interface Schema {
+  type: keyof PrimitiveMap | 'object' | 'array'
+  enum?: string[] | number[]
+  properties?: Record<string, Schema>
+  items?: Schema
+  required?: string[]
+}
+
+
+interface PrimitiveMap {
+  string: string
+  number: number
+  boolean: boolean
+}
+
+interface Schema {
+  type: keyof PrimitiveMap | 'object' | 'array'
+  enum?: string[] | number[]
+  properties?: Record<string, Schema>
+  items?: Schema
+  required?: string[]
+}
+
+type Merge<T> = {
+  [Key in keyof T]: T[Key]
+}
+
+type RequiredWith<T extends Record<string, unknown>, Keys extends keyof T> =
+  Merge<Required<Pick<T, Keys>> & Omit<T, Keys>>
+
+type JSONSchema2TS<T extends Schema> =
+  T['type'] extends keyof PrimitiveMap
+    ? T['enum'] extends unknown[]
+      ? T['enum'][number]
+      : PrimitiveMap[T['type']]
+    : T['type'] extends 'object'
+      ? T['properties'] extends Record<string, Schema>
+        ? RequiredWith<{
+          [Key in keyof T['properties']]?: JSONSchema2TS<T['properties'][Key]>
+        }, T['required'] extends string[] ? T['required'][number] : never>
+        : Record<string, unknown>
+      : T['items'] extends Schema
+        ? JSONSchema2TS<T['items']>[]
+        : unknown[]
+```
+
+:::
