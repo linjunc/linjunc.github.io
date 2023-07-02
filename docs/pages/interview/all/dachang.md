@@ -48,15 +48,55 @@ Compositor thread 有三棵 cc::LayerImpl 树：
 
 3. js 的数据类型
 
+:::tip
+`undefined`、`null`、`number`、`string`、`boolean`、`object`、`bigint`、`Symbol`
+:::
+
 4. null 和 undefined 的区别，使用场景上
+
+- null 表示"没有对象"，即该处不应该有值
+- undefined 表示"缺少值"，就是此处应该有一个值，但是还没有定义
+
+- null 的用法：表示函数的参数不是对象、作为对象原型链的终点
+- undefined 的用法：声明未赋值、参数为传递，对象没有值、函数返回值
 
 5. `1 === new Number(1)` 相等吗
 
-6. if（{}） if（[ ]）if（0）是true还是false
+不相等，`new Number` 返回的是包装对象，这里涉及到包装类的知识
+
+以字符串为例子，在我们操作一个字符串时，例如 `str.substring`，我们操作的原始类型 string 原本是没有这个方法的，它会通过 `new String(str)`，把 str 包装成对象调用
+
+内部是这样的
+
+```js
+const str = new String(str)
+const str1 = str.substring(2)
+str = null
+```
+
+大概意思就是包装类型使用完就会被销毁，不会存在内存中
+
+6. `if（{}） if（[ ]）if（0）`是true还是false
+
+对象是引用，原始值是 false
 
 7. symbol 类型 写一下怎么用
 
 8. script 会阻塞 html 嘛 css 呢
+
+:::tip
+script 的加载如果没有 defer 或者 async 的话，会在同步解析，遇到 script 标签会暂停解析，先下载 script 再执行，执行完再继续解析
+
+如果有 defer 的话，遇到 script 会下载，但会等待 html 解析完，loaded 事件触发前执行
+
+如果是 async 的话，遇到 script 会下载，但不会停止解析，等待 script 下载完立刻执行
+:::
+
+DOM 解析和 CSS 解析是并行的，因此 CSS 加载不会阻塞 DOM 树的解析，但是 CSS 加载会阻塞 DOM 树的渲染
+
+- css 加载不会阻塞DOM树的解析
+- css 加载会阻塞DOM树的渲染
+- css 加载会阻塞后面js语句的执行
 
 9. async 和 defer 怎么用 区别
 
