@@ -2510,3 +2510,55 @@ type JSONSchema2TS<T extends Schema> =
 ```
 
 :::
+
+## 27105 · Triangular number
+
+题目：Given a number N, find the Nth triangular number, i.e. 1 + 2 + 3 + ... + N
+
+:::details 查看解答
+
+计算的题目基本上都用数组来实现，利用数组的 length 求和，这题相当于需要把每个数转成对应长度的数组，例如 3，需要转成 1，2，3 这三个数字对应长度的数组
+
+```typescript
+1: ['']
+2: ['', ''],
+3: ['', '', ''],
+```
+
+递归创建即可
+
+```typescript
+type CountArr<N extends number, R extends string[] = []> = R['length'] extends N 
+  ? R
+  : CountArr<N, [...R, '']>
+
+type Triangular<N extends number, R extends any[] = [], Count extends string[] = []> = Count['length'] extends N 
+  ? R['length']
+  : Triangular<N, [...CountArr<[...Count, ""]['length']>, ...R], [...Count, ""]>
+```
+
+:::
+
+## 27862 · CartesianProduct
+
+题目：Given 2 sets (unions), return its Cartesian product in a set of tuples, e.g.
+
+```typescript
+CartesianProduct<1 | 2, 'a' | 'b'> 
+// [1, 'a'] | [2, 'a'] | [1, 'b'] | [2, 'b']
+```
+
+:::details 查看解答
+
+根据联合类型的遍历规则，遍历时会进行循环，因此这里相当于两层 for 循环遍历即可
+
+```typescript
+type CartesianProduct<T, U> = T extends T
+  ? U extends U
+    ? [T, U]
+    : never
+  : never
+```
+
+:::
+
