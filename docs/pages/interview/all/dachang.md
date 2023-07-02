@@ -100,6 +100,14 @@ DOM 解析和 CSS 解析是并行的，因此 CSS 加载不会阻塞 DOM 树的�
 
 9. async 和 defer 怎么用 区别
 
+:::tip
+在实践中，defer 用于需要整个 DOM 或其相对执行顺序很重要的 scripts。而 async 则用于独立的 scripts，如计数器或广告，而它们的相对执行顺序并不重要。
+
+async 下载完立刻执行，因此和下载速度有关
+
+defer 下载完等待 HTML 解析完成后，按顺序执行
+:::
+
 10. let const 和 var 的区别
 
 11. html 渲染的过程 html 和 css 是怎么渲染的，重绘是什么阶段完成的，若果要加载一个js，会引发重绘嘛，怎么判断这个js执行完没有
