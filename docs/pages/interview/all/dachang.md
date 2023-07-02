@@ -124,6 +124,14 @@ var 变量可以在其作用域内更新和重新声明； let 变量可以更�
 
 1. 水平垂直居中布局？
 
+:::tip
+- text-align + line-height：子元素是 inline-block
+- bsolute + margin
+- absolute + calc
+- flex
+- grid
+:::
+
 2. DOM、BOM常用的API？
 
 3. 浏览器缓存机制？
