@@ -2606,7 +2606,6 @@ type CheckRepeatedTuple<[1, 2, 3]>   // false
 type CheckRepeatedTuple<[1, 2, 1]>   // true
 ```
 
-
 :::details 查看解答
 
 递归遍历，判断是否在数组 U 中有这个字符，实现一个 Includes 来判断
@@ -2624,3 +2623,18 @@ type CheckRepeatedTuple<T extends unknown[], U extends unknown[] = []> = T exten
 
 :::
 
+## 28333 · Public Type
+
+题目：Remove the key starting with _ from given type T.
+
+:::details 查看解答
+
+遍历对象的每个 Key，然后通过模板字符串语法来判断，过滤掉不符合要求的 key
+
+```typescript
+type PublicType<T extends object> = {
+  [K in keyof T as K extends `_${infer R}` ? never : K]: T[K]
+}
+```
+
+:::
