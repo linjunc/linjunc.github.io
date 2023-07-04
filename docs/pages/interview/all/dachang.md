@@ -148,7 +148,7 @@ var 变量可以在其作用域内更新和重新声明； let 变量可以更�
 
 6. sessionStorage、localStorage、cookie区别？
 
-7. 用过localStorage吗？如果要实现存储数据的时间不超过24小时怎么做？
+7. 用过 localStorage 吗？如果要实现存储数据的时间不超过24小时怎么做？
 
 8. 跨域怎么做？谁来做？
 
@@ -174,7 +174,7 @@ var 变量可以在其作用域内更新和重新声明； let 变量可以更�
 
 5. 跨域
 
-6. TCP、UDP以及应用场景
+6. TCP、UDP 以及应用场景
 
 7. 手写CSS垂直居中
 
@@ -196,7 +196,7 @@ var 变量可以在其作用域内更新和重新声明； let 变量可以更�
 
 position有哪些值
 
-说一下BFC
+说一下 BFC
 
 js 基本数据类型
 
@@ -218,7 +218,7 @@ HTTP 状态码
 
 HTTP2.0 新增特性
 
-Git常用操作
+Git 常用操作
 
 webpack loader plugin区别
 
