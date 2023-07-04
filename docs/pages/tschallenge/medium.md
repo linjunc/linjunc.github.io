@@ -2596,3 +2596,31 @@ type Merge<F, S> = {
 ```
 
 :::
+
+## 27958 · CheckRepeatedTuple
+
+题目：Implement type `CheckRepeatedChars<T>` which will return whether type `T` contains duplicated member
+
+```typescript
+type CheckRepeatedTuple<[1, 2, 3]>   // false
+type CheckRepeatedTuple<[1, 2, 1]>   // true
+```
+
+
+:::details 查看解答
+
+递归遍历，判断是否在数组 U 中有这个字符，实现一个 Includes 来判断
+
+```typescript
+type Includes<T extends readonly any[], U> = T extends [infer F, ...infer R] ? (IsEqual<U, F> extends true ? true : Includes<R, U>) : false
+type IsEqual<A, B> = ((<T>() => T extends A ? true : false) extends (<T>() => T  extends B ? true : false) ? true : false )
+
+type CheckRepeatedTuple<T extends unknown[], U extends unknown[] = []> = T extends [infer F, ...infer Rest]
+  ? Includes<U, F> extends true
+    ? true
+    : CheckRepeatedTuple<Rest, [...U, F]>
+  : false
+```
+
+:::
+
