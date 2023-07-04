@@ -2562,3 +2562,37 @@ type CartesianProduct<T, U> = T extends T
 
 :::
 
+## 27932 · MergeAll
+
+题目：Merge variadic number of types into a new type. If the keys overlap, its values should be merged into an union.
+
+```typescript
+type Foo = { a: 1; b: 2 }
+type Bar = { a: 2 }
+type Baz = { c: 3 }
+
+type Result = MergeAll<[Foo, Bar, Baz]> // expected to be { a: 1 | 2; b: 2; c: 3 }
+```
+
+:::details 查看解答
+
+递归遍历，进行合并，用一个空对象收集所有的结果
+
+```typescript
+type MergeAll<XS, P = {}> = XS extends [infer F, ...infer Rest] 
+  ? MergeAll<Rest, Merge<P, F>>
+  : P
+
+type Merge<F, S> = {
+  [P in keyof F | keyof S]: 
+    P extends keyof S 
+    ? P extends keyof F
+      ? S[P] | F[P]
+      : S[P]
+    : P extends keyof F
+      ? F[P]
+      :never
+}
+```
+
+:::
