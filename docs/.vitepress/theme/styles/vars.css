@@ -3,13 +3,13 @@
  * -------------------------------------------------------------------------- */
 
 :root {
-  --vp-c-brand: #00c0ff;
-  --vp-c-brand-light: #42A5F5;
-  --vp-c-brand-lighter: #36d4f6;
-  --vp-c-brand-lightest: #7fc5ff;
-  --vp-c-brand-dark: #1976D2;
-  --vp-c-brand-darker: #1565C0;
-  --vp-c-brand-dimm: rgba(100, 108, 255, 0.08);
+  --vp-c-brand: #48cae4;
+  --vp-c-brand-light: #90e0ef;
+  --vp-c-brand-lighter: #ade8f4;
+  --vp-c-brand-lightest: #caf0f8;
+  --vp-c-brand-dark: #00b4d8;
+  --vp-c-brand-darker: #0096c7;
+  --vp-c-brand-dimm: #0077b6;
 }
 
 /**
