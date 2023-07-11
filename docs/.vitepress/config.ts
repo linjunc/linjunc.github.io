@@ -39,6 +39,9 @@ export default defineConfig({
       message: "Released under the MIT License.",
       copyright: "Copyright © 2021-present linjunc  粤ICP备2021119090号 ",
     },
+    outline: {
+      level: [2, 6],
+    },
     // darkModeSwitchLabel: true,
     nav: [
       { text: "首页", link: "/" },
