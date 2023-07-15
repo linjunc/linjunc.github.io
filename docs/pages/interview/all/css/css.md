@@ -49,3 +49,7 @@ link > visited > hover > active
 ## 网站图片文件，如何点击下载？而非点击预览
 
 `<a href="logo.jpg" download>下载</a>` `<a href="logo.jpg" download="网站LOGO" >下载</a>`
+
+## Tailwind CSS 有什么好处？
+
+Tailwind Css 开发更加高效，不需要编写 CSS 或 less，最大的好处是更好的组件化，之前编写 React 组件时，jsx 和 css 分离，导致样式没法和组件高度融合，使用 tailwind 可以更加紧密的结合在一起
