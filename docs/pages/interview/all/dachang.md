@@ -161,9 +161,73 @@ var 变量可以在其作用域内更新和重新声明； let 变量可以更�
 
 ### sessionStorage、localStorage、cookie区别？
 
+首先这三个都是客户端存储数据的方法，在存储容量上，生命周期、作用域、数据传输上有些不同
+
+先说说 sessionStorage 和 localStorage ，他们的存储空间大小都是 5 MB 左右，作用域都是在同源页面，不能跨域访问。sessionStorage 仅在本次会话期间有效，浏览器标签页关闭数据就会被清除，localStorage 没有过期时间，一直保留在客户端。
+
+而 cookie 来说，大小不超过 4 kb，只能存一些简单的数据，做会话标识，cookie 可以设置过期时间，过期自动删除，如果没有设置，那么会在浏览器关闭时删除。
+
+cookie 的作用域可以自己设置，设置 domain 和 path，用于限制 cookie 只能被特定域名和路径访问，默认情况下 cookie 只能被创建它的同源页面访问。
+
+cookie 在每次 http 请求时，会自动附加在请求头上发送给服务端。
+
+
 ### 用过 localStorage 吗？如果要实现存储数据的时间不超过24小时怎么做？
 
+有的，localStorage 本身没有提供设置过期时间的功能，但是可以通过在存储数据时添加一个额外的过期时间戳来实现这个需求。
+
+在获取数据时，先判断是否过期，如果过期则删除 key
+
+```ts
+// 设置数据到 localStorage
+function setItemWithExpiry(key, value, ttl) {
+  const now = new Date();
+  // ttl 是以毫秒为单位的时间长度
+  const expiryTime = now.getTime() + ttl;
+  const data = { value: value, expiry: expiryTime };
+  localStorage.setItem(key, JSON.stringify(data));
+}
+
+// 从 localStorage 获取数据
+function getItemWithExpiry(key) {
+  const data = localStorage.getItem(key);
+  if (!data) {
+    return null;
+  }
+  const parsedData = JSON.parse(data);
+  const now = new Date();
+  // 如果数据已过期，删除它并返回 null
+  if (now.getTime() > parsedData.expiry) {
+    localStorage.removeItem(key);
+    return null;
+  }
+  return parsedData.value;
+}
+
+// 示例：存储一个值，过期时间为 24 小时
+const key = 'myKey';
+const value = 'myValue';
+const ttl = 24 * 60 * 60 * 1000; // 24 小时
+setItemWithExpiry(key, value, ttl);
+
+// 获取存储的值（如果已过期，将返回 null）
+const storedValue = getItemWithExpiry(key);
+console.log(storedValue);
+```
+
 ### 跨域怎么做？谁来做？
+
+跨域问题主要是因为浏览器的同源策略引起的，当域名、协议、端口不一致时，就会有跨域的问题。
+
+跨域的解决方法有很多，大多数都需要服务端配合，比较常用的 JSONP 解决跨域，利用 script 标签，img 标签可以加载跨域资源的原理，服务端返回一个包含回调函数的 json 数据，客户端调用回调来处理数据，只支持 get 请求
+
+第二种是 cors 资源共享，服务端设置响应头 `Access-Control-Allow-Origin` 来允许特定源的请求
+
+第三种是代理服务器，做 ng 请求转发到目标服务器
+
+第四种是用 postMessage 做跨域通信，但不是跨域请求。
+
+第五种是用 websocket 它没有同源策略的限制，跨域实现跨域通信
 
 ### 响应式布局实现？媒体查询、vh、vw、rem、em？
 
