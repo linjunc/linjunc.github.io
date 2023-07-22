@@ -8,9 +8,9 @@
 提前批一面 [https://www.nowcoder.com/discuss/399332676883197952?sourceSSR=search](https://www.nowcoder.com/discuss/399332676883197952?sourceSSR=search)
 :::
 
-1. axios 底层实现，ajax 怎么实现的，优点在哪儿，axios 和 ajax 的关系
+### axios 底层实现，ajax 怎么实现的，优点在哪儿，axios 和 ajax 的关系
 
-2. 用户输入 url 到页面渲染的全过程
+### 用户输入 url 到页面渲染的全过程
 
 :::tip
 
@@ -46,13 +46,13 @@ Compositor thread 有三棵 cc::LayerImpl 树：
 
 :::
 
-3. js 的数据类型
+### js 的数据类型
 
 :::tip
 `undefined`、`null`、`number`、`string`、`boolean`、`object`、`bigint`、`Symbol`
 :::
 
-4. null 和 undefined 的区别，使用场景上
+### null 和 undefined 的区别，使用场景上
 
 - null 表示"没有对象"，即该处不应该有值
 - undefined 表示"缺少值"，就是此处应该有一个值，但是还没有定义
@@ -60,7 +60,7 @@ Compositor thread 有三棵 cc::LayerImpl 树：
 - null 的用法：表示函数的参数不是对象、作为对象原型链的终点
 - undefined 的用法：声明未赋值、参数为传递，对象没有值、函数返回值
 
-5. `1 === new Number(1)` 相等吗
+### `1 === new Number(1)` 相等吗
 
 不相等，`new Number` 返回的是包装对象，这里涉及到包装类的知识
 
@@ -76,13 +76,13 @@ str = null
 
 大概意思就是包装类型使用完就会被销毁，不会存在内存中
 
-6. `if（{}） if（[ ]）if（0）`是true还是false
+### `if（{}） if（[ ]）if（0）`是true还是false
 
 对象是引用，原始值是 false
 
-7. symbol 类型 写一下怎么用
+### symbol 类型 写一下怎么用
 
-8. script 会阻塞 html 嘛 css 呢
+### script 会阻塞 html 嘛 css 呢
 
 :::tip
 script 的加载如果没有 defer 或者 async 的话，会在同步解析，遇到 script 标签会暂停解析，先下载 script 再执行，执行完再继续解析
@@ -98,7 +98,7 @@ DOM 解析和 CSS 解析是并行的，因此 CSS 加载不会阻塞 DOM 树的�
 - css 加载会阻塞DOM树的渲染
 - css 加载会阻塞后面js语句的执行
 
-9. async 和 defer 怎么用 区别
+### async 和 defer 怎么用 区别
 
 :::tip
 在实践中，defer 用于需要整个 DOM 或其相对执行顺序很重要的 scripts。而 async 则用于独立的 scripts，如计数器或广告，而它们的相对执行顺序并不重要。
@@ -108,7 +108,7 @@ async 下载完立刻执行，因此和下载速度有关
 defer 下载完等待 HTML 解析完成后，按顺序执行
 :::
 
-10. let const 和 var 的区别
+### let const 和 var 的区别
 
 :::tip
 var 声明是全局作用域或函数作用域，而 let 和 const 是块作用域。
@@ -116,13 +116,13 @@ var 声明是全局作用域或函数作用域，而 let 和 const 是块作用�
 var 变量可以在其作用域内更新和重新声明； let 变量可以更新但不能重新声明； const 变量既不能更新也不能重新声明。 它们都被提升到了作用域的顶部。
 :::
 
-11. html 渲染的过程 html 和 css 是怎么渲染的，重绘是什么阶段完成的，若果要加载一个js，会引发重绘嘛，怎么判断这个js执行完没有
+### html 渲染的过程 html 和 css 是怎么渲染的，重绘是什么阶段完成的，若果要加载一个js，会引发重绘嘛，怎么判断这个js执行完没有
 
 :::tip
 提前批一面 [https://www.nowcoder.com/discuss/395306690277543936?sourceSSR=search](https://www.nowcoder.com/discuss/395306690277543936?sourceSSR=search)
 :::
 
-1. 水平垂直居中布局？
+### 水平垂直居中布局？
 
 :::tip
 - text-align + line-height：子元素是 inline-block
@@ -132,9 +132,9 @@ var 变量可以在其作用域内更新和重新声明； let 变量可以更�
 - grid
 :::
 
-2. DOM、BOM常用的API？
+### DOM、BOM常用的API？
 
-3. 浏览器缓存机制？
+### 浏览器缓存机制？
 
 :::tip
 强缓存和协商缓存，在浏览器发起 HTTP 请求前，先会检查 Expires，和 `Cache-Control` 是否过期，如果强缓存有效，则不会发起请求，直接返回静态资源。
@@ -142,23 +142,24 @@ var 变量可以在其作用域内更新和重新声明； let 变量可以更�
 否则进入协商缓存，请求资源时，把用户本地该资源的 etag 同时带到服务端，服务端和最新资源做对比。 如果资源没更改，返回304，浏览器读取本地缓存。 如果资源有更改，返回200，返回最新的资源。
 :::
 
-4. 重排、重绘？怎么减少重排重绘的开销？
+### 重排、重绘？怎么减少重排重绘的开销？
 
-5. 网页加载很慢的话，怎么做性能优化？
 
-6. sessionStorage、localStorage、cookie区别？
+### 网页加载很慢的话，怎么做性能优化？
 
-7. 用过 localStorage 吗？如果要实现存储数据的时间不超过24小时怎么做？
+### sessionStorage、localStorage、cookie区别？
 
-8. 跨域怎么做？谁来做？
+### 用过 localStorage 吗？如果要实现存储数据的时间不超过24小时怎么做？
 
-9. 响应式布局实现？媒体查询、vh、vw、rem、em？
+### 跨域怎么做？谁来做？
 
-10. react、vue了解多少？框架底层原理？
+### 响应式布局实现？媒体查询、vh、vw、rem、em？
 
-11. node了解多少？node里的http？
+### react、vue了解多少？框架底层原理？
 
-12. get、post区别？长度限制、安全性等？
+### node了解多少？node里的http？
+
+### get、post区别？长度限制、安全性等？
 
 :::tip
 提前批一面 [https://www.nowcoder.com/discuss/399928752820559872?sourceSSR=search](https://www.nowcoder.com/discuss/399928752820559872?sourceSSR=search)
