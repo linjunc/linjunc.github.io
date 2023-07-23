@@ -241,67 +241,109 @@ console.log(storedValue);
 提前批一面 [https://www.nowcoder.com/discuss/399928752820559872?sourceSSR=search](https://www.nowcoder.com/discuss/399928752820559872?sourceSSR=search)
 :::
 
-1. 手写instanceof
+### 手写 instanceof
 
-2. 原型链原理
+### 原型链原理
 
-3. http和https区别
+### http 和 https 区别
 
-4. 对称加密和非对称加密
+HTTPS 相对于 HTTP 提高了更高的安全性，HTTP 基于 3次握手就可以进行通信，HTTPS 在 HTTP 的基础上还需要进行 TLS 四次握手，对服务端身份进行确认，确保服务器可信
 
-5. 跨域
+HTTPS 使用 TLS 对传输数据进行加密，确保数据在传输过程中的安全性，即使数据被拦截也无法轻易破解。同时 HTTPS 可以确保数据在传输过程中未被篡改，通过对数据进行数字签名，可以检测数据是否被篡改
 
-6. TCP、UDP 以及应用场景
+HTTPS 的端口号是 443，HTTP 是 80
 
-7. 手写CSS垂直居中
+### 对称加密和非对称加密
 
-8. BFC
+对称加密是指加密和解密用的相同密钥的加密算法，发送方和接收方需要共享一个密钥，用于加解密，例如 HTTPS 的 ECDHE 算法，就采用的对称加密，采用非对称加密的方式生成共享密钥。
 
-9. 盒模型
+非对称加密是指在加密和解密过程中用的不同的密钥。每个用户都有一对密钥，一个公钥一个私钥。
 
-10. react生命周期
+非对称加密的优点是密钥管理简单，安全性高，比如 RSA 就是非对称加密，生成 3 个随机数。
 
-11. react有哪些hooks
+在实际应用中，通常会将对称加密和非对称加密结合使用。例如，使用非对称加密算法安全地传输对称加密算法的密钥，然后使用对称加密算法加密和解密数据。这样既保证了数据传输的安全性，又提高了加密和解密的效率。
 
-12. react router
+### （追问）什么时候使用非对称加密
+
+数字签名就是用的非对称加密，发送方使用自己的私钥对消息生成数字签名，接收方使用发送方的公钥验证数字签名。
+
+非对称加密可以确保数据在传输过程中未被篡改
+
+### 跨域
+
+### TCP、UDP 以及应用场景
+
+TCP 和 UDP 的是传输层协议 它们有一定的区别
+
+TCP 是面向连接的可靠的数据传输协议，在数据传输前，需要通过 3 次握手来简历连接，然后通过序号、确认应答、滑动窗口，超时重传、流量控制、拥塞控制等手段来保证数据的可靠传输
+
+而对于 UDP 而言它是无连接的，不可靠的传输协议，它不需要建立连接即可以进行数据传输，传输速度较快。在 HTTP 3 中就采用了 UDP 来做传输层协议。
+
+采用 QUIC 结合了 TCP 的可靠性和高效性，来保证 UDP 的安全性，自己实现了一套基于帧和流的二进制传输方式，以及多路复用，同时也有超时重传等能力，保障基于 UDP 实现的不可靠问题，让 UDP 变得可靠。
+
+对于应用场景而言，TCP 因为它的可靠性以及数据的完整性，决定了它的使用场景，网页内容、文件传输、邮件、远程登录
+
+而 UDP 则因为它的速度快和实时性，让它在视频会议、实时通话、在线游戏等场景更受青睐
+
+### 手写 CSS 垂直居中
+
+### BFC
+
+### 盒模型
+
+### react 生命周期
+
+### react 有哪些 hooks
+
+### react router
 
 :::tip
 提前批一面[https://www.nowcoder.com/discuss/394976882133934080?sourceSSR=search](https://www.nowcoder.com/discuss/394976882133934080?sourceSSR=search)
 :::
 
-水平垂直居中
+### 水平垂直居中
 
-position有哪些值
+### position 有哪些值
 
-说一下 BFC
+### 说一下 BFC
 
-js 基本数据类型
+BFC 指的是块级格式化上下文，它是一种布局概念吧，每个元素都是一个盒子模型，BFC 定义了盒子模型的布局规则，决定块级盒子如何排列，以及它们之间的相互作用和外边距折叠
 
-instanceof 原理
+它有以下主要特性，BFC 区域不会和浮动元素重叠，算是一个独立的容器，不会受外部盒子外边距干扰，可以解决外边距合并的问题。
 
-说一下ES6新增
+触发的条件的话有很多，display 设置为 block inline block，table等，float 不为 none 还有 flow-root，以及 overflow 不为 visible等
 
-for in 和for of区别
+### js 基本数据类型
 
-Object.defineProperty 定义的对象的属性有哪些
+number、string、boolean、object、null、undefined、symbol、bigint
+
+### instanceof 原理
+
+### 说一下 ES6 新增
+
+### for in 和for of区别
+
+### Object.defineProperty 定义的对象的属性有哪些
 
 <https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty>
 
-事件循环
+### 事件循环
 
-HTTP 缓存
+事件循环是 JS 的一种执行机制，用于处理异步操作，因为 JS 是单线程的嘛，事件循环主要为了避免长耗时操作阻塞主线程，事件循环允许异步任务在特定时机执行，从而实现非阻塞的程序执行
 
-HTTP 状态码
+### HTTP 缓存
 
-HTTP2.0 新增特性
+### HTTP 状态码
 
-Git 常用操作
+### HTTP2.0 新增特性
 
-webpack loader plugin区别
+### Git 常用操作
 
-说一下知道的plugin
+### webpack loader plugin区别
 
-Vue双向绑定原理 数组是怎么做双向绑定
+### 说一下知道的plugin
+
+### Vue双向绑定原理 数组是怎么做双向绑定
 
 :::tip
 百度提前批 前端 一二三面面经 [https://www.nowcoder.com/discuss/395239030223384576?sourceSSR=search](https://www.nowcoder.com/discuss/395239030223384576?sourceSSR=search)
