@@ -351,6 +351,32 @@ webpack 打包出来的内容特别大怎么办
 
 ### 随机打乱一个数组
 
+```ts
+function shuffle(array) {
+  let currentIndex = array.length;
+  let temporaryValue, randomIndex;
+
+  // 当数组中还有元素时
+  while (currentIndex !== 0) {
+    // 随机选取一个元素
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // 与当前元素交换位置
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
+}
+
+// 示例
+const myArray = [1, 2, 3, 4, 5];
+const shuffledArray = shuffle(myArray);
+console.log(shuffledArray);
+```
+
 ### 字符串 kebab-case 转换成 camelCase
 
 ### 手写数组括号匹配
