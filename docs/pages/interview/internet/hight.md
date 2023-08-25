@@ -255,6 +255,32 @@ overflow hidden 可以不显示滚动条，也可以反向设置 margin 来避�
 
 因此它的作用主要是用于解决命名冲突，最主要的场景就是在对象的 key 中使用，避免意外的被覆盖，另一方面可以用作私有属性，无法通过对象外部访问对象中的 Symbol 属性。
 
+```typescript
+let obj = {
+   [Symbol('name')]: '一斤代码', // 私有属性
+   age: 18,
+   title: 'Engineer'
+}
+
+// 读取
+
+// 使用Object的API
+Object.getOwnPropertySymbols(obj) // [Symbol(name)]
+
+// 使用新增的反射API
+Reflect.ownKeys(obj) // [Symbol(name), 'age', 'title']
+```
+
+同时我们还可以使用Symbol来替代常量
+
+```ts
+const TYPE_AUDIO = 'AUDIO'
+const TYPE_VIDEO = 'VIDEO'
+// 替代
+const TYPE_AUDIO = Symbol()
+const TYPE_VIDEO = Symbol()
+```
 
 ### 洗牌算法
 
+### 介绍一下浏览器的 EventLoop 的整个过程
