@@ -12,7 +12,7 @@
     "build": "vitepress build docs",
     "serve": "vitepress serve docs",
     "push": "bash scripts/push.sh",
-    "deploy": "bash deploy.sh"
+    "deploy": "node deploy.js"
   },
   "devDependencies": {
     "flexsearch": "^0.7.31",
