@@ -4,7 +4,7 @@ layout: home
 title: 小丞的日常
 
 hero:
-  name: 小丞同学1
+  name: 小丞同学
   text: 记录美好生活
   tagline: 几帧影像，留住美好瞬间
   image:
