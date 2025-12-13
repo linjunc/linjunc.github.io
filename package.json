@@ -1,6 +1,7 @@
 {
   "name": "iVBlog",
   "version": "1.0.0",
+  "type": "module",
   "main": "index.js",
   "license": "MIT",
   "homepage": "./",
@@ -16,10 +17,10 @@
   "devDependencies": {
     "flexsearch": "^0.7.31",
     "markdown-it": "^13.0.1",
-    "vite": "^4.2.1",
-    "vitepress": "^1.0.0-beta.2",
-    "vitepress-plugin-search": "^1.0.4-alpha.19",
-    "vue": "^3.2.37"
+    "vite": "^6.4.1",
+    "vitepress": "^1.6.4",
+    "vitepress-plugin-search": "^1.0.4-alpha.22",
+    "vue": "^3.5.25"
   },
   "dependencies": {
     "markdown-it-custom-attrs": "^1.0.2"
