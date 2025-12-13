@@ -7,25 +7,36 @@ on:
   pull_request:
     branches:
       - main
-  
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      # 移除 ACCESS_TOKEN 配置，保留基础拉取代码逻辑
       - uses: actions/checkout@v2
-        with:
-          token: ${{ secrets.ACCESS_TOKEN }}
+
+      # Node 版本改为 20，保留 yarn 缓存
       - uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 20
           cache: yarn
+
+      # 沿用你原有依赖安装命令
       - run: yarn install --frozen-lockfile
 
+      # 沿用你原有构建命令
       - name: Build
         run: yarn build
 
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
+      # 部署到自有服务器（端口22写死，用户名默认root）
+      - name: Deploy to own server via SSH
+        uses: appleboy/ssh-action@master
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: docs/.vitepress/dist
+          host: ${{ secrets.SERVER_IP }}
+          username: root
+          port: 22
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            mkdir -p ${{ secrets.DEPLOY_PATH }}
+            rm -rf ${{ secrets.DEPLOY_PATH }}/*
+            scp -r ${{ github.workspace }}/docs/.vitepress/dist/* root@${{ secrets.SERVER_IP }}:${{ secrets.DEPLOY_PATH }}/
