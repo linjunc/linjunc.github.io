@@ -28,8 +28,21 @@ jobs:
       - name: Build
         run: yarn build
 
-      # 部署到自有服务器（端口22写死，用户名默认root）
+      # 部署到自有服务器
       - name: Deploy to own server via SSH
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: root
+          port: 22
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: "docs/.vitepress/dist/*"
+          target: ${{ secrets.DEPLOY_PATH }}
+          strip_components: 3
+          timeout: 300s
+
+      # 清理和设置权限
+      - name: Setup permissions on server
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SERVER_IP }}
@@ -37,6 +50,4 @@ jobs:
           port: 22
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            mkdir -p ${{ secrets.DEPLOY_PATH }}
-            rm -rf ${{ secrets.DEPLOY_PATH }}/*
-            scp -r ${{ github.workspace }}/docs/.vitepress/dist/* root@${{ secrets.SERVER_IP }}:${{ secrets.DEPLOY_PATH }}/
+            chmod -R 755 ${{ secrets.DEPLOY_PATH }}
