@@ -2,8 +2,8 @@ import { defineConfig } from "vitepress";
 import { markdown, sidebar } from "./configs/index";
 
 export default defineConfig({
-  title: "小丞前端日记", // 显示在左上角的网页名称以及首页在浏览器标签显示的text名称
-  description: "小丞同学的博客，致力于分享高质量的 React,JS 相关博文", // meta 中的描述文字，用于SEO
+  title: "小丞同学", // 显示在左上角的网页名称以及首页在浏览器标签显示的text名称
+  description: "小丞同学的网站，记录美好生活", // meta 中的描述文字，用于SEO
   // 注入到当前页面的 HTML <head> 中的标签
   head: [
     ["link", { rel: "icon", href: "/avatar.jpg" }], //浏览器的标签栏的网页图标
@@ -115,7 +115,6 @@ export default defineConfig({
             text: "掘金",
             link: "https://juejin.cn/user/1460594842018446",
           },
-          { text: "CSDN", link: "https://blog.csdn.net/m0_50855872" },
         ],
       },
     ],

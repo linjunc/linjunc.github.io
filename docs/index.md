@@ -1,7 +1,7 @@
 ---
 layout: home
 
-title: 小丞的日常
+title: 小丞同学
 
 hero:
   name: 小丞同学
@@ -14,9 +14,6 @@ hero:
     - theme: brand
       text: 开始学习 →
       link: /pages/react/hard/readme.html  
-    - theme: alt
-      text: 关于我
-      link: https://github.com/linjunc
 features:
   - icon: 📸
     title: 随手记录
