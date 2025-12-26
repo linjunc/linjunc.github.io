@@ -37,7 +37,7 @@ export default defineConfig({
     ],
     footer: {
       message: "Released under the MIT License.",
-      copyright: "Copyright © 2021-present linjunc  粤ICP备2021119090号 ",
+      copyright: "Copyright © 2021-present jcjun  粤ICP备2025511471号 ",
     },
     outline: {
       level: [2, 6],

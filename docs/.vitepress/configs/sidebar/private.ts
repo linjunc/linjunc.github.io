@@ -5,7 +5,11 @@ export const privateRouter = {
             items: [
                 {
                     link: '/pages/private/experience/2023.md',
-                    text: '面经'
+                    text: '实习'
+                },
+                {
+                    link: '/pages/private/experience/autumn.md',
+                    text: '秋招'
                 }
             ]
         }

@@ -34,20 +34,12 @@ const specList = [
  * @return
  */
 function createSKU(spu, specList) {
-  const set = [spu];
-  for (let i = 0; i < specList.length; i++) {
-    const spec = specList[i];
-    const len = set.length;
-    // 每一项 ["red", "yellow"],
-    for (let j = 0; j < spec.length; j++) {
-      const specName = spec[j];
-      for (let i = 0; i < len; i++) {
-        set.push(`${set[i]}-${specName}`);
-      }
-    }
-    set.splice(0, len);
-  }
-  return set;
+  const res = specList.reduce((acc, cur) => {
+    return cur.map(specs => {
+      return acc.map(item => `${item}-${specs}`)
+    }).flat();
+  }, [spu])
+  return res
 }
 const a = createSKU(spu, specList);
 
